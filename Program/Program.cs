@@ -23,5 +23,9 @@ static class Program
         OrExpression.Evaluate();
 
         Console.WriteLine($"{Greater.Value} {Smaller.Value} {AndExpression.Value} {OrExpression.Value}");
+
+        Expression NotExpression = new Not(Greater, new CodeLocation());
+        NotExpression.Evaluate();
+        Console.WriteLine(NotExpression.Value);
     }
 }
