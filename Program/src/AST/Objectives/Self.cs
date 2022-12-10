@@ -13,7 +13,7 @@ namespace AST
 
         public override List<Player> Evaluate()
         {
-            return new List<Player>() { GameManager.CurrentPlayer };
+            return new List<Player>() { GameManager.CurrentGame.CurrentPlayer };
         }
     }
 

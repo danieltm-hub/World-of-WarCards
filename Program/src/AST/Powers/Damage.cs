@@ -21,6 +21,7 @@ namespace AST
             {
                 Amount.Evaluate(); //lo pusimos aqui dntro por si luego usa variables del enemigo
                 player.ChangeHealth((double)Amount.Value);
+                System.Console.WriteLine(Amount.Value);
             }
         }
     }

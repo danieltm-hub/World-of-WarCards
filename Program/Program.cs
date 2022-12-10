@@ -1,10 +1,10 @@
 ﻿using AST;
+using GameProgram;
 
 static class Program
 {
     static void Main(string[] args)
     {
-
         Expression Sum = new Add(new Number(1, new CodeLocation()), new Number(2, new CodeLocation()), new CodeLocation());
         Expression Div = new Div(new Number(1, new CodeLocation()), new Number(2, new CodeLocation()), new CodeLocation());
         //System.Console.WriteLine(Div.CheckSemantic(new List<Error>()));
@@ -27,5 +27,9 @@ static class Program
         Expression NotExpression = new Not(Greater, new CodeLocation());
         NotExpression.Evaluate();
         Console.WriteLine(NotExpression.Value);
+
+        Effector Effect = new Effector(new List<Objective>{new Self(new CodeLocation())}, new List<Power>{new ModifyHealth(Addcorner, new CodeLocation())}, new CodeLocation());
+        
+        Effect.Evaluate();
     }
 }

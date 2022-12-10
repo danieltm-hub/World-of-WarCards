@@ -37,13 +37,13 @@ namespace AST
             if (BooleanCondition.Type != NodeType.Bool)
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve a boolean parameter"));
-                Type = Error;
+                Type = NodeType.Error;
             }
 
-            if(left.Type != NodeType.Action || (Right!=null)? right.Type != NodeType.Action : false)
+            if(Left.Type != NodeType.Action && (Right == null || Right.Type != NodeType.Action))
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve an action parameter"));
-                Type = Error;
+                Type = NodeType.Error;
             }
 
             return Type != NodeType.Error && left && right && condition;
