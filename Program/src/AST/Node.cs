@@ -9,6 +9,13 @@ namespace AST
         string File;
         int Line;
         int Column;
+
+        public CodeLocation (string file, int line, int column)
+        {
+            File = file;
+            Line = line;
+            Column = column;
+        }
     }
 
     public abstract class Node 
