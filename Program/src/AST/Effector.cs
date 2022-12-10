@@ -14,36 +14,52 @@ namespace AST
 
         public override NodeType Type { get => NodeType.Action; set { } }
 
-        public Effector(List<Objective> objectives, List<Power> powers, CodeLocation location) : base(location) { }
-        
+        public Effector(List<Objective> objectives, List<Power> powers, CodeLocation location) : base(location)
+        {
+            Objectives = objectives;
+            Powers = powers;
+        }
+
 
         public override bool CheckSemantic(List<Error> errors)
         {
-            bool objectivesBoolean = Objective.CheckSemantic(errors);
-            bool powersBoolean = Power.CheckSemantic(errors);
-
-            if( Objective.Type != NodeType.Objective)
+            bool objectivesBoolean = true;
+            bool powersBoolean = true;
+            foreach (var objective in Objectives)
             {
-                errors.Add(new Error(ErrorCode.Invalid, Location, $"Expected Objectives as first argument"));
-                Type = NodeType.Error;
+                objectivesBoolean &= objective.CheckSemantic(errors);
+                if (objective.Type != NodeType.Objective)
+                {
+                    errors.Add(new Error(ErrorCode.Invalid, Location, $"Expected Objectives as first argument"));
+                    Type = NodeType.Error;
+                }
             }
 
-            if (Power.Type != NodeType.Power)
+            foreach (var power in Powers)
             {
-                errors.Add(new Error(ErrorCode.Invalid, Location, $"Expected Powers as second argument"));
-                Type = NodeType.Error;
+                powersBoolean &= power.CheckSemantic(errors);
+                if (power.Type != NodeType.Power)
+                {
+                    errors.Add(new Error(ErrorCode.Invalid, Location, $"Expected Powers as second argument"));
+                    Type = NodeType.Error;
+                }
             }
 
-            return objectivesBoolean && powersBoolean && Type != NodeType.Error; 
+            return objectivesBoolean && powersBoolean && Type != NodeType.Error;
         }
 
         public override void Evaluate()
         {
             List<Player> players = new List<Player>();
-            
+
             foreach (var objective in Objectives)
             {
-                players.AddRange(objective.GetPlayers(game));
+                players.AddRange(objective.Evaluate());
+            }
+
+            foreach (var power in Powers)
+            {
+                power.Evaluate(players);
             }
         }
     }
