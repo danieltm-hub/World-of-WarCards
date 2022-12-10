@@ -18,6 +18,7 @@ namespace AST
 
         public override void Evaluate()
         {
+            base.Evaluate();
             Value = (double)Left.Value / (double)Right.Value;
         }
     }

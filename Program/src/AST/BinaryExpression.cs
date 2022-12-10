@@ -23,6 +23,7 @@ namespace AST
             Right.Evaluate();
             Left.Evaluate();
         }
+        
 
         public override bool CheckSemantic(List<Error> errors)
         {

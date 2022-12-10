@@ -14,10 +14,11 @@ namespace AST
         public Or(Expression left, Expression right, CodeLocation location) : base(left, right, location)
         {
             Type = ExpressionType.Bool;
-            Value = 0;
+            Value = false;
         }
         public override void Evaluate()
         {
+            base.Evaluate();
             Value = (bool)Right.Value || (bool)Left.Value;
         }
 

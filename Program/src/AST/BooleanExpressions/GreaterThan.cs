@@ -14,10 +14,11 @@ namespace AST
         public GreaterThan(Expression left, Expression right, CodeLocation location) : base(left, right, location)
         {
             Type = ExpressionType.Bool;
-            Value = 0;
+            Value = false;
         }
         public override void Evaluate()
         {
+            base.Evaluate();
             Value = (double)Right.Value > (double)Left.Value;
         }
 
