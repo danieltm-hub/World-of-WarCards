@@ -14,6 +14,9 @@ namespace AST
     public abstract class Node 
     {
         public abstract bool CheckSemantic(List<Error> errors);
+       
+        public virtual NodeType Type { get; set; }
+
         protected CodeLocation Location;
 
         public Node(CodeLocation location)
@@ -21,4 +24,18 @@ namespace AST
             Location = location;
         }
     }
+    public enum NodeType
+    {
+        Text,
+        Number,
+        Error,
+        Bool,
+
+        Action,
+        Objective,
+        Power,
+
+    }
+
+
 }

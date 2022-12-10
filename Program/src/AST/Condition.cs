@@ -34,14 +34,19 @@ namespace AST
             bool right = (Right == null) ? true : Right.CheckSemantic(errors);
             bool condition = BooleanCondition.CheckSemantic(errors);
 
-            if (BooleanCondition.Type != ExpressionType.Bool)
+            if (BooleanCondition.Type != NodeType.Bool)
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve a boolean parameter"));
-
-                return false;
+                Type = Error;
             }
 
-            return left && right && condition;
+            if(left.Type != NodeType.Action || (Right!=null)? right.Type != NodeType.Action : false)
+            {
+                errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve an action parameter"));
+                Type = Error;
+            }
+
+            return Type != NodeType.Error && left && right && condition;
         }
     }
 }

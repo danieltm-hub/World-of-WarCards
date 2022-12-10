@@ -8,7 +8,7 @@ namespace AST
 
     public class Boolean : AtomicExpression
     {
-        public override ExpressionType Type { get => ExpressionType.Bool; set { } }
+        public override NodeType Type { get => NodeType.Bool; set { } }
         public override object Value { get; set; }
         public override void Evaluate() { }
         public Boolean(double value, CodeLocation location) : base(location)

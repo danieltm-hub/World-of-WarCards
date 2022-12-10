@@ -10,9 +10,10 @@ namespace AST
     public class Self : Objective
     {
         public Self(CodeLocation location) : base(location) { }
-        public override List<Player> Evaluate(Game game)
+
+        public override List<Player> Evaluate()
         {
-            return new List<Player>() { game.CurrentPlayer };
+            return new List<Player>() { GameManager.CurrentPlayer };
         }
     }
 

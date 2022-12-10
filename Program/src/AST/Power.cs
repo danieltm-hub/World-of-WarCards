@@ -8,6 +8,7 @@ namespace AST
 {
     public abstract class Power : Node
     {
+        public override NodeType Type => NodeType.Power;
         public Power(CodeLocation location) : base(location) { }
         public override bool CheckSemantic(List<Error> errors) => true;
         public abstract void Evaluate(IEnumerable<Player> players);

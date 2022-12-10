@@ -7,12 +7,12 @@ namespace AST
 {
     public class Equal : BinaryExpression
     {
-        public override Func<Expression, Expression, bool> IsValid => (left, right) => left.Type == ExpressionType.Number && right.Type == ExpressionType.Number;
-        public override ExpressionType Type { get; set; }
+        public override Func<Expression, Expression, bool> IsValid => (left, right) => left.Type == NodeType.Number && right.Type == NodeType.Number;
+        public override NodeType Type { get; set; }
         public override object Value { get; set; }
         public Equal(Expression left, Expression right, CodeLocation location) : base(left, right, location)
         {
-            Type = ExpressionType.Bool;
+            Type = NodeType.Bool;
             Value = false;
         }
         public override void Evaluate()

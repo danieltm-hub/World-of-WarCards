@@ -10,11 +10,11 @@ namespace AST
     {
         public Cos(Expression argument, CodeLocation location) : base(argument, location) { Value = 0; }
         
-        public override ExpressionType Type { get => ExpressionType.Number; set { } }
+        public override NodeType Type { get => NodeType.Number; set { } }
 
         public override object Value { get; set; }
 
-        public override Func<Expression, bool> IsValid => (e) => e.Type == ExpressionType.Number;
+        public override Func<Expression, bool> IsValid => (e) => e.Type == NodeType.Number;
 
         public override void Evaluate()
         {

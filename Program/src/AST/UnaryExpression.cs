@@ -23,7 +23,7 @@ namespace AST
             if (!IsValid(Argument) || !argument)
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Expected {Type} in expression"));
-                Type = ExpressionType.Error;
+                Type = NodeType.Error;
                 return false;
             }
             return argument;

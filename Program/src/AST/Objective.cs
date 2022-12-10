@@ -8,10 +8,10 @@ namespace AST
 {
     public abstract class Objective : Node
     {
-
+        public override NodeType Type => NodeType.Objective;
         public Objective(CodeLocation location) : base(location) { }
         public override bool CheckSemantic(List<Error> errors) => true;
-        public abstract List<Player> Evaluate(Game game);
+        public abstract List<Player> Evaluate();
     }
 
 }

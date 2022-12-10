@@ -10,11 +10,11 @@ namespace AST
     {
         public Not(Expression argument, CodeLocation location) : base(argument, location) { Value = false; }
         
-        public override ExpressionType Type { get => ExpressionType.Bool; set { } }
+        public override NodeType Type { get => NodeType.Bool; set { } }
 
         public override object Value { get; set; }
 
-        public override Func<Expression, bool> IsValid => (e) => e.Type == ExpressionType.Bool;
+        public override Func<Expression, bool> IsValid => (e) => e.Type == NodeType.Bool;
 
         public override void Evaluate()
         {
