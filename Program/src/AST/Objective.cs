@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameProgram;
 
 namespace AST
 {
-    public abstract class AtomicExpression : Expression
+    public abstract class Objective : Node
     {
-        public AtomicExpression(CodeLocation location) : base(location) { }
+
+        public Objective(CodeLocation location) : base(location) { }
         public override bool CheckSemantic(List<Error> errors) => true;
+        public abstract List<Player> Evaluate(Game game);
     }
+
 }
