@@ -31,5 +31,8 @@ static class Program
         Effector Effect = new Effector(new List<Objective>{new Self(new CodeLocation())}, new List<Power>{new ModifyHealth(Addcorner, new CodeLocation())}, new CodeLocation());
         
         Effect.Evaluate();
+
+        //Val's working
+        
     }
 }
