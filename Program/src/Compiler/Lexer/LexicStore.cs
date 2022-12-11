@@ -7,8 +7,8 @@ namespace Compiler
 {
     public static class LexicStore
     {
-        public static Dictionary<string, TokenType> Operators { get; private set; } = new Dictionary<string, TokenType>()
-        {
+        public static Dictionary<string, TokenType> Symbols { get; private set; } = new Dictionary<string, TokenType>()
+        { //all that starts with a special char
 
             {"+", TokenType.Sum},
             {"-", TokenType.Sub},
@@ -22,9 +22,9 @@ namespace Compiler
             {"||", TokenType.Or},
             {"(", TokenType.LParen},
             {")", TokenType.RParen},
+
             {"[", TokenType.LBracket},
             {"]", TokenType.RBracket},
-
             {"{", TokenType.LSquareBracket},
             {"}", TokenType.RSquareBracket},
             {",", TokenType.Comma},
@@ -49,7 +49,7 @@ namespace Compiler
 
         public static void RegistrerOperator(string op, TokenType type)
         {
-            Operators.Add(op, type);
+            Symbols.Add(op, type);
         }
         public static void RegistrerKeyword(string keyword, TokenType type)
         {
@@ -58,7 +58,7 @@ namespace Compiler
 
         public static bool MatchOperator(string op)
         {
-            return Operators.ContainsKey(op);
+            return Symbols.ContainsKey(op);
         }
 
         public static bool MatchKeyword(string keyword)

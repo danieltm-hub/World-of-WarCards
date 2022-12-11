@@ -20,7 +20,7 @@ namespace Compiler
 
         public override string ToString()
         {
-            return string.Format($"{Type} {Value}");
+            return string.Format($"Type:[{Type}] Value:[{Value}]");
         }
 
     }
@@ -46,13 +46,20 @@ namespace Compiler
 
         public char Peek()
         {
-            if (pos < 0 || pos >= Code.Length) throw new Exception("Index out in Peek in TokenReader");
+            if (pos < 0 || EOF) throw new Exception("Index out in Peek in TokenReader");
 
             return Code[pos];
         }
 
-        public bool EOF => pos >= Code.Length;
+        public bool Reset(int backpos)
+        {
+            if (backpos < 0 || Code.Length <= backpos) return false;
+            pos = backpos;
+            return true;
+        }
 
+        public bool IOF => pos == 0;
+        public bool EOF => pos >= Code.Length;
         public bool EOL => EOF || Code[pos] == '\n';
 
         public bool ContinuesWith(string prefix)
@@ -67,20 +74,97 @@ namespace Compiler
             return true;
         }
 
-        public bool Match (string prefix)
+        public bool Match(string prefix, bool nextpos = true)
         {
             if (ContinuesWith(prefix))
             {
-                pos += prefix.Length;
+                if (nextpos) pos += prefix.Length;
                 return true;
             }
             return false;
         }
 
-       //continuar el codigo, basandonos en lo que hizo el profe
-    }
+        public bool ValidIdCharacter(char c, bool begining)
+        {
+            return c == '_' || begining ? char.IsLetter(c) : char.IsLetterOrDigit(c);
+        }
 
-    
+        public bool ReadID(out string id)
+        {
+            id = "";
+            while (!EOL && ValidIdCharacter(Peek(), id.Length == 0))
+                id += ReadAny();
+
+            return id.Length > 1;
+        }
+
+        public char ReadAny()
+        {
+            if (EOF) throw new Exception("EOF limit Exceed in ReadAny, error in code");
+
+            if (EOF)
+            {
+                line++;
+                lastLB = pos;
+            }
+
+            return Code[pos++];
+        }
+
+        public char ReadBack()
+        {
+            if (IOF) throw new Exception("Reading out Code input, in ReadBack pos == 0");
+            return Code[pos--];
+        }
+        public bool ReadNumber(out string number)
+        {
+            number = "";
+
+            //negative, lo que pense tambier era hacer un valid number char como en valid id number
+
+            while (!EOL && char.IsDigit(Peek())) number += ReadAny();
+
+            if (number.Length == 0) return false; //case .231
+
+            if (!EOL && Match("."))
+            {
+                number += ".";
+
+                int partial = number.Length;
+
+                while (!EOL && char.IsDigit(Peek())) number += ReadAny();
+
+                if (number.Length == partial) return false; //case 1334. 
+            }
+
+            return true;
+        }
+
+        public bool ReadUntil(string end, out string text, bool include = false)
+        {
+            text = "";
+            while (!Match(end))
+            {
+                if (EOL) return false;
+
+                text += ReadAny();
+            }
+
+            text += (include) ? end : "";
+
+            return true;
+        }
+
+        public bool ReadWhiteSpace()
+        {
+            if (char.IsWhiteSpace(Peek()))
+            {
+                ReadAny();
+                return true;
+            }
+            return false;
+        }
+    }
 
     public enum TokenType
     {

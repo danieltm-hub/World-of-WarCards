@@ -1,5 +1,6 @@
 ﻿using AST;
 using GameProgram;
+using Compiler;
 
 static class Program
 {
@@ -28,11 +29,25 @@ static class Program
         NotExpression.Evaluate();
         Console.WriteLine(NotExpression.Value);
 
-        Effector Effect = new Effector(new List<Objective>{new Self(new CodeLocation())}, new List<Power>{new ModifyHealth(Addcorner, new CodeLocation())}, new CodeLocation());
-        
+        Effector Effect = new Effector(new List<Objective> { new Self(new CodeLocation()) }, new List<Power> { new ModifyHealth(Addcorner, new CodeLocation()) }, new CodeLocation());
+
         Effect.Evaluate();
 
         //Val's working
-        
+
+        string randomInput = "uno dos tres probando 5 + 6 1-2 1*2 = -1 1.2 -1.2";
+        List<Error> tempErros = new List<Error>();
+        List<Token> tokens = Analyzer.GetTokens("", randomInput, tempErros);
+
+        foreach(var token in tokens)
+        {
+            Console.WriteLine(token.ToString());
+        }
+        foreach(var error in tempErros)
+        {
+            Console.WriteLine(error.ToString());
+        }
+
+
     }
 }
