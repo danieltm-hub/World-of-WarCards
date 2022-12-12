@@ -12,7 +12,7 @@ namespace Compiler
         {
             List<Token> tokens = new List<Token>();
 
-            source = source.ToLower();
+            source = source.ToLower(); // our language is case insensitive
 
             TokenReader reader = new TokenReader(filename, source);
 

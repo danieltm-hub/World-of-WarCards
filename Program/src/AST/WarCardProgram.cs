@@ -9,7 +9,8 @@ namespace AST
         public WarCardProgram(CodeLocation location) : base(location)
         {
             Errors = new List<Error>();
-            //aqui vendrian la inicializacion de los diccionarios correspondientes
+            Cards = new Dictionary<string, Card>();
+            Errors = new List<Error>();
         }
         public void AddCard(Card card)
         {
@@ -18,7 +19,7 @@ namespace AST
 
             if (Cards.ContainsKey(card.Name))
             {
-                Errors.Add(new Error("Card " + card.Name + " already exists", card.Location));
+                Errors.Add(new Error(ErrorCode.Invalid, card.Location, $"{card.Name} Card already exists"));
             }
             else
             {
