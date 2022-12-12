@@ -19,14 +19,13 @@ namespace Compiler
         public bool OUT(int k = 0) => (pos + k >= Tokens.Count || pos + k < 0);
         public bool MoveNext(int k = 1)
         {
+            if (OUT(k)) return false;
             pos += k;
-            if (OUT()) throw new Exception("Index OUT in MoveNext, TokenStream");
             return true;
         }
         public bool MoveBack(int k = 1)
         {
-
-            if (OUT(k)) throw new Exception("Index OUT in MoveBack TokenStream");
+            if (OUT(-k)) return false;
             pos -= k;
             return true;
         }

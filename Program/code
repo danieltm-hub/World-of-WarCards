@@ -1,1 +1,8 @@
-this is a
+Card Name
+{
+    { 
+        Damage 20, Damage 1 ;
+        Self;
+    }
+};
+
