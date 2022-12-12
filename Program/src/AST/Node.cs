@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace AST
 {
     public struct CodeLocation{
-        string File;
-        int Line;
-        int Column;
+        public string File{get; private set;}
+        public int Line{get; private set;}
+        public int Column{get; private set;}
 
         public CodeLocation (string file, int line, int column)
         {

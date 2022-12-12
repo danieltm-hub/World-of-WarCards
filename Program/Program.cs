@@ -35,9 +35,10 @@ static class Program
 
         //Val's working
 
-        string randomInput = "uno dos tres probando 5 + 6 1-2 1*2 = -1 1.2 -1.2";
+        string randomInput = File.ReadAllText("./code");
+
         List<Error> tempErros = new List<Error>();
-        List<Token> tokens = Analyzer.GetTokens("", randomInput, tempErros);
+        List<Token> tokens = Analyzer.GetTokens("code", randomInput, tempErros);
 
         foreach(var token in tokens)
         {

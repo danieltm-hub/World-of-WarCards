@@ -29,6 +29,8 @@ namespace Compiler
             {"}", TokenType.RSquareBracket},
             {",", TokenType.Comma},
             {";", TokenType.Breaker},
+
+            {"\"", TokenType.DoubleCommas},
         };
         public static Dictionary<string, TokenType> Keywords { get; private set; } = new Dictionary<string, TokenType>()
         {
@@ -40,6 +42,7 @@ namespace Compiler
             {"cos", TokenType.Cos},
             {"not", TokenType.Not},
 
+            {"card", TokenType.Card},
             //Objectives
             {"Self", TokenType.Objective},
 

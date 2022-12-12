@@ -7,17 +7,22 @@ namespace AST
 {
     public class Error
     {
-        public ErrorCode Code {get; private set;}
+        public ErrorCode Argument { get; private set; }
 
-        public string Argument {get; private set;}
+        public string Code { get; private set; }
 
-        public CodeLocation Location {get; private set;}
+        public CodeLocation Location { get; private set; }
 
-        public Error(ErrorCode code, CodeLocation location, string argument)
+        public Error(ErrorCode argument, CodeLocation location, string code )
         {
             Code = code;
             Location = location;
             Argument = argument;
+        }
+
+        public override string ToString()
+        {
+            return $"Error: {Argument} {Code} at line:{Location.Line} Column:{Location.Column} in file:{Location.File}";
         }
     }
 
@@ -27,8 +32,4 @@ namespace AST
         Invalid,
     }
 
-    public class Default
-    {
-        public Default(){}
-    }
 }

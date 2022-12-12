@@ -20,7 +20,7 @@ namespace Compiler
 
         public override string ToString()
         {
-            return string.Format($"Type:[{Type}] Value:[{Value}]");
+            return $"Type:[{Type}] Value:[{Value}]";
         }
 
     }
@@ -102,7 +102,7 @@ namespace Compiler
         {
             if (EOF) throw new Exception("EOF limit Exceed in ReadAny, error in code");
 
-            if (EOF)
+            if (EOL)
             {
                 line++;
                 lastLB = pos;
@@ -196,6 +196,7 @@ namespace Compiler
         RSquareBracket,
         Breaker,
         Comma,
+        DoubleCommas,
 
         Ignore,
 
@@ -207,5 +208,7 @@ namespace Compiler
         Symbol,
         Epsilon,
 
+
+        Card,
     }
 }

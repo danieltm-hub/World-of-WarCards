@@ -21,6 +21,7 @@ namespace Compiler
         {
             pos += k;
             if (OUT()) throw new Exception("Index OUT in MoveNext, TokenStream");
+            return true;
         }
         public bool MoveBack(int k = 1)
         {
@@ -43,7 +44,7 @@ namespace Compiler
 
         public Token Peek(int k = 0)
         {
-            if (WillOut(k)) throw new Exception("Index OUT in Peek, TokenStream");
+            if (OUT(k)) throw new Exception("Index OUT in Peek, TokenStream");
 
             return Tokens[pos + k];
         }
