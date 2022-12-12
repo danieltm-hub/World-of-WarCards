@@ -11,7 +11,7 @@ namespace Compiler
         public TokenStream(List<Token> tokens)
         {
             Tokens = tokens;
-            pos = 0;
+            pos = -1;
         }
 
         public bool END => pos >= Tokens.Count - 1;

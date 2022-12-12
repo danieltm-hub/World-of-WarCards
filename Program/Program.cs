@@ -6,7 +6,43 @@ static class Program
 {
     static void Main(string[] args)
     {
-        Expression Sum = new Add(new Number(1, new CodeLocation()), new Number(2, new CodeLocation()), new CodeLocation());
+        string randomInput = File.ReadAllText("./code");
+
+        List<Error> tempErros = new List<Error>();
+        List<Token> tokens = Analyzer.GetTokens("code", randomInput, tempErros);
+
+        foreach(var token in tokens)
+        {
+            Console.WriteLine(token.ToString());
+        }
+        foreach(var error in tempErros)
+        {
+            Console.WriteLine(error.ToString());
+        }
+
+        Parser parseExpression = new Parser(new TokenStream(tokens));
+        Expression? expression = parseExpression.ParseExpressionCall(out tempErros);
+        
+        foreach(Error error in tempErros)
+        {
+            System.Console.WriteLine(error);
+        }
+
+        if(expression!=null)
+        {
+            expression.Evaluate();
+            Console.WriteLine(expression.Value);
+        }
+        else
+        {
+            System.Console.WriteLine("Returning null");
+        }
+    }
+}
+
+/*
+Comments region
+Expression Sum = new Add(new Number(1, new CodeLocation()), new Number(2, new CodeLocation()), new CodeLocation());
         Expression Div = new Div(new Number(1, new CodeLocation()), new Number(2, new CodeLocation()), new CodeLocation());
         //System.Console.WriteLine(Div.CheckSemantic(new List<Error>()));
         Expression Greater = new GreaterThan(Sum, Div, new CodeLocation());
@@ -33,28 +69,7 @@ static class Program
 
         Effect.Evaluate();
 
-        //Val's working
 
-        string randomInput = File.ReadAllText("./code");
 
-        List<Error> tempErros = new List<Error>();
-        List<Token> tokens = Analyzer.GetTokens("code", randomInput, tempErros);
 
-        foreach(var token in tokens)
-        {
-            Console.WriteLine(token.ToString());
-        }
-        foreach(var error in tempErros)
-        {
-            Console.WriteLine(error.ToString());
-        }
-
-        Parser parseExpression = new Parser(new TokenStream(tokens));
-        Expression? expression = parseExpression.ParseExpressionCall(tempErros);
-        if(expression!=null)
-        {
-            expression.Evaluate();
-            Console.WriteLine(expression.Value);
-        }
-    }
-}
+*/
