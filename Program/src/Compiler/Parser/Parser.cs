@@ -47,7 +47,6 @@ namespace Compiler
             if (Reader.Match(TokenType.ID))
             {
                 name = Reader.Peek().Value;
-                Reader.MoveNext();
             }
             else
             {
@@ -78,27 +77,13 @@ namespace Compiler
 
         public Effector ParseEffector(List<Error> CompilerErrors)
         {
-            //first token is a Power
             CodeLocation location = Reader.Peek().Location;
-
-            Power power = new NullPower(new CodeLocation());
 
             Objective objective = new NullObjective(new CodeLocation());
 
-            while (!Reader.END && !Reader.Match(TokenType.Power))
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, Reader.Peek().Value));
-                Reader.MoveNext();
-            }
-
-
-            if (Reader.Match(TokenType.Power))
-            {
-                power = ParsePower(CompilerErrors);
-            }
-
-
-            //second token is Objective
+            Power power = new NullPower(new CodeLocation());
+            
+            //first token is Objective
 
             while (!Reader.END && !Reader.Match(TokenType.Objective))
             {
@@ -108,6 +93,18 @@ namespace Compiler
             if (Reader.Match(TokenType.Objective))
             {
                 objective = ParseObjective(CompilerErrors);
+            }
+
+            //second token is Power
+
+            while (!Reader.END && !Reader.Match(TokenType.Power))
+            {
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, Reader.Peek().Value));
+                Reader.MoveNext();
+            }
+            if (Reader.Match(TokenType.Power))
+            {
+                power = ParsePower(CompilerErrors);
             }
 
             return new Effector(new List<Objective> { objective }, new List<Power> { power }, location);
@@ -219,9 +216,5 @@ namespace Compiler
 
             return BacklvlMaker(opBuild(left, right, location));
         }
-
-
-
-
     }
 }

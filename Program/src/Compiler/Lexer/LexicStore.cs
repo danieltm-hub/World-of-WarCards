@@ -43,11 +43,12 @@ namespace Compiler
             {"not", TokenType.Not},
 
             {"card", TokenType.Card},
+            
             //Objectives
-            {"Self", TokenType.Objective},
+            {"self", TokenType.Objective},
 
             //Powers
-            {"Damage", TokenType.Power},
+            {"damage", TokenType.Power},
         };
 
         public static void RegistrerOperator(string op, TokenType type)

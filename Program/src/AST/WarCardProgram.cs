@@ -10,7 +10,6 @@ namespace AST
         {
             Errors = new List<Error>();
             Cards = new Dictionary<string, Card>();
-            Errors = new List<Error>();
         }
         public void AddCard(Card card)
         {
