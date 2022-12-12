@@ -14,6 +14,11 @@ namespace Compiler
             Reader = reader;
         }
 
+        public Expression? ParseExpressionCall(List<Error> CompileErrors)
+        {
+            return ParseExpression();
+        }
+
         public WarCardProgram ParseProgram(List<Error> CompilerErrors)
         {
             WarCardProgram program = new WarCardProgram(new CodeLocation());
@@ -40,37 +45,21 @@ namespace Compiler
 
             Effector effect = new Effector(new List<Objective>(), new List<Power>(), new CodeLocation());
 
-            //current token is Card
-            //Reader.MoveNext();
+            // Current Token is Card
 
-            //name
-            if (Reader.Match(TokenType.ID))
-            {
-                name = Reader.Peek().Value;
-            }
-            else
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "Card Name"));
-            }
+            // Name
+            if (CheckToken(TokenType.ID, CompilerErrors)) name = Reader.Peek().Value;
 
+
+            // Add cycle to read multiple effects
             // {
-            if (Reader.Match(TokenType.LSquareBracket))
-            {
-                Reader.MoveNext();
-            }
-            else
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "{"));
-            }
+            CheckToken(TokenType.LSquareBracket, CompilerErrors);
 
-            //Powers (here I have two options, reads to ; or reads to '\n', now I choose to read to ';')
+            // Effect : Check to stop when missing ;
             effect = ParseEffector(CompilerErrors);
 
             // }
-            if (!Reader.Match(TokenType.RSquareBracket))
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "}"));
-            }
+            CheckToken(TokenType.RSquareBracket, CompilerErrors);
 
             return new Card(name, effect, Reader.Peek().Location);
         }
@@ -83,33 +72,24 @@ namespace Compiler
 
             Power power = new NullPower(new CodeLocation());
             
-            //first token is Objective
+            //first token is Objective, add cycle to read multiple objectives
+            if (CheckToken(TokenType.Objective, CompilerErrors)) objective = ParseObjective(CompilerErrors);
 
-            while (!Reader.END && !Reader.Match(TokenType.Objective))
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, Reader.Peek().Value));
-                Reader.MoveNext();
-            }
-            if (Reader.Match(TokenType.Objective))
-            {
-                objective = ParseObjective(CompilerErrors);
-            }
-
-            //second token is Power
-
-            while (!Reader.END && !Reader.Match(TokenType.Power))
-            {
-                CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, Reader.Peek().Value));
-                Reader.MoveNext();
-            }
-            if (Reader.Match(TokenType.Power))
-            {
-                power = ParsePower(CompilerErrors);
-            }
+            //second token is Power, add cycle to read multiple powers
+            if (CheckToken(TokenType.Power, CompilerErrors)) power = ParsePower(CompilerErrors);
 
             return new Effector(new List<Objective> { objective }, new List<Power> { power }, location);
         }
 
+        public Objective ParseObjective(List<Error> CompilerErrors)
+        {
+            //current token is Objective
+            CodeLocation location = Reader.Peek().Location;
+            Reader.MoveNext();
+
+            //Specific Objective to Parsed
+            throw new Exception("ParseObjective was't implemented");
+        }
         public Power ParsePower(List<Error> CompilerErrors)
         {
             //current token is Power
@@ -120,18 +100,17 @@ namespace Compiler
 
             throw new Exception("ParsePower was't implemented");
         }
-        public Objective ParseObjective(List<Error> CompilerErrors)
-        {
-            //current token is Objective
-            CodeLocation location = Reader.Peek().Location;
-            Reader.MoveNext();
 
-            //Specific Objective to Parsed
-            throw new Exception("ParseObjective was't implemented");
+        public bool CheckToken(TokenType token, List<Error> CompilerErrors, bool pass = true)
+        {
+            if (Reader.Match(token, pass)) return true;
+           
+            CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, Reader.Peek().Value));
+            return false;
         }
 
 
-        //Parser Expressions
+        #region Expression
         private Expression? ParseExpression()
         {
             return ParseExpressionLv1(null);
@@ -217,4 +196,5 @@ namespace Compiler
             return BacklvlMaker(opBuild(left, right, location));
         }
     }
+    #endregion
 }

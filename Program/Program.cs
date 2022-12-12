@@ -49,6 +49,12 @@ static class Program
             Console.WriteLine(error.ToString());
         }
 
-
+        Parser parseExpression = new Parser(new TokenStream(tokens));
+        Expression? expression = parseExpression.ParseExpressionCall(tempErros);
+        if(expression!=null)
+        {
+            expression.Evaluate();
+            Console.WriteLine(expression.Value);
+        }
     }
 }
