@@ -29,7 +29,7 @@ namespace Compiler
 
                     else
                         tokens.Add(new Token(TokenType.ID, value, reader.Location));
-
+        
                     continue;
                 }
 

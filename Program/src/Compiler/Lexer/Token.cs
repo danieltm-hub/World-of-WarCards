@@ -29,7 +29,7 @@ namespace Compiler
     {
         string Filename;
         string Code;
-        int pos;
+        public int pos;
         int line;
         int lastLB;
 
@@ -95,7 +95,7 @@ namespace Compiler
             while (!EOL && ValidIdCharacter(Peek(), id.Length == 0))
                 id += ReadAny();
 
-            return id.Length > 1;
+            return id.Length > 0;
         }
 
         public char ReadAny()
