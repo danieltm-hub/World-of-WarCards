@@ -128,39 +128,56 @@ namespace Compiler
             return newExpression;
         }
         private Expression? ParseExpressionLv1Maker(Expression? left)
-        { // + -
-            Expression? exp =
+        {   // + - > < == !=  >= <= 
+            Expression? exp = // +
                 ParseBinaryOp(left, TokenType.Sum, (left, right, location) => new Add(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
-            exp =
+            exp = // -
                 ParseBinaryOp(left, TokenType.Sub, (left, right, location) => new Sub(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
-            // < > <= >= == != 
-            exp =
+            // booleans
+            exp = // <
                 ParseBinaryOp(left, TokenType.Smaller, (left, right, location) => new SmallerThan(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
-            exp =
+            exp = // >
                 ParseBinaryOp(left, TokenType.Greater, (left, right, location) => new GreaterThan(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
-            exp =
+            exp = // == 
                 ParseBinaryOp(left, TokenType.Equal, (left, right, location) => new Equal(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
-            
+            exp = // !=
+                ParseBinaryOp(left, TokenType.NotEqual, (left, right, location) => new Not(new Equal(left, right, location), location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
+
+            if (exp != null) return exp;
+
+            exp = // <=
+                ParseBinaryOp(left, TokenType.SmallerEqual, (left, right, location) => new Or(new SmallerThan(left, right, location), new Equal(left, right, location), location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
+
+            if (exp != null) return exp;
+
+            exp = //>=
+                ParseBinaryOp(left, TokenType.GreaterEqual, (left, right, location) => new Or(new GreaterThan(left, right, location), new Equal(left, right, location), location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
+
+            if (exp != null) return exp;
+
             return left;
         }
 
@@ -171,15 +188,27 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv2Maker(Expression? left)
-        { // * /
-            Expression? exp =
+        {   // * / && ||
+            Expression? exp = // *
                 ParseBinaryOp(left, TokenType.Mul, (left, right, location) => new Mult(left, right, location),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
 
             if (exp != null) return exp;
 
-            exp =
+            exp = // /
                 ParseBinaryOp(left, TokenType.Div, (left, right, location) => new Div(left, right, location),
+                (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
+
+            if (exp != null) return exp;
+
+            exp = // &&
+                ParseBinaryOp(left, TokenType.And, (left, right, location) => (new And(left, right, location)),
+                (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
+
+            if (exp != null) return exp;
+
+            exp = // ||
+                ParseBinaryOp(left, TokenType.And, (left, right, location) => (new Or(left, right, location)),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
 
             if (exp != null) return exp;
@@ -206,21 +235,26 @@ namespace Compiler
 
         private Expression? ParseExpressionLv4(Expression? left)
         {
-            //sen cos
             Expression? newLeft = ParseExpressionLv5(left);
             return ParseExpressionLv4Maker(newLeft);
         }
 
         private Expression? ParseExpressionLv4Maker(Expression? left)
-        { //se=in cos
-            Expression? exp =
+        {   //sin cos !
+            Expression? exp = //Sen
                 ParseUnaryOp(left, TokenType.Sin, (right, location) => new Sin(right, location),
                 (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
 
             if (exp != null) return exp;
 
-            exp =
+            exp = // Cos
                 ParseUnaryOp(left, TokenType.Cos, (right, location) => new Cos(right, location),
+                (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
+
+            if (exp != null) return exp;
+
+            exp = // !
+                ParseUnaryOp(left, TokenType.Cos, (right, location) => new Not(right, location),
                 (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
 
             if (exp != null) return exp;
@@ -244,16 +278,23 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv6(Expression? left) //not included text
-        { //number
-            Expression? exp = ParseNumber();
+        { //number bool
+            Expression? exp =
+                ParseAtomicExpression(TokenType.Number, (atomic) => (new Number(double.Parse(atomic.Value), atomic.Location)));
+
+            if (exp != null) return exp;
+
+            exp =
+                ParseAtomicExpression(TokenType.Bool, (atomic) => (new Bool(atomic.Value, atomic.Location)));
+
             return (exp != null) ? exp : left;
         }
 
-        private Expression? ParseNumber()
+        private Expression? ParseAtomicExpression(TokenType atomicType, Func<Token, Expression> getExpression)
         {
-            if (Reader.Match(TokenType.Number))
+            if (Reader.Match(atomicType))
             {
-                return new Number(double.Parse(Reader.Peek().Value), Reader.Peek().Location);
+                return getExpression(Reader.Peek());
             }
             return null;
         }
