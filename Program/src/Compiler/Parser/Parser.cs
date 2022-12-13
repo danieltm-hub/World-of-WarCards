@@ -141,6 +141,26 @@ namespace Compiler
 
             if (exp != null) return exp;
 
+            // < > <= >= == != 
+            exp =
+                ParseBinaryOp(left, TokenType.Smaller, (left, right, location) => new SmallerThan(left, right, location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+
+            if (exp != null) return exp;
+
+            exp =
+                ParseBinaryOp(left, TokenType.Greater, (left, right, location) => new GreaterThan(left, right, location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+
+            if (exp != null) return exp;
+
+            exp =
+                ParseBinaryOp(left, TokenType.Equal, (left, right, location) => new Equal(left, right, location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
+
+            if (exp != null) return exp;
+
+            
             return left;
         }
 

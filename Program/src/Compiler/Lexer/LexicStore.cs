@@ -15,7 +15,11 @@ namespace Compiler
             {"*", TokenType.Mul},
             {"/", TokenType.Div},
             {"^", TokenType.Pow},
-            {"=", TokenType.Equal},
+            {"=", TokenType.Assign},
+            {"==", TokenType.Equal},
+            {"!=", TokenType.NotEqual},
+            {"<=", TokenType.SmallerEqual},
+            {">=", TokenType.GreaterEqual},
             {"<", TokenType.Smaller},
             {">", TokenType.Greater},
             {"&&", TokenType.And},
@@ -71,7 +75,7 @@ namespace Compiler
         }
     }
 
-     public enum TokenType
+    public enum TokenType
     {
         // Atomic Expressions
         Number,
@@ -88,8 +92,11 @@ namespace Compiler
         Div,
         Pow,
         Equal,
+        NotEqual,
         Smaller,
+        SmallerEqual,
         Greater,
+        GreaterEqual,
         And,
         Or,
 
@@ -104,6 +111,7 @@ namespace Compiler
         DoubleCommas,
 
         Ignore,
+        Assign,
 
         Effector,
         Power,
