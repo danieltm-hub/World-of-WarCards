@@ -127,7 +127,7 @@ namespace Compiler
             return newExpression;
         }
         private Expression? ParseExpressionLv1Maker(Expression? left)
-        {
+        { // + -
             Expression? exp =
                 ParseBinaryOp(left, TokenType.Sum, (left, right, location) => new Add(left, right, location),
                 (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1(left));
@@ -150,7 +150,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv2Maker(Expression? left)
-        {
+        { // * /
             Expression? exp =
                 ParseBinaryOp(left, TokenType.Mul, (left, right, location) => new Mult(left, right, location),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
@@ -166,8 +166,64 @@ namespace Compiler
             return left;
         }
 
-        private Expression? ParseExpressionLv3(Expression? left) //not included text
+        private Expression? ParseExpressionLv3(Expression? left)
         {
+            Expression? newLeft = ParseExpressionLv4(left);
+            return ParseExpressionLv3Maker(newLeft);
+        }
+
+        private Expression? ParseExpressionLv3Maker(Expression? left)
+        {   // pow
+            Expression? exp =
+                ParseBinaryOp(left, TokenType.Pow, (left, right, location) => new Pow(left, right, location),
+                (left) => (ParseExpressionLv4(left)), (left) => (ParseExpressionLv3Maker(left)));
+
+            if (exp != null) return exp;
+
+            return left;
+        }
+
+        private Expression? ParseExpressionLv4(Expression? left)
+        {
+            //sen cos
+            Expression? newLeft = ParseExpressionLv5(left);
+            return ParseExpressionLv4Maker(newLeft);
+        }
+
+        private Expression? ParseExpressionLv4Maker(Expression? left)
+        { //se=in cos
+            Expression? exp =
+                ParseUnaryOp(left, TokenType.Sin, (right, location) => new Sin(right, location),
+                (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
+
+            if (exp != null) return exp;
+
+            exp =
+                ParseUnaryOp(left, TokenType.Cos, (right, location) => new Cos(right, location),
+                (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
+
+            if (exp != null) return exp;
+
+            return left;
+        }
+        private Expression? ParseExpressionLv5(Expression? left)
+        {
+            Expression? newLeft = ParseExpressionLv6(left);
+            return ParseExpressionLv5Maker(newLeft);
+        }
+
+        private Expression? ParseExpressionLv5Maker(Expression? left)
+        { // ()
+            if (!Reader.Match(TokenType.LParen)) return left;
+
+            Expression? exp = ParseExpression();
+            CheckToken(TokenType.RParen);
+
+            return (exp != null) ? exp : left;
+        }
+
+        private Expression? ParseExpressionLv6(Expression? left) //not included text
+        { //number
             Expression? exp = ParseNumber();
             return (exp != null) ? exp : left;
         }
@@ -186,7 +242,7 @@ namespace Compiler
              Func<Expression?, Expression?> NextlvlParser, Func<Expression?, Expression?> BacklvlMaker)
         {
             if (left == null || !Reader.Match(oper)) return null;
-            
+
             CodeLocation location = Reader.Peek().Location;
 
             Expression? right = NextlvlParser(null);
@@ -196,13 +252,31 @@ namespace Compiler
             if (right == null)
             {
                 System.Console.WriteLine(Reader.Peek().Type);
-                CompilerErrors.Add(new Error(ErrorCode.Invalid,location,"Expected an expression"));
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, "Expected an expression"));
                 Reader.MoveBack(2);
                 return null;
             }
 
             return BacklvlMaker(opBuild(left, right, location));
         }
+
+        private Expression? ParseUnaryOp(Expression? left, TokenType oper, Func<Expression, CodeLocation, Expression> opBuild,
+                 Func<Expression?, Expression?> NextlvlParser, Func<Expression?, Expression?> BacklvlMaker)
+        {
+            if (left != null || !Reader.Match(oper)) return null;
+
+            CodeLocation location = Reader.Peek().Location;
+            Expression? right = NextlvlParser(null);
+
+            if (right == null)
+            {
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, "Expected an expression"));
+                Reader.MoveBack(1);
+                return null;
+            }
+
+            return BacklvlMaker(opBuild(right, location));
+        }
+        #endregion
     }
-    #endregion
 }
