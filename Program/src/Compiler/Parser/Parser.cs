@@ -113,14 +113,13 @@ namespace Compiler
             return false;
         }
 
-
         #region Expression
         //a partir de este commit voy implemtar las expresiones booleanas
         private Expression? ParseExpression()
         {
             return ParseExpressionLv1(null);
         }
-        
+
         private Expression? ParseExpressionLv1(Expression? left)
         {
             Expression? newLeft = ParseExpressionLv2(left);
@@ -289,7 +288,12 @@ namespace Compiler
             exp = // true false
                 ParseAtomicExpression(TokenType.Bool, (atomic) => (new Bool(bool.Parse(atomic.Value), atomic.Location)));
 
-            return (exp != null) ? exp : left;
+            if (exp != null) return exp;
+            
+            exp = // text
+                ParseAtomicExpression(TokenType.Text, (atomic) => (new Text(atomic.Value, atomic.Location)));
+
+            return (exp != null) ? exp : left;    
         }
 
         private Expression? ParseAtomicExpression(TokenType atomicType, Func<Token, Expression> getExpression)
