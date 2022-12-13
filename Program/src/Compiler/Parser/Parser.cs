@@ -279,13 +279,13 @@ namespace Compiler
 
         private Expression? ParseExpressionLv6(Expression? left) //not included text
         { //number bool
-            Expression? exp =
+            Expression? exp = // number
                 ParseAtomicExpression(TokenType.Number, (atomic) => (new Number(double.Parse(atomic.Value), atomic.Location)));
 
             if (exp != null) return exp;
 
-            exp =
-                ParseAtomicExpression(TokenType.Bool, (atomic) => (new Bool(atomic.Value, atomic.Location)));
+            exp = // true false
+                ParseAtomicExpression(TokenType.Bool, (atomic) => (new Bool(bool.Parse(atomic.Value), atomic.Location)));
 
             return (exp != null) ? exp : left;
         }
