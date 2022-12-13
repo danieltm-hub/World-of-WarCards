@@ -10,20 +10,24 @@ namespace Compiler
         public static Dictionary<string, TokenType> Symbols { get; private set; } = new Dictionary<string, TokenType>()
         { //all that starts with a special char
 
+            //Composite Signs
+            {"==", TokenType.Equal},
+            {"!=", TokenType.NotEqual},
+            {"<=", TokenType.SmallerEqual},
+            {">=", TokenType.GreaterEqual},
+            {"&&", TokenType.And},
+            {"||", TokenType.Or},
+            
+            //Simple Signs
             {"+", TokenType.Sum},
             {"-", TokenType.Sub},
             {"*", TokenType.Mul},
             {"/", TokenType.Div},
             {"^", TokenType.Pow},
             {"=", TokenType.Assign},
-            {"==", TokenType.Equal},
-            {"!=", TokenType.NotEqual},
-            {"<=", TokenType.SmallerEqual},
-            {">=", TokenType.GreaterEqual},
+            {"!", TokenType.Not},
             {"<", TokenType.Smaller},
             {">", TokenType.Greater},
-            {"&&", TokenType.And},
-            {"||", TokenType.Or},
             {"(", TokenType.LParen},
             {")", TokenType.RParen},
 

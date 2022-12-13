@@ -208,7 +208,7 @@ namespace Compiler
             if (exp != null) return exp;
 
             exp = // ||
-                ParseBinaryOp(left, TokenType.And, (left, right, location) => (new Or(left, right, location)),
+                ParseBinaryOp(left, TokenType.Or, (left, right, location) => (new Or(left, right, location)),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
 
             if (exp != null) return exp;
@@ -254,7 +254,7 @@ namespace Compiler
             if (exp != null) return exp;
 
             exp = // !
-                ParseUnaryOp(left, TokenType.Cos, (right, location) => new Not(right, location),
+                ParseUnaryOp(left, TokenType.Not, (right, location) => new Not(right, location),
                 (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
 
             if (exp != null) return exp;
@@ -314,7 +314,7 @@ namespace Compiler
             if (right == null)
             {
                 System.Console.WriteLine(Reader.Peek().Type);
-                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, "Expected an expression"));
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, $"Expected expression after {oper}"));
                 Reader.MoveBack(2);
                 return null;
             }
@@ -332,7 +332,7 @@ namespace Compiler
 
             if (right == null)
             {
-                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, "Expected an expression"));
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, location, $"Expected expression after {oper}"));
                 Reader.MoveBack(1);
                 return null;
             }
