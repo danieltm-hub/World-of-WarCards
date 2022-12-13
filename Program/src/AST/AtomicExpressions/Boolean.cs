@@ -11,7 +11,7 @@ namespace AST
         public override NodeType Type { get => NodeType.Bool; set { } }
         public override object Value { get; set; }
         public override void Evaluate() { }
-        public Bool(double value, CodeLocation location) : base(location)
+        public Bool(bool value, CodeLocation location) : base(location)
         {
             Value = value;
         }
