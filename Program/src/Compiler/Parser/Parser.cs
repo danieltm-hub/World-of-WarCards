@@ -74,7 +74,7 @@ namespace Compiler
 
             Objective objective = new NullObjective(new CodeLocation());
 
-            Power power = new NullPower(new CodeLocation());
+            Power power = new NullPower(new List<Expression>(), new CodeLocation());
 
             //first token is Objective, add cycle to read multiple objectives
             if (CheckToken(TokenType.Objective)) objective = ParseObjective();

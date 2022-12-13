@@ -8,15 +8,13 @@ namespace AST
 {
     public class ModifyHealth : Power
     {
-        private Expression Amount;
-
-        public ModifyHealth(Expression amount, CodeLocation location) : base(location)
-        {
-            Amount = amount;
-        }
+        public override List<NodeType> ExpectedTypes => new List<NodeType>() {NodeType.Number};
+        public ModifyHealth(List<Expression> parameters, CodeLocation location) : base(parameters,location) {}
 
         public override void Evaluate(IEnumerable<Player> players)
         {
+            Expression Amount = Parameters[0];
+
             foreach (var player in players)
             {
                 Amount.Evaluate(); //lo pusimos aqui dntro por si luego usa variables del enemigo
@@ -24,5 +22,6 @@ namespace AST
                 System.Console.WriteLine(Amount.Value);
             }
         }
+       
     }
 }

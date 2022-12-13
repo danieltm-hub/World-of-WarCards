@@ -8,7 +8,8 @@ namespace AST
 {
     public class NullPower : Power
     {
-        public NullPower(CodeLocation location) : base(location) {}
+        public override List<NodeType> ExpectedTypes => new List<NodeType>();
+        public NullPower(List<Expression> parameters, CodeLocation location) : base(parameters, location) {}
 
         public override void Evaluate(IEnumerable<Player> players)
         {
