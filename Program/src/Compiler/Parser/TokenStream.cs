@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AST;
 
 namespace Compiler
 {
@@ -13,7 +14,7 @@ namespace Compiler
             Tokens = tokens;
             pos = -1;
         }
-
+    
         public bool END => pos >= Tokens.Count - 1;
         public bool Start => pos == 0;
         public bool OUT(int k = 0) => (pos + k >= Tokens.Count || pos + k < 0);
@@ -43,7 +44,7 @@ namespace Compiler
 
         public Token Peek(int k = 0)
         {
-            if (OUT(k)) throw new Exception("Index OUT in Peek, TokenStream");
+            if (OUT(k)) throw new Exception($"Index {pos + k} OUT in Peek, TokenStream");
 
             return Tokens[pos + k];
         }

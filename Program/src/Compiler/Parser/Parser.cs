@@ -16,18 +16,16 @@ namespace Compiler
             CompilerErrors = new List<Error>();
         }
 
-        // ParseExpressionCall is with testing purposes
-        public Expression? ParseExpressionCall(out List<Error> compileErrors)
+        // 
+
+        public Effector? ParseEffectorCall(out List<Error> compileErrors)
         {
             compileErrors = CompilerErrors;
 
-            if (Reader.OUT(1)) return new Number(0, new CodeLocation("Code", 0, 0));
+            if (Reader.OUT(1)) return null;
 
-            return ParseExpression();
+            return ParseEffector();
         }
-
-        // 
-
         public Power? ParsePowerCall(out List<Error> compileErrors)
         {
             compileErrors = CompilerErrors;
@@ -47,21 +45,21 @@ namespace Compiler
             {
                 if (Reader.Match(TokenType.Card))
                 {
-                    Card card = ParseCard();
-                    program.AddCard(card);
+                    Card? card = ParseCard();
+                    if (card != null) program.AddCard(card);
                 }
             }
 
             return program;
         }
 
-        public Card ParseCard()
+        public Card? ParseCard()
         {
             string name = "";
 
             CodeLocation location = Reader.Peek().Location;
 
-            Effector effect = new Effector(new List<Objective>(), new List<Power>(), new CodeLocation());
+            Effector? effect = new Effector(new List<Objective>(), new List<Power>(), new CodeLocation());
 
             // Current Token is Card
 
@@ -71,99 +69,131 @@ namespace Compiler
 
             // Add cycle to read multiple effects
             // {
-            CheckToken(TokenType.LSquareBracket);
+            CheckToken(TokenType.LBracket);
 
             // Effect : Check to stop when missing ;
             effect = ParseEffector();
 
             // }
-            CheckToken(TokenType.RSquareBracket);
+            CheckToken(TokenType.RBracket);
 
-            return new Card(name, effect, Reader.Peek().Location);
+            if (effect != null)
+            {
+                return new Card(name, effect, Reader.Peek().Location);
+            }
+            return null;
         }
 
-        public Effector ParseEffector()
+        public Effector? ParseEffector()
         {
+            if (!CheckToken(TokenType.LSquareBracket)) return null; // exception [ ]
+
             CodeLocation location = Reader.Peek().Location;
 
-            Objective objective = new NullObjective(new List<Expression>(), new CodeLocation());
+            List<Objective> objectives = new List<Objective>();
 
-            Power power = new NullPower(new List<Expression>(), new CodeLocation());
+            List<Power> powers = new List<Power>();
 
-            //first token is Objective, add cycle to read multiple objectives
-            if (CheckToken(TokenType.Objective)) objective = ParseObjective();
+            //first token is a Objective
+            do
+            {
+                if (CheckToken(TokenType.Objective))
+                {
+                    Objective? objective = ParseObjective();
+                    if (objective == null) CompilerErrors.Add(new Error(ErrorCode.Expected, location, "An Objective"));
+                    else objectives.Add(objective);
+                }
+            }
+            while (Reader.Match(TokenType.Comma));
 
-            //second token is Power, add cycle to read multiple powers
-            if (CheckToken(TokenType.Power)) power = ParsePower();
+            CheckToken(TokenType.Breaker);
 
-            return new Effector(new List<Objective> { objective }, new List<Power> { power }, location);
+            //second token is Power
+            do
+            {
+                if (CheckToken(TokenType.Power))
+                {
+                    Power? power = ParsePower();
+                    if (power == null) CompilerErrors.Add(new Error(ErrorCode.Expected, location, "An power"));
+                    else
+                    {
+                        powers.Add(power);
+                    }
+                }
+            }
+            while (Reader.Match(TokenType.Comma));
+
+            CheckToken(TokenType.RSquareBracket);
+
+            return new Effector(objectives, powers, location);
         }
 
         public Objective ParseObjective()
         {
             //current token is Objective
             CodeLocation location = Reader.Peek().Location;
+            string objectiveName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();
 
             CheckToken(TokenType.LParen);
 
-            if (Reader.Match(TokenType.RParen)) return new NullObjective(parameters, location);
-
-            //add cycle to read multiple parameters
-
-            do
+            if (!Reader.Match(TokenType.RParen, false))
             {
-                Expression? parameter = ParseExpression();
+                do
+                {
+                    Expression? parameter = ParseExpression();
 
-                if(parameter == null || Reader.END) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
-                else parameters.Add(parameter);
+                    if (parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression"));
+                    else parameters.Add(parameter);
 
+                }
+                while (Reader.Match(TokenType.Comma));
             }
-            while(Reader.Match(TokenType.Comma));
-            
+
             CheckToken(TokenType.RParen);
 
-            return new NullObjective(parameters, location);
+            return (Objective)Reflection.Reflect(objectiveName, parameters, location);
         }
         public Power ParsePower()
         {
             //current token is Power
             CodeLocation location = Reader.Peek().Location;
+            string powerName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();
 
             CheckToken(TokenType.LParen);
 
-            if(Reader.Match(TokenType.RParen)) return new NullPower(parameters, location);
-
-            //add cycle to read multiple parameters
-
-            do
+            if (!Reader.Match(TokenType.RParen, false))
             {
-                Expression? parameter = ParseExpression();
+                do
+                {
+                    Expression? parameter = ParseExpression();
 
-                if(parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression"));
-                else parameters.Add(parameter);
-
+                    if (parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression"));
+                    else parameters.Add(parameter);
+                }
+                while (Reader.Match(TokenType.Comma));
             }
-            while(Reader.Match(TokenType.Comma));
 
             CheckToken(TokenType.RParen);
 
-            return new NullPower(parameters, location);
+            return (Power)Reflection.Reflect(powerName, parameters, location);
         }
 
         public bool CheckToken(TokenType token, bool pass = true)
         {
             if (Reader.Match(token, pass)) return true;
 
-            CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, token.ToString()));
+            if (Reader.OUT(1)) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, token.ToString()));
+
+            else CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek(1).Location, token.ToString()));
+
             return false;
         }
 
         #region Expression
-        //a partir de este commit voy implemtar las expresiones booleanas
         private Expression? ParseExpression()
         {
             return ParseExpressionLv1(null);
@@ -177,7 +207,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv1Maker(Expression? left) // + - > < == !=  >= <=
-        {    
+        {
             Expression? exp = // +
                 ParseBinaryOp(left, TokenType.Sum, (left, right, location) => new Add(left, right, location),
                 (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
@@ -237,7 +267,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv2Maker(Expression? left) // * / && ||
-        {   
+        {
             Expression? exp = // *
                 ParseBinaryOp(left, TokenType.Mul, (left, right, location) => new Mult(left, right, location),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
@@ -272,7 +302,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv3Maker(Expression? left) // pow
-        {   
+        {
             Expression? exp =
                 ParseBinaryOp(left, TokenType.Pow, (left, right, location) => new Pow(left, right, location),
                 (left) => (ParseExpressionLv4(left)), (left) => (ParseExpressionLv3Maker(left)));
@@ -289,7 +319,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv4Maker(Expression? left) //sin cos !
-        {   
+        {
             Expression? exp = //Sen
                 ParseUnaryOp(left, TokenType.Sin, (right, location) => new Sin(right, location),
                 (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
@@ -318,7 +348,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv5Maker(Expression? left) // ()
-        { 
+        {
             if (!Reader.Match(TokenType.LParen)) return left;
 
             Expression? exp = ParseExpression();
@@ -328,7 +358,7 @@ namespace Compiler
         }
 
         private Expression? ParseExpressionLv6(Expression? left) //not included text, number bool
-        { 
+        {
             Expression? exp = // number
                 ParseAtomicExpression(TokenType.Number, (atomic) => (new Number(double.Parse(atomic.Value), atomic.Location)));
 
@@ -338,11 +368,11 @@ namespace Compiler
                 ParseAtomicExpression(TokenType.Bool, (atomic) => (new Bool(bool.Parse(atomic.Value), atomic.Location)));
 
             if (exp != null) return exp;
-            
+
             exp = // text
                 ParseAtomicExpression(TokenType.Text, (atomic) => (new Text(atomic.Value, atomic.Location)));
 
-            return (exp != null) ? exp : left;    
+            return (exp != null) ? exp : left;
         }
 
         private Expression? ParseAtomicExpression(TokenType atomicType, Func<Token, Expression> getExpression)

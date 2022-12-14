@@ -31,10 +31,10 @@ namespace Compiler
             {"(", TokenType.LParen},
             {")", TokenType.RParen},
 
-            {"[", TokenType.LBracket},
-            {"]", TokenType.RBracket},
-            {"{", TokenType.LSquareBracket},
-            {"}", TokenType.RSquareBracket},
+            {"[", TokenType.LSquareBracket},
+            {"]", TokenType.RSquareBracket},
+            {"{", TokenType.LBracket},
+            {"}", TokenType.RBracket},
             {",", TokenType.Comma},
             {";", TokenType.Breaker},
 

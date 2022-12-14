@@ -15,6 +15,11 @@ namespace AST
         {
             Expression Amount = Parameters[0];
 
+            Amount.Evaluate();
+            double damage = (double)Amount.Value;
+
+            System.Console.WriteLine(damage);
+
             foreach (var player in players)
             {
                 Amount.Evaluate(); //lo pusimos aqui dntro por si luego usa variables del enemigo
