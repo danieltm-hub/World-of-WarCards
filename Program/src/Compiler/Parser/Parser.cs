@@ -116,7 +116,7 @@ namespace Compiler
             {
                 Expression? parameter = ParseExpression();
 
-                if(parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
+                if(parameter == null || Reader.END) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
                 else parameters.Add(parameter);
 
             }
