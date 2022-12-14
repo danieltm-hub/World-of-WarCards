@@ -6,7 +6,7 @@ using GameProgram;
 namespace AST
 {
     public abstract class Power : Node
-    {
+    {   
         public List<Expression> Parameters { get; private set; }
         public abstract List<NodeType> ExpectedTypes { get; }
         public Power(List<Expression> parameters, CodeLocation location) : base(location)

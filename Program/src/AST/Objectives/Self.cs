@@ -9,8 +9,8 @@ namespace AST
 
     public class Self : Objective
     {
-        public Self(CodeLocation location) : base(location) { }
-
+        public override List<NodeType> ExpectedTypes => new List<NodeType>();
+        public Self(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
         public override List<Player> Evaluate()
         {
             return new List<Player>() { GameManager.CurrentGame.CurrentPlayer };

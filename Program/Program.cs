@@ -8,22 +8,49 @@ static class Program
     {
         string randomInput = File.ReadAllText("./code");
 
-        List<Error> tempErros = new List<Error>();
-        List<Token> tokens = Analyzer.GetTokens("code", randomInput, tempErros);
+        List<Error> Errors = new List<Error>();
+        List<Token> tokens = Analyzer.GetTokens("code", randomInput, Errors);
 
         foreach(var token in tokens)
         {
             Console.WriteLine(token.ToString());
         }
-        foreach(var error in tempErros)
+        foreach(var error in Errors)
         {
             Console.WriteLine(error.ToString());
         }
 
-        Parser parseExpression = new Parser(new TokenStream(tokens));
-        Expression? expression = parseExpression.ParseExpressionCall(out tempErros);
+        TestPower(Errors, tokens);
+        //TestExpression(Errors, tokens);
+    }
+
+    static void TestPower(List<Error> Errors, List<Token> tokens)
+    {
+        Parser parsePower = new Parser(new TokenStream(tokens));
+        Power? power = parsePower.ParsePowerCall(out Errors);
+
+        foreach(Error error in Errors)
+        {
+            System.Console.WriteLine(error);
+        }
+
+        if(power != null && !power.CheckSemantic(Errors))
+        {
+            System.Console.WriteLine("Power is valid");
+        }
+        else
+        {
+            System.Console.WriteLine("Returning null");
+        }
+    }
+
+    static void TestExpression(List<Error> Errors, List<Token> tokens)
+    {
         
-        foreach(Error error in tempErros)
+        Parser parseExpression = new Parser(new TokenStream(tokens));
+        Expression? expression = parseExpression.ParseExpressionCall(out Errors);
+        
+        foreach(Error error in Errors)
         {
             System.Console.WriteLine(error);
         }

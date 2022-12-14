@@ -16,6 +16,7 @@ namespace Compiler
             CompilerErrors = new List<Error>();
         }
 
+        // ParseExpressionCall is with testing purposes
         public Expression? ParseExpressionCall(out List<Error> compileErrors)
         {
             compileErrors = CompilerErrors;
@@ -23,6 +24,19 @@ namespace Compiler
             if (Reader.OUT(1)) return new Number(0, new CodeLocation("Code", 0, 0));
 
             return ParseExpression();
+        }
+
+        // 
+
+        public Power? ParsePowerCall(out List<Error> compileErrors)
+        {
+            compileErrors = CompilerErrors;
+
+            if (Reader.OUT(1)) return null;
+
+            if (CheckToken(TokenType.Power)) return ParsePower();
+
+            return null;
         }
 
         public WarCardProgram ParseProgram()
@@ -72,7 +86,7 @@ namespace Compiler
         {
             CodeLocation location = Reader.Peek().Location;
 
-            Objective objective = new NullObjective(new CodeLocation());
+            Objective objective = new NullObjective(new List<Expression>(), new CodeLocation());
 
             Power power = new NullPower(new List<Expression>(), new CodeLocation());
 
@@ -89,20 +103,55 @@ namespace Compiler
         {
             //current token is Objective
             CodeLocation location = Reader.Peek().Location;
-            Reader.MoveNext();
 
-            //Specific Objective to Parsed
-            throw new Exception("ParseObjective was't implemented");
+            List<Expression> parameters = new List<Expression>();
+
+            CheckToken(TokenType.RParen);
+
+            if (Reader.Match(TokenType.RParen)) return new NullObjective(parameters, location);
+
+            //add cycle to read multiple parameters
+
+            do
+            {
+                Expression? parameter = ParseExpression();
+
+                if(parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
+                else parameters.Add(parameter);
+
+            }
+            while(Reader.Match(TokenType.Comma));
+            
+            CheckToken(TokenType.RParen);
+
+            return new NullObjective(parameters, location);
         }
         public Power ParsePower()
         {
             //current token is Power
             CodeLocation location = Reader.Peek().Location;
-            Reader.MoveNext();
 
-            //Specific Power to Parsed
+            List<Expression> parameters = new List<Expression>();
 
-            throw new Exception("ParsePower was't implemented");
+            CheckToken(TokenType.LParen);
+
+            if(Reader.Match(TokenType.RParen)) return new NullPower(parameters, location);
+
+            //add cycle to read multiple parameters
+
+            do
+            {
+                Expression? parameter = ParseExpression();
+
+                if(parameter == null || Reader.END) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
+                else parameters.Add(parameter);
+
+            }
+            while(Reader.Match(TokenType.Comma));
+
+            CheckToken(TokenType.RParen);
+
+            return new NullPower(parameters, location);
         }
 
         public bool CheckToken(TokenType token, bool pass = true)

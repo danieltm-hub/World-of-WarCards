@@ -8,7 +8,8 @@ namespace AST
 {
     public class NullObjective : Objective
     {
-        public NullObjective(CodeLocation location) : base(location) { }
+        public override List<NodeType> ExpectedTypes => new List<NodeType>();
+        public NullObjective(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
 
         public override List<Player> Evaluate()
         {
