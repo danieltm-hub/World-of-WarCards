@@ -106,7 +106,7 @@ namespace Compiler
 
             List<Expression> parameters = new List<Expression>();
 
-            CheckToken(TokenType.RParen);
+            CheckToken(TokenType.LParen);
 
             if (Reader.Match(TokenType.RParen)) return new NullObjective(parameters, location);
 
@@ -143,7 +143,7 @@ namespace Compiler
             {
                 Expression? parameter = ParseExpression();
 
-                if(parameter == null || Reader.END) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"Expected Expression"));
+                if(parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression"));
                 else parameters.Add(parameter);
 
             }
@@ -158,7 +158,7 @@ namespace Compiler
         {
             if (Reader.Match(token, pass)) return true;
 
-            CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, Reader.Peek().Value));
+            CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, token.ToString()));
             return false;
         }
 

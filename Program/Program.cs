@@ -21,6 +21,7 @@ static class Program
         }
 
         TestPower(Errors, tokens);
+
         //TestExpression(Errors, tokens);
     }
 
