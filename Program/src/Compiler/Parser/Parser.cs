@@ -8,7 +8,7 @@ namespace Compiler
     public class Parser
     {
         public TokenStream Reader { get; private set; }
-        
+
         private List<Error> CompilerErrors;
 
         public Parser(TokenStream reader)
@@ -33,10 +33,10 @@ namespace Compiler
                     CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "Card"));
                     Reader.MoveNext();
                 }
-                
+
             }
 
-            foreach(Error error in CompilerErrors)
+            foreach (Error error in CompilerErrors)
             {
                 System.Console.WriteLine(error);
             }
@@ -47,12 +47,12 @@ namespace Compiler
         public Card? ParseCard()
         {
             // Current Token is Card
-            
+
             string name = "";
 
             CodeLocation location = Reader.Peek().Location;
 
-            List<Effector> effects = new List<Effector>();
+            List<Effect> effects = new List<Effect>();
 
             if (CheckToken(TokenType.ID)) name = Reader.Peek().Value;
 
@@ -60,15 +60,15 @@ namespace Compiler
             do
             {
                 Effector? effect = ParseEffector();
-                if(effect != null)
+                if (effect != null)
                 {
                     effects.Add(effect);
                 }
             }
-            while(Reader.Match(TokenType.Comma));
+            while (Reader.Match(TokenType.Comma));
 
             CheckToken(TokenType.RBracket);
-            
+
             if (effects.Count != 0)
             {
                 return new Card(name, effects, Reader.Peek().Location);
@@ -125,9 +125,9 @@ namespace Compiler
         public Objective ParseObjective()
         {
             //current token is Objective
-            
+
             CodeLocation location = Reader.Peek().Location;
-            
+
             string objectiveName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();
@@ -155,9 +155,9 @@ namespace Compiler
         public Power ParsePower()
         {
             //current token is Power
-            
+
             CodeLocation location = Reader.Peek().Location;
-            
+
             string powerName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();

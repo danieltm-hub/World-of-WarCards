@@ -6,10 +6,10 @@ namespace GameProgram
     public class Card : Node
     {
         public string Name { get; private set; }
-        public List<Effector> Effects { get; private set; }
+        public List<Effect> Effects { get; private set; }
 
-        
-        public Card(string name, List<Effector> effects, CodeLocation location) : base(location)
+
+        public Card(string name, List<Effect> effects, CodeLocation location) : base(location)
         {
             Name = name;
             Effects = effects;
@@ -18,9 +18,9 @@ namespace GameProgram
 
         public override bool CheckSemantic(List<Error> errors)
         {
-            foreach(var effect in Effects)
+            foreach (var effect in Effects)
             {
-                if(!effect.CheckSemantic(errors)) return false;
+                if (!effect.CheckSemantic(errors)) return false;
             }
             return true;
         }
