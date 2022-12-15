@@ -43,7 +43,7 @@ namespace AST
         Error,
         Bool,
 
-        Action,
+        Effect,
         Objective,
         Power,
 

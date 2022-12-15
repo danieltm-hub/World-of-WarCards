@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace AST
 {
-    public abstract class Action : Node
+    public abstract class Effect : Node
     {
-        public Action(CodeLocation location) : base(location) { }
+        public Effect(CodeLocation location) : base(location) { }
 
         public abstract void Evaluate();
     }
