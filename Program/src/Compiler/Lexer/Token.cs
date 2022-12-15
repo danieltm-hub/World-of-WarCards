@@ -29,7 +29,7 @@ namespace Compiler
     {
         string Filename;
         string Code;
-        int pos;
+        public int pos;
         int line;
         int lastLB;
 
@@ -166,49 +166,4 @@ namespace Compiler
         }
     }
 
-    public enum TokenType
-    {
-        // Atomic Expressions
-        Number,
-        Bool,
-        Text,
-        // Unary Operators
-        Sin,
-        Cos,
-        Not,
-        // Binary Operators
-        Sum,
-        Sub,
-        Mul,
-        Div,
-        Pow,
-        Equal,
-        Smaller,
-        Greater,
-        And,
-        Or,
-
-        LParen,
-        RParen,
-        LBracket,
-        RBracket,
-        LSquareBracket,
-        RSquareBracket,
-        Breaker,
-        Comma,
-        DoubleCommas,
-
-        Ignore,
-
-        Effector,
-        Power,
-        Objective,
-        Conditional,
-        ID,
-        Symbol,
-        Epsilon,
-
-
-        Card,
-    }
 }

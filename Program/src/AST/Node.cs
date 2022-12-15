@@ -16,6 +16,11 @@ namespace AST
             Line = line;
             Column = column;
         }
+
+        public override string ToString()
+        {
+            return $"line: {Line}, column: {Column}";
+        }
     }
 
     public abstract class Node 
@@ -38,7 +43,7 @@ namespace AST
         Error,
         Bool,
 
-        Action,
+        Effect,
         Objective,
         Power,
 

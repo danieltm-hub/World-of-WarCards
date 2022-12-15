@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AST;
 
 namespace Compiler
 {
@@ -11,22 +12,21 @@ namespace Compiler
         public TokenStream(List<Token> tokens)
         {
             Tokens = tokens;
-            pos = 0;
+            pos = -1;
         }
-
+    
         public bool END => pos >= Tokens.Count - 1;
         public bool Start => pos == 0;
         public bool OUT(int k = 0) => (pos + k >= Tokens.Count || pos + k < 0);
         public bool MoveNext(int k = 1)
         {
+            if (OUT(k)) return false;
             pos += k;
-            if (OUT()) throw new Exception("Index OUT in MoveNext, TokenStream");
             return true;
         }
         public bool MoveBack(int k = 1)
         {
-
-            if (OUT(k)) throw new Exception("Index OUT in MoveBack TokenStream");
+            if (OUT(-k)) return false;
             pos -= k;
             return true;
         }
@@ -44,7 +44,7 @@ namespace Compiler
 
         public Token Peek(int k = 0)
         {
-            if (OUT(k)) throw new Exception("Index OUT in Peek, TokenStream");
+            if (OUT(k)) throw new Exception($"Index {pos + k} OUT in Peek, TokenStream");
 
             return Tokens[pos + k];
         }

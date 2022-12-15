@@ -10,23 +10,31 @@ namespace Compiler
         public static Dictionary<string, TokenType> Symbols { get; private set; } = new Dictionary<string, TokenType>()
         { //all that starts with a special char
 
+            //Composite Signs
+            {"==", TokenType.Equal},
+            {"!=", TokenType.NotEqual},
+            {"<=", TokenType.SmallerEqual},
+            {">=", TokenType.GreaterEqual},
+            {"&&", TokenType.And},
+            {"||", TokenType.Or},
+            
+            //Simple Signs
             {"+", TokenType.Sum},
             {"-", TokenType.Sub},
             {"*", TokenType.Mul},
             {"/", TokenType.Div},
             {"^", TokenType.Pow},
-            {"=", TokenType.Equal},
+            {"=", TokenType.Assign},
+            {"!", TokenType.Not},
             {"<", TokenType.Smaller},
             {">", TokenType.Greater},
-            {"&&", TokenType.And},
-            {"||", TokenType.Or},
             {"(", TokenType.LParen},
             {")", TokenType.RParen},
 
-            {"[", TokenType.LBracket},
-            {"]", TokenType.RBracket},
-            {"{", TokenType.LSquareBracket},
-            {"}", TokenType.RSquareBracket},
+            {"[", TokenType.LSquareBracket},
+            {"]", TokenType.RSquareBracket},
+            {"{", TokenType.LBracket},
+            {"}", TokenType.RBracket},
             {",", TokenType.Comma},
             {";", TokenType.Breaker},
 
@@ -35,6 +43,7 @@ namespace Compiler
         public static Dictionary<string, TokenType> Keywords { get; private set; } = new Dictionary<string, TokenType>()
         {
             {"if", TokenType.Conditional},
+            {"else", TokenType.Else},
 
             {"true", TokenType.Bool},
             {"false", TokenType.Bool},
@@ -43,11 +52,12 @@ namespace Compiler
             {"not", TokenType.Not},
 
             {"card", TokenType.Card},
+            
             //Objectives
-            {"Self", TokenType.Objective},
+            {"self", TokenType.Objective},
 
             //Powers
-            {"Damage", TokenType.Power},
+            {"damage", TokenType.Power},
         };
 
         public static void RegistrerOperator(string op, TokenType type)
@@ -68,5 +78,57 @@ namespace Compiler
         {
             return Keywords.ContainsKey(keyword);
         }
+    }
+
+    public enum TokenType
+    {
+        // Atomic Expressions
+        Number,
+        Bool,
+        Text,
+        // Unary Operators
+        Sin,
+        Cos,
+        Not,
+        // Binary Operators
+        Sum,
+        Sub,
+        Mul,
+        Div,
+        Pow,
+        Equal,
+        NotEqual,
+        Smaller,
+        SmallerEqual,
+        Greater,
+        GreaterEqual,
+        And,
+        Or,
+
+        LParen,
+        RParen,
+        LBracket,
+        RBracket,
+        LSquareBracket,
+        RSquareBracket,
+        Breaker,
+        Comma,
+        DoubleCommas,
+
+        Ignore,
+        Assign,
+
+        Effector,
+        Power,
+        Objective,
+        Conditional,
+        Else,
+        ID,
+        Symbol,
+        Epsilon,
+
+        BreakLine,
+        Card,
+
     }
 }

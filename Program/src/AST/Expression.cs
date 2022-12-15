@@ -13,5 +13,11 @@ namespace AST
         public abstract object Value { get; set; }
 
         public Expression(CodeLocation location) : base(location) { }
+
+        public override string ToString()
+        {
+            this.Evaluate();
+            return $"{Location} => {this.Value}";
+        }
     }
 }

@@ -1,0 +1,4 @@
+card carta {
+    if (true) [self(); damage(1)] 
+    else [self(); damage(2)], [self(); damage(3)]
+}

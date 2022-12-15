@@ -6,15 +6,14 @@ using GameProgram;
 
 namespace AST
 {
-
-    public class Self : Objective
+    public class NullObjective : Objective
     {
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
-        public Self(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
+        public NullObjective(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
+
         public override List<Player> Evaluate()
         {
-            return new List<Player>() { GameManager.CurrentGame.CurrentPlayer };
+            return new List<Player>();
         }
     }
-
 }

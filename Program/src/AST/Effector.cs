@@ -6,13 +6,13 @@ using GameProgram;
 
 namespace AST
 {
-    public class Effector : Action
+    public class Effector : Effect
     {
         public List<Objective> Objectives { get; private set; }
 
         public List<Power> Powers { get; private set; }
 
-        public override NodeType Type { get => NodeType.Action; set { } }
+        public override NodeType Type { get => NodeType.Effect; set { } }
 
         public Effector(List<Objective> objectives, List<Power> powers, CodeLocation location) : base(location)
         {
@@ -25,6 +25,7 @@ namespace AST
         {
             bool objectivesBoolean = true;
             bool powersBoolean = true;
+            
             foreach (var objective in Objectives)
             {
                 objectivesBoolean &= objective.CheckSemantic(errors);

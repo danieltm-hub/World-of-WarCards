@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace AST
 {
-    public class Condition : Action
+    public class Condition : Effect
     {
         public Expression BooleanCondition { get; private set; }
-        public Action Left { get; private set; }
-        public Action? Right { get; private set; }
+        public Effect Left { get; private set; }
+        public Effect? Right { get; private set; }
 
 
-        public Condition(Expression booleanCondition, Action left, Action? right, CodeLocation location) : base(location)
+        public Condition(Expression booleanCondition, Effect left, Effect? right, CodeLocation location) : base(location)
         {
             BooleanCondition = booleanCondition;
             Left = left;
@@ -40,7 +40,7 @@ namespace AST
                 Type = NodeType.Error;
             }
 
-            if(Left.Type != NodeType.Action && (Right == null || Right.Type != NodeType.Action))
+            if(Left.Type != NodeType.Effect && (Right == null || Right.Type != NodeType.Effect))
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve an action parameter"));
                 Type = NodeType.Error;
