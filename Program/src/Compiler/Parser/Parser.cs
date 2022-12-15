@@ -19,13 +19,18 @@ namespace Compiler
 
         public WarCardProgram ParseProgram()
         {
+            // Current reader index is -1
+
             WarCardProgram program = new WarCardProgram(new CodeLocation());
 
             while (!Reader.OUT(1))
             {
-                if (CheckToken(TokenType.Card))
+                if (Reader.Match(TokenType.Card))
                 {
                     Card? card = ParseCard();
+
+
+
                     if (card != null) program.AddCard(card);
                 }
                 else
@@ -34,11 +39,6 @@ namespace Compiler
                     Reader.MoveNext();
                 }
 
-            }
-
-            foreach (Error error in CompilerErrors)
-            {
-                System.Console.WriteLine(error);
             }
 
             return program;
