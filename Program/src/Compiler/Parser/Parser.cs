@@ -8,33 +8,13 @@ namespace Compiler
     public class Parser
     {
         public TokenStream Reader { get; private set; }
+        
         private List<Error> CompilerErrors;
 
         public Parser(TokenStream reader)
         {
             Reader = reader;
             CompilerErrors = new List<Error>();
-        }
-
-        // 
-
-        public Effector? ParseEffectorCall(out List<Error> compileErrors)
-        {
-            compileErrors = CompilerErrors;
-
-            if (Reader.OUT(1)) return null;
-
-            return ParseEffector();
-        }
-        public Power? ParsePowerCall(out List<Error> compileErrors)
-        {
-            compileErrors = CompilerErrors;
-
-            if (Reader.OUT(1)) return null;
-
-            if (CheckToken(TokenType.Power)) return ParsePower();
-
-            return null;
         }
 
         public WarCardProgram ParseProgram()
@@ -47,6 +27,11 @@ namespace Compiler
                 {
                     Card? card = ParseCard();
                     if (card != null) program.AddCard(card);
+                }
+                else
+                {
+                    CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "Card"));
+                    Reader.MoveNext();
                 }
                 
             }
@@ -61,34 +46,27 @@ namespace Compiler
 
         public Card? ParseCard()
         {
+            // Current Token is Card
+            
             string name = "";
 
             CodeLocation location = Reader.Peek().Location;
 
             List<Effector> effects = new List<Effector>();
 
-            // Current Token is Card
-
-            // Name
             if (CheckToken(TokenType.ID)) name = Reader.Peek().Value;
 
-
-            // Add cycle to read multiple effects
-            // {
             CheckToken(TokenType.LBracket);
             do
             {
-
                 Effector? effect = ParseEffector();
                 if(effect != null)
                 {
                     effects.Add(effect);
                 }
-
             }
             while(Reader.Match(TokenType.Comma));
 
-            // }
             CheckToken(TokenType.RBracket);
             
             if (effects.Count != 0)
@@ -147,7 +125,9 @@ namespace Compiler
         public Objective ParseObjective()
         {
             //current token is Objective
+            
             CodeLocation location = Reader.Peek().Location;
+            
             string objectiveName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();
@@ -171,10 +151,13 @@ namespace Compiler
 
             return (Objective)Reflection.Reflect(objectiveName, parameters, location);
         }
+
         public Power ParsePower()
         {
             //current token is Power
+            
             CodeLocation location = Reader.Peek().Location;
+            
             string powerName = Reader.Peek().Value;
 
             List<Expression> parameters = new List<Expression>();

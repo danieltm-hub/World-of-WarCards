@@ -30,51 +30,16 @@ public static class Program
 
         if(program == null) return;
 
-        if(!program.CheckSemantic(Errors)) return;
+        if(!program.CheckSemantic(Errors)) 
+        {
+            foreach(Error error in Errors)
+            {
+                System.Console.WriteLine(error);
+            }
+            return;
+        }
 
         System.Console.WriteLine(program);
-    }
-
-    static void TestEffector(List<Error> Errors, List<Token> tokens)
-    {
-        Parser parser = new Parser(new TokenStream(tokens));
-        Effector? effector = parser.ParseEffectorCall(out Errors);
-
-        if (effector == null) return;
-
-        else
-        {
-            effector.CheckSemantic(Errors);
-        }
-        foreach (Error error in Errors)
-        {
-            System.Console.WriteLine(error);
-        }
-    }
-
-    static void TestPower(List<Error> Errors, List<Token> tokens)
-    {
-        Parser parsePower = new Parser(new TokenStream(tokens));
-        Power? power = parsePower.ParsePowerCall(out Errors);
-
-        foreach (Error error in Errors)
-        {
-            System.Console.WriteLine(error);
-        }
-
-        if (power == null)
-        {
-            System.Console.WriteLine("Returning null");
-        }
-        else if (!power.CheckSemantic(Errors))
-        {
-            System.Console.WriteLine("Check semantic invalid");
-        }
-        else
-        {
-            System.Console.WriteLine("Power is valid");
-            power.Evaluate(new List<Player>());
-        }
     }
 
 }

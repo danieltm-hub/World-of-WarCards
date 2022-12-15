@@ -1,4 +1,4 @@
-card cosa {
-    [self(); damage(1)]
-}
+card carta {
+    [self(); damage(1)],
 
+}

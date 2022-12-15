@@ -11,9 +11,9 @@ namespace Compiler
     {
         public static object Reflect(string key, List<Expression> parameters, CodeLocation location)
         {
-            if (!McDonalds.ContainsKey(key)) throw new Exception($"Key: {key} is not in Dictionary");
+            if (!TypeStore.ContainsKey(key)) throw new Exception($"Key: {key} is not in Dictionary");
 
-            Type myType = McDonalds[key];
+            Type myType = TypeStore[key];
 
             ConstructorInfo? constructor = myType.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
 
@@ -23,7 +23,7 @@ namespace Compiler
         }
 
 
-        static Dictionary<string, Type> McDonalds = new Dictionary<string, Type>
+        static Dictionary<string, Type> TypeStore = new Dictionary<string, Type>
         {
             {"damage", typeof(ModifyHealth)},
             {"self", typeof(Self)},
