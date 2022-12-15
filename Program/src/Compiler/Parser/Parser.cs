@@ -43,11 +43,17 @@ namespace Compiler
 
             while (!Reader.OUT(1))
             {
-                if (Reader.Match(TokenType.Card))
+                if (CheckToken(TokenType.Card))
                 {
                     Card? card = ParseCard();
                     if (card != null) program.AddCard(card);
                 }
+                
+            }
+
+            foreach(Error error in CompilerErrors)
+            {
+                System.Console.WriteLine(error);
             }
 
             return program;
@@ -59,7 +65,7 @@ namespace Compiler
 
             CodeLocation location = Reader.Peek().Location;
 
-            Effector? effect = new Effector(new List<Objective>(), new List<Power>(), new CodeLocation());
+            List<Effector> effects = new List<Effector>();
 
             // Current Token is Card
 
@@ -70,16 +76,24 @@ namespace Compiler
             // Add cycle to read multiple effects
             // {
             CheckToken(TokenType.LBracket);
+            do
+            {
 
-            // Effect : Check to stop when missing ;
-            effect = ParseEffector();
+                Effector? effect = ParseEffector();
+                if(effect != null)
+                {
+                    effects.Add(effect);
+                }
+
+            }
+            while(Reader.Match(TokenType.Comma));
 
             // }
             CheckToken(TokenType.RBracket);
-
-            if (effect != null)
+            
+            if (effects.Count != 0)
             {
-                return new Card(name, effect, Reader.Peek().Location);
+                return new Card(name, effects, Reader.Peek().Location);
             }
             return null;
         }
@@ -88,13 +102,15 @@ namespace Compiler
         {
             if (!CheckToken(TokenType.LSquareBracket)) return null; // exception [ ]
 
+            //  Current Token is [
+
             CodeLocation location = Reader.Peek().Location;
 
             List<Objective> objectives = new List<Objective>();
 
             List<Power> powers = new List<Power>();
 
-            //first token is a Objective
+            // Parse Objectives and add them to the list
             do
             {
                 if (CheckToken(TokenType.Objective))
@@ -108,7 +124,7 @@ namespace Compiler
 
             CheckToken(TokenType.Breaker);
 
-            //second token is Power
+            // Parse Powers and add them to the list
             do
             {
                 if (CheckToken(TokenType.Power))

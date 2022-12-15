@@ -6,7 +6,7 @@ public static class Program
 {
     static void Main(string[] args)
     {
-        string randomInput = File.ReadAllText("./code");
+        string randomInput = File.ReadAllText("./code.txt");
 
         List<Error> Errors = new List<Error>();
         List<Token> tokens = Analyzer.GetTokens("code", randomInput, Errors);
@@ -20,7 +20,19 @@ public static class Program
             Console.WriteLine(error.ToString());
         }
 
-        TestEffector(Errors, tokens);
+        WarCardProgramTest(Errors, tokens);
+    }
+
+    static void WarCardProgramTest(List<Error> Errors, List<Token> tokens)
+    {
+        Parser parser = new Parser(new TokenStream (tokens));
+        WarCardProgram? program = parser.ParseProgram();
+
+        if(program == null) return;
+
+        if(!program.CheckSemantic(Errors)) return;
+
+        System.Console.WriteLine(program);
     }
 
     static void TestEffector(List<Error> Errors, List<Token> tokens)

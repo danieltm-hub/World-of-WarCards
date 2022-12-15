@@ -25,6 +25,7 @@ namespace AST
         {
             bool objectivesBoolean = true;
             bool powersBoolean = true;
+            
             foreach (var objective in Objectives)
             {
                 objectivesBoolean &= objective.CheckSemantic(errors);

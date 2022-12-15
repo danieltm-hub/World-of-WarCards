@@ -15,8 +15,6 @@ namespace Compiler
 
             Type myType = McDonalds[key];
 
-            System.Console.WriteLine(myType);
-
             ConstructorInfo? constructor = myType.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
 
             if (constructor == null) throw new Exception($"Cannot invoke {key}");

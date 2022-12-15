@@ -18,7 +18,8 @@ namespace AST
 
             if (Cards.ContainsKey(card.Name))
             {
-                Errors.Add(new Error(ErrorCode.Invalid, card.Location, $"{card.Name} Card already exists"));
+                //En este punto ya el contexto debe haber revisado eso
+                //Errors.Add(new Error(ErrorCode.Invalid, card.Location, $"{card.Name} Card already exists"));
             }
             else
             {
@@ -32,7 +33,22 @@ namespace AST
         }
         public override bool CheckSemantic(List<Error> errors)
         {
-            throw new Exception("CheckSemantic was't implemented");
+            foreach(Card card in Cards.Values)
+            {
+                if(!card.CheckSemantic(errors)) return false;
+            }
+            return true;
+        }
+
+        public override string ToString()
+        {
+            string s = "";
+            foreach(string key in Cards.Keys)
+            {
+                s += key;
+                s += "\n";
+            }
+            return s;
         }
 
     }

@@ -1,0 +1,4 @@
+card cosa {
+    [self(); damage(1)]
+}
+
