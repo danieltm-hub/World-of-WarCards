@@ -27,15 +27,18 @@ public static class Program
     {
         Parser parser = new Parser(new TokenStream (tokens));
         WarCardProgram? program = parser.ParseProgram();
-
-        if(program == null) return;
+        
+        if(Errors.Count != 0)
+        {
+            System.Console.WriteLine("Syntax errors");
+            System.Console.WriteLine(string.Join('\n', Errors));
+            return ;
+        } 
 
         if(!program.CheckSemantic(Errors)) 
         {
-            foreach(Error error in Errors)
-            {
-                System.Console.WriteLine(error);
-            }
+            System.Console.WriteLine("Semantic errors");
+            System.Console.WriteLine(string.Join('\n', Errors));
             return;
         }
 
