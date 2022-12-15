@@ -43,6 +43,7 @@ namespace Compiler
         public static Dictionary<string, TokenType> Keywords { get; private set; } = new Dictionary<string, TokenType>()
         {
             {"if", TokenType.Conditional},
+            {"else", TokenType.Else},
 
             {"true", TokenType.Bool},
             {"false", TokenType.Bool},
@@ -121,11 +122,13 @@ namespace Compiler
         Power,
         Objective,
         Conditional,
+        Else,
         ID,
         Symbol,
         Epsilon,
 
         BreakLine,
         Card,
+
     }
 }

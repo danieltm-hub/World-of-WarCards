@@ -57,12 +57,17 @@ namespace Compiler
             if (CheckToken(TokenType.ID)) name = Reader.Peek().Value;
 
             CheckToken(TokenType.LBracket);
+
             do
             {
-                Effector? effect = ParseEffector();
+                Effect? effect = ParseEffect();
                 if (effect != null)
                 {
                     effects.Add(effect);
+                }
+                else
+                {
+                    CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
                 }
             }
             while (Reader.Match(TokenType.Comma));
@@ -76,9 +81,50 @@ namespace Compiler
             return null;
         }
 
+        public Effect? ParseEffect()
+        {
+            return (Reader.Match(TokenType.Conditional)) ? ParseConditional() : ParseEffector();
+        }
+
+        public Condition? ParseConditional()
+        {
+            // Current Token is if
+
+            CheckToken(TokenType.LParen);
+            
+            Expression? condition = ParseExpression();
+
+            if(condition == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Boolean Expression"));
+
+            CheckToken(TokenType.RParen);
+
+            Effect? effect = ParseEffect();
+
+            if(effect == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
+
+            Effect? elseEffect = null;
+
+            if(Reader.Match(TokenType.Else))
+            {
+                elseEffect = ParseEffect();
+                
+                if(elseEffect == null)
+                {   
+                    CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
+                    return null;
+                }
+            }
+
+            if(condition == null || effect == null) return null;
+            
+            return new Condition(condition, effect, elseEffect, Reader.Peek().Location);
+
+
+        }
+
         public Effector? ParseEffector()
         {
-            if (!CheckToken(TokenType.LSquareBracket)) return null; // exception [ ]
+            if (!Reader.Match(TokenType.LSquareBracket)) return null;
 
             //  Current Token is [
 
