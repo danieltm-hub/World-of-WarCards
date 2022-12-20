@@ -1,4 +1,20 @@
 card carta {
-    if (true) [self(); damage(1 + 2 * 8 / 14 * sen(16))] 
-    else [self(); damage(2)], [self(); damage(3)]
+    if (true) [self(); damage(1 + 2 * 8 / 14 * sin(16))] 
+    else [self(); damage(2)],
+    
+    [self(); damage(3)]
 }
+
+card carta2 {
+    [self(); damage(1)]
+}
+
+effect aguacate = [self(); damage(1 + 2 * 8 / 14 * sin(16))]
+
+
+card carta3 {
+    aguacate, [self(); damage(2)], [self(); damage(3)]
+}
+
+effect malanga = if (true) [self(); damage(1 + 2 * 8 / 14 * sin(16))] 
+    else aguacate

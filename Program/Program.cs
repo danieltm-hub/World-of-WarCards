@@ -27,7 +27,9 @@ public static class Program
     {
         Parser parser = new Parser(new TokenStream (tokens));
         WarCardProgram? program = parser.ParseProgram();
-        
+
+        Errors = program.Errors;
+
         if(Errors.Count != 0)
         {
             System.Console.WriteLine("Syntax errors");

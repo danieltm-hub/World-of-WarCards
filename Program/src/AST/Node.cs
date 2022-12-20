@@ -17,6 +17,13 @@ namespace AST
             Column = column;
         }
 
+        public CodeLocation()
+        {
+            File = "";
+            Line = 0;
+            Column = 0;
+        }
+
         public override string ToString()
         {
             return $"line: {Line}, column: {Column}";

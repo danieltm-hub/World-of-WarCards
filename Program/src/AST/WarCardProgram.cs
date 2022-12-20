@@ -27,9 +27,9 @@ namespace AST
             }
         }
 
-        public void AddError(Error error)
+        public void AddErrors(List<Error> errors)
         {
-            Errors.Add(error);
+            Errors.AddRange(errors);
         }
         public override bool CheckSemantic(List<Error> errors)
         {

@@ -48,15 +48,20 @@ namespace Compiler
             {"true", TokenType.Bool},
             {"false", TokenType.Bool},
             {"sin", TokenType.Sin},
+            {"sen", TokenType.Sin},
             {"cos", TokenType.Cos},
             {"not", TokenType.Not},
 
             {"card", TokenType.Card},
+            {"effector", TokenType.Effector},
+            {"effect", TokenType.Effect},
             
-            //Objectives
+            // Add when using reflection in runtime
+            
+            // Objectives
             {"self", TokenType.Objective},
 
-            //Powers
+            // Powers
             {"damage", TokenType.Power},
         };
 
@@ -121,6 +126,7 @@ namespace Compiler
         Effector,
         Power,
         Objective,
+        Effect,
         Conditional,
         Else,
         ID,

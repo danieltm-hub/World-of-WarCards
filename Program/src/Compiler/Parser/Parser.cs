@@ -11,10 +11,37 @@ namespace Compiler
 
         private List<Error> CompilerErrors;
 
+        private Dictionary<string, Effect> effectVariables = new Dictionary<string, Effect>();
+
         public Parser(TokenStream reader)
         {
             Reader = reader;
             CompilerErrors = new List<Error>();
+        }
+
+        private void variablesAdd(string name, Effect effect)
+        {
+            if(name == "") return;
+
+            if (effectVariables.ContainsKey(name))
+            {
+                CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, $"Variable {name} already exists"));
+                return;
+            }
+
+            effectVariables.Add(name, effect);
+        }
+
+        private Effect? variableGet(string name)
+        {
+            if (effectVariables.ContainsKey(name))
+            {
+                return effectVariables[name];
+            }
+
+            CompilerErrors.Add(new Error(ErrorCode.Invalid, Reader.Peek().Location, $"Variable {name} does not exist"));
+
+            return null;
         }
 
         public WarCardProgram ParseProgram()
@@ -22,24 +49,50 @@ namespace Compiler
             // Current reader index is -1
 
             WarCardProgram program = new WarCardProgram(new CodeLocation());
-
             while (!Reader.OUT(1))
             {
                 if (Reader.Match(TokenType.Card))
                 {
                     Card? card = ParseCard();
 
-
-
                     if (card != null) program.AddCard(card);
+                    
+                    else
+                    {
+                        CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Card"));
+                    }
+                }
+                else if (Reader.Match(TokenType.Effect))
+                {
+                    string name = "";
+                    if(CheckToken(TokenType.ID))
+                    {
+                        name = Reader.Peek().Value;
+                    }
+
+                    CheckToken(TokenType.Assign);
+                    
+                    Effect? toAdd =  ParseEffect();
+
+                    if(toAdd != null)
+                    {
+                        variablesAdd(name, toAdd);
+                    }
+                    else
+                    {
+                        CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
+                    }
                 }
                 else
                 {
-                    CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "Card"));
+                    Console.Write(Reader.Peek().Value + ' ');
+                    CompilerErrors.Add(new Error(ErrorCode.Expected, (Reader.OUT()) ? new CodeLocation() : Reader.Peek().Location, "A card or a variable declaration"));
                     Reader.MoveNext();
                 }
 
             }
+
+            program.AddErrors(CompilerErrors);
 
             return program;
         }
@@ -60,7 +113,7 @@ namespace Compiler
 
             do
             {
-                Effect? effect = ParseEffect();
+                Effect? effect =  ParseEffect();
                 if (effect != null)
                 {
                     effects.Add(effect);
@@ -83,13 +136,18 @@ namespace Compiler
 
         public Effect? ParseEffect()
         {
+            // if effect is a varaible
+            if (Reader.Match(TokenType.ID)) return variableGet(Reader.Peek().Value);
+
+            // if effect is a conditional or an effector
             return (Reader.Match(TokenType.Conditional)) ? ParseConditional() : ParseEffector();
         }
 
+        // Conditional recieves only a unique expression as argument
         public Condition? ParseConditional()
         {
             // Current Token is if
-
+            
             CheckToken(TokenType.LParen);
             
             Expression? condition = ParseExpression();
@@ -439,11 +497,8 @@ namespace Compiler
 
             Expression? right = NextlvlParser(null);
 
-            //if (right != null) System.Console.WriteLine(right);
-
             if (right == null)
             {
-                System.Console.WriteLine(Reader.Peek().Type);
                 CompilerErrors.Add(new Error(ErrorCode.Invalid, location, $"Expected expression after {oper}"));
                 Reader.MoveBack(2);
                 return null;
