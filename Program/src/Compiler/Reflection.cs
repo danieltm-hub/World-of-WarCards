@@ -22,12 +22,33 @@ namespace Compiler
             return constructor.Invoke(new object[] { parameters, location });
         }
 
+        public static void RegisterDll(string path)
+        {
+            Assembly assembly = Assembly.LoadFrom(path);
+            Type[] types = assembly.GetTypes();
+
+            foreach (Type type in types)
+            {
+                if (type.IsSubclassOf(typeof(Power)))
+                {
+                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
+
+                    if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
+
+                    Power instance = (Power)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
+                    
+                    TypeStore.Add(instance.Keyword(), type);
+
+                    LexicStore.Keywords.Add(instance.Keyword(), TokenType.Power);
+                }
+            }
+        }
+
 
         static Dictionary<string, Type> TypeStore = new Dictionary<string, Type>
         {
             {"damage", typeof(ModifyHealth)},
             {"self", typeof(Self)},
-
         };
     }
 

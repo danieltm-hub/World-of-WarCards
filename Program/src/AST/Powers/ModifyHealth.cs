@@ -8,6 +8,7 @@ namespace AST
 {
     public class ModifyHealth : Power
     {
+        public override string Keyword() => "modifyhealth";
         public override List<NodeType> ExpectedTypes => new List<NodeType>() {NodeType.Number};
         public ModifyHealth(List<Expression> parameters, CodeLocation location) : base(parameters,location) {}
 

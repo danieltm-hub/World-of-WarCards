@@ -8,6 +8,7 @@ namespace AST
 {
     public class NullPower : Power
     {
+        public override string Keyword() => "null";
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
         public NullPower(List<Expression> parameters, CodeLocation location) : base(parameters, location) {}
 
