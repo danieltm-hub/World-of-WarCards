@@ -365,7 +365,7 @@ namespace Compiler
 
         private Expression? ParseExpressionLv4Maker(Expression? left) //sin cos !
         {
-            Expression? exp = //Sen
+            Expression? exp = // Sen
                 ParseUnaryOp(left, TokenType.Sin, (right, location) => new Sin(right, location),
                 (left) => (ParseExpressionLv5(left)), (left) => (ParseExpressionLv4Maker(left)));
 

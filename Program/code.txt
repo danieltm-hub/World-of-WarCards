@@ -1,4 +1,4 @@
 card carta {
-    if (true) [self(); damage(1)] 
+    if (true) [self(); damage(1 + 2 * 8 / 14 * sen(16))] 
     else [self(); damage(2)], [self(); damage(3)]
 }
