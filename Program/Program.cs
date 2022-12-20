@@ -6,6 +6,10 @@ public static class Program
 {
     static void Main(string[] args)
     {
+        string path = "./Dlls/Program.dll";
+
+        Reflection.RegisterDll(path);
+
         string randomInput = File.ReadAllText("./code.txt");
 
         List<Error> Errors = new List<Error>();

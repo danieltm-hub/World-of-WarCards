@@ -55,14 +55,6 @@ namespace Compiler
             {"card", TokenType.Card},
             {"effector", TokenType.Effector},
             {"effect", TokenType.Effect},
-            
-            // Add when using reflection in runtime
-            
-            // Objectives
-            {"self", TokenType.Objective},
-
-            // Powers
-            {"damage", TokenType.Power},
         };
 
         public static void RegistrerOperator(string op, TokenType type)

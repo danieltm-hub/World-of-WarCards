@@ -41,14 +41,33 @@ namespace Compiler
 
                     LexicStore.Keywords.Add(instance.Keyword(), TokenType.Power);
                 }
+
+                if (type.IsSubclassOf(typeof(Objective)))
+                {
+                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
+
+                    if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
+
+                    Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
+                    
+                    TypeStore.Add(instance.Keyword(), type);
+
+                    LexicStore.Keywords.Add(instance.Keyword(), TokenType.Objective);
+                }
             }
+
+            foreach(string key in TypeStore.Keys)
+            {
+                Console.WriteLine($"{key} : {TypeStore[key]}");
+            }
+
+            
         }
 
 
         static Dictionary<string, Type> TypeStore = new Dictionary<string, Type>
         {
-            {"damage", typeof(ModifyHealth)},
-            {"self", typeof(Self)},
+            
         };
     }
 
