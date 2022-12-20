@@ -63,6 +63,7 @@ namespace Compiler
         }
         public static void RegistrerKeyword(string keyword, TokenType type)
         {
+            if(Keywords.ContainsKey(keyword)) throw new Exception($"Keyword {keyword} already exists");
             Keywords.Add(keyword, type);
         }
 

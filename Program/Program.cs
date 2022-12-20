@@ -6,9 +6,12 @@ public static class Program
 {
     static void Main(string[] args)
     {
-        string path = "./Dlls/Program.dll";
+        List<string> paths = new List<string>(){"./bin/Debug/net6.0/Program.dll"};
 
-        Reflection.RegisterDll(path);
+        foreach(string path in paths)
+        {
+            Reflection.RegisterDll(path);
+        }
 
         string randomInput = File.ReadAllText("./code.txt");
 
@@ -29,19 +32,19 @@ public static class Program
 
     static void WarCardProgramTest(List<Error> Errors, List<Token> tokens)
     {
-        Parser parser = new Parser(new TokenStream (tokens));
+        Parser parser = new Parser(new TokenStream(tokens));
         WarCardProgram? program = parser.ParseProgram();
 
         Errors = program.Errors;
 
-        if(Errors.Count != 0)
+        if (Errors.Count != 0)
         {
             System.Console.WriteLine("Syntax errors");
             System.Console.WriteLine(string.Join('\n', Errors));
-            return ;
-        } 
+            return;
+        }
 
-        if(!program.CheckSemantic(Errors)) 
+        if (!program.CheckSemantic(Errors))
         {
             System.Console.WriteLine("Semantic errors");
             System.Console.WriteLine(string.Join('\n', Errors));

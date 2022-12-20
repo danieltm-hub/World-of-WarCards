@@ -37,9 +37,9 @@ namespace Compiler
 
                     Power instance = (Power)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
                     
-                    TypeStore.Add(instance.Keyword(), type);
+                    RegistrerType(instance.Keyword(), type);
 
-                    LexicStore.Keywords.Add(instance.Keyword(), TokenType.Power);
+                    LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Power);
                 }
 
                 if (type.IsSubclassOf(typeof(Objective)))
@@ -50,20 +50,18 @@ namespace Compiler
 
                     Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
                     
-                    TypeStore.Add(instance.Keyword(), type);
+                    RegistrerType(instance.Keyword(), type);
 
-                    LexicStore.Keywords.Add(instance.Keyword(), TokenType.Objective);
+                    LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Objective);
                 }
-            }
-
-            foreach(string key in TypeStore.Keys)
-            {
-                Console.WriteLine($"{key} : {TypeStore[key]}");
-            }
-
-            
+            }            
         }
 
+        public static void RegistrerType(string keyword, Type type)
+        {
+            if(TypeStore.ContainsKey(keyword)) throw new Exception($"Key: {keyword} is already in Dictionary");
+            TypeStore.Add(keyword, type);
+        }
 
         static Dictionary<string, Type> TypeStore = new Dictionary<string, Type>
         {
