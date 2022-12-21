@@ -4,3 +4,10 @@ card carta {
     
     [self(); modifyHealth(3)]
 }
+
+Effect aguacate = [self(); modifyhealth(2 + 2)]
+
+card carta2 {
+    if (false) if(true) aguacate else [self(); modifyhealth(1)]
+    else [self(); modifyhealth(2)]
+}
