@@ -11,12 +11,12 @@ namespace AST
         public Effect Left { get; private set; }
         public Effect? Right { get; private set; }
 
-
         public Condition(Expression booleanCondition, Effect left, Effect? right, CodeLocation location) : base(location)
         {
             BooleanCondition = booleanCondition;
             Left = left;
             Right = right;
+            Type = NodeType.Effect;
         }
 
         public override void Evaluate()

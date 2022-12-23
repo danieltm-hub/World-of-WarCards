@@ -12,12 +12,11 @@ namespace AST
 
         public List<Power> Powers { get; private set; }
 
-        public override NodeType Type { get => NodeType.Effect; set { } }
-
         public Effector(List<Objective> objectives, List<Power> powers, CodeLocation location) : base(location)
         {
             Objectives = objectives;
             Powers = powers;
+            Type = NodeType.Effect;
         }
 
 

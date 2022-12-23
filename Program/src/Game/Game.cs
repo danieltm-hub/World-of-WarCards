@@ -13,12 +13,8 @@ namespace GameProgram
 
         public Game()
         {
-            Players.Add(new Player("Player 1"));
-            Players.Add(new Player("Player 2"));
-            Players.Add(new Player("Player 3"));
-            Players.Add(new Player("Player 4"));
+            Players.Add(new Player("Player 1", 20, 20));
+            Players.Add(new Player("Player 2", 20, 20));
         }
-
-
     }
 }

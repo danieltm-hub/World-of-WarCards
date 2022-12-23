@@ -9,9 +9,9 @@ namespace AST
     public abstract class Objective : Node
     {
         public abstract string Keyword();
-        public List<Expression> Parameters {get; private set;}
+        public List<Node> Parameters {get; private set;}
         public abstract List<NodeType> ExpectedTypes { get; }
-        public Objective(List<Expression> parameters, CodeLocation location) : base(location) 
+        public Objective(List<Node> parameters, CodeLocation location) : base(location) 
         { 
             Parameters = parameters;
             Type = NodeType.Objective;

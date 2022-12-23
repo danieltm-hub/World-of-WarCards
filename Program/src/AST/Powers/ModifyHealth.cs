@@ -9,12 +9,12 @@ namespace AST
     public class ModifyHealth : Power
     {
         public override string Keyword() => "modifyhealth";
-        public override List<NodeType> ExpectedTypes => new List<NodeType>() {NodeType.Number};
-        public ModifyHealth(List<Expression> parameters, CodeLocation location) : base(parameters,location) {}
+        public override List<NodeType> ExpectedTypes => new List<NodeType>() { NodeType.Number };
+        public ModifyHealth(List<Node> parameters, CodeLocation location) : base(parameters, location) { }
 
         public override void Evaluate(IEnumerable<Player> players)
         {
-            Expression Amount = Parameters[0];
+            Expression Amount = (Expression)Parameters[0];
 
             Amount.Evaluate();
             double damage = (double)Amount.Value;
@@ -25,6 +25,6 @@ namespace AST
                 player.ChangeHealth((double)Amount.Value);
             }
         }
-       
+
     }
 }

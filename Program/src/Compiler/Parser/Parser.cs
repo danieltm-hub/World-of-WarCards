@@ -234,7 +234,7 @@ namespace Compiler
 
             string objectiveName = Reader.Peek().Value;
 
-            List<Expression> parameters = new List<Expression>();
+            List<Node> parameters = new List<Node>();
 
             CheckToken(TokenType.LParen);
 
@@ -264,7 +264,7 @@ namespace Compiler
 
             string powerName = Reader.Peek().Value;
 
-            List<Expression> parameters = new List<Expression>();
+            List<Node> parameters = new List<Node>();
 
             CheckToken(TokenType.LParen);
 
@@ -272,9 +272,17 @@ namespace Compiler
             {
                 do
                 {
-                    Expression? parameter = ParseExpression();
+                    Node? parameter = ParseEffect();
 
-                    if (parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression"));
+                    if (parameter != null)
+                    {
+                        parameters.Add(parameter);
+                        continue;
+                    }
+
+                    parameter = ParseExpression();
+
+                    if (parameter == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, $"An Expression or an effect"));
                     else parameters.Add(parameter);
                 }
                 while (Reader.Match(TokenType.Comma));

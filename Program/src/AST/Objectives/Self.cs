@@ -11,7 +11,7 @@ namespace AST
     {
         public override string Keyword() => "self";
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
-        public Self(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
+        public Self(List<Node> parameters, CodeLocation location) : base(parameters, location) { }
         public override List<Player> Evaluate()
         {
             return new List<Player>() { GameManager.CurrentGame.CurrentPlayer };

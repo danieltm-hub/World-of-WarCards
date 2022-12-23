@@ -11,3 +11,7 @@ card carta2 {
     if (false) if(true) aguacate else [self(); modifyhealth(1)]
     else [self(); modifyhealth(2)]
 }
+
+card carta3 {
+    [self(); initstate([self(); modifyhealth(12)], 4)]
+}

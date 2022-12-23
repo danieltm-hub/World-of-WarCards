@@ -9,13 +9,13 @@ namespace Compiler
 {
     public static class Reflection
     {
-        public static object Reflect(string key, List<Expression> parameters, CodeLocation location)
+        public static object Reflect(string key, List<Node> parameters, CodeLocation location)
         {
             if (!TypeStore.ContainsKey(key)) throw new Exception($"Key: {key} is not in Dictionary");
 
             Type myType = TypeStore[key];
 
-            ConstructorInfo? constructor = myType.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
+            ConstructorInfo? constructor = myType.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
             if (constructor == null) throw new Exception($"Cannot invoke {key}");
 
@@ -31,11 +31,11 @@ namespace Compiler
             {
                 if (type.IsSubclassOf(typeof(Power)))
                 {
-                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
+                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
                     if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
 
-                    Power instance = (Power)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
+                    Power instance = (Power)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
                     
                     RegistrerType(instance.Keyword(), type);
 
@@ -44,11 +44,11 @@ namespace Compiler
 
                 if (type.IsSubclassOf(typeof(Objective)))
                 {
-                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Expression>), typeof(CodeLocation) });
+                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
                     if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
 
-                    Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Expression>(), new CodeLocation()});
+                    Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
                     
                     RegistrerType(instance.Keyword(), type);
 

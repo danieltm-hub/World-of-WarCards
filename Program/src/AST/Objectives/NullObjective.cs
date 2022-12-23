@@ -10,7 +10,7 @@ namespace AST
     {
         public override string Keyword() => "nullobj";
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
-        public NullObjective(List<Expression> parameters, CodeLocation location) : base(parameters, location) { }
+        public NullObjective(List<Node> parameters, CodeLocation location) : base(parameters, location) { }
 
         public override List<Player> Evaluate()
         {
