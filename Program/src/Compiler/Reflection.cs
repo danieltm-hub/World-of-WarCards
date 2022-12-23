@@ -24,7 +24,7 @@ namespace Compiler
 
         public static void RegisterDll(string path)
         {
-            Assembly assembly = Assembly.LoadFrom(path);
+            Assembly assembly = Assembly.LoadFile(path);
             Type[] types = assembly.GetExportedTypes();
 
             System.Console.WriteLine(types.Length);

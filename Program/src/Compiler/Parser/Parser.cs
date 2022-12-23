@@ -125,11 +125,23 @@ namespace Compiler
             }
             while (Reader.Match(TokenType.Comma));
 
+            CheckToken(TokenType.Breaker);
+
+            Expression? cooldown = ParseExpression();
+
+            if(cooldown == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for cooldown"));
+
+            CheckToken(TokenType.Breaker);
+
+            Expression? energyCost = ParseExpression();
+
+            if(energyCost == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for energy cost"));
+
             CheckToken(TokenType.RBracket);
 
-            if (effects.Count != 0)
+            if (effects.Count != 0 && cooldown != null && energyCost != null)
             {
-                return new Card(name, effects, Reader.Peek().Location);
+                return new Card(name, effects, cooldown, energyCost, Reader.Peek().Location);
             }
             return null;
         }

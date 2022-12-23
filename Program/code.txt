@@ -2,16 +2,23 @@ card carta {
     if (true) [self(); modifyhealth(1 + 2 * 8 / 14 * sin(16))] 
     else [self(); modifyhealth(2)],
     
-    [self(); modifyHealth(3)]
+    [self(); modifyHealth(3)];
+
+    1; 
+    2
 }
 
 Effect aguacate = [self(); modifyhealth(2 + 2)]
 
 card carta2 {
     if (false) if(true) aguacate else [self(); modifyhealth(1)]
-    else [self(); modifyhealth(2)]
+    else [self(); modifyhealth(2)];
+    1; 
+    2
 }
 
 card carta3 {
-    [self(); initstate([self(); modifyhealth(12)], 4)]
+    [self(); initstate([self(); modifyhealth(12)], 4)];
+    1; 
+    2
 }
