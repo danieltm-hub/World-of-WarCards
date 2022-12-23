@@ -25,10 +25,14 @@ namespace Compiler
         public static void RegisterDll(string path)
         {
             Assembly assembly = Assembly.LoadFrom(path);
-            Type[] types = assembly.GetTypes();
+            Type[] types = assembly.GetExportedTypes();
+
+            System.Console.WriteLine(types.Length);
 
             foreach (Type type in types)
             {
+                System.Console.WriteLine(type.Name);
+
                 if (type.IsSubclassOf(typeof(Power)))
                 {
                     ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
