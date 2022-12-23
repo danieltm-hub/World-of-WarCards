@@ -11,6 +11,7 @@ namespace GameProgram
 
         public Card(string name, List<Effect> effects, CodeLocation location) : base(location)
         {
+            Type = NodeType.Card;
             Name = name;
             Effects = effects;
             Location = location;

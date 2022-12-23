@@ -53,6 +53,7 @@ namespace AST
         Effect,
         Objective,
         Power,
+        Card,
 
     }
 
