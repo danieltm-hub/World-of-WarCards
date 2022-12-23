@@ -7,8 +7,6 @@ namespace GameProgram
     {
         public string Name { get; private set; }
         public List<Effect> Effects { get; private set; }
-
-
         public Card(string name, List<Effect> effects, CodeLocation location) : base(location)
         {
             Name = name;
@@ -31,6 +29,16 @@ namespace GameProgram
                 if (!effect.CheckSemantic(errors)) return false;
             }
             return true;
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+            foreach (Effect effect in Effects)
+            {
+                str += effect + " ";
+            }
+            return Name + "( " + str + ")";
         }
 
     }

@@ -15,18 +15,26 @@ namespace GameProgram
 
         public void Play()
         {
-            if (GameManager.CurrentGame.CurrentPlayer.Name != MyPlayer.Name)
-                throw new Exception("Error in Play Virtual . Not my turn");
+            CheckTurn();
+            System.Console.WriteLine(MyPlayer.Name + " is thinking... \n");
 
             (double recivedScore, Card card) = MiniMaxCards(GameManager.CurrentGame, 0);
+
             System.Console.WriteLine("Score: " + recivedScore);
 
-            if (GameManager.CurrentGame.CurrentPlayer.Name != MyPlayer.Name)
-                throw new Exception("Error in Play Minimax Simluation . Not my turn");
+            CheckTurn();
 
+            Thread.Sleep(1000);
+            System.Console.WriteLine("Play Card: " + card.ToString() + "\n");
             MyPlayer.PlayCard(card);
         }
-
+        private void CheckTurn()
+        {
+            if (GameManager.CurrentGame.CurrentPlayer.Name != MyPlayer.Name)
+            {
+                throw new Exception("Error in Play Virtual . Not my turn");
+            }
+        }
         private double FinalMove(Game toReset)
         {
             Player? Winner = toReset.Winner();

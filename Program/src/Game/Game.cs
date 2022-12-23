@@ -29,7 +29,7 @@ namespace GameProgram
             CurrentPlayerIndex = (CurrentPlayerIndex - 1) % Players.Count;
             UpdateGame();
         }
-        
+
         private void UpdateGame() //Optional
         {
             Players = Players.FindAll(player => player.Health > 0);
@@ -50,6 +50,29 @@ namespace GameProgram
             }
 
             return new Game(playersClone, CurrentPlayerIndex);
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(ToString());
+        }
+        public void PrintAll()
+        {
+            foreach (Player player in Players)
+            {
+                Console.WriteLine(player.ToString());
+            }
+        }
+
+        public override string ToString()
+        {
+            string str = "Current Player: " + CurrentPlayer.Name + "\n";
+
+            foreach (Player player in Players)
+            {
+                str += player.Name + " => Health: " + player.Health + "\n";
+            }
+            return str;
         }
     }
 }

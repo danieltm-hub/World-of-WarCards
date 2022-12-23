@@ -37,5 +37,21 @@ namespace GameProgram
             }
             return new Player(Name, Health, cardsClone);
         }
+
+        public override string ToString()
+        {
+            string str = Name + " Health: " + Health + ". Player Cards: \n ";
+            for (int i = 0; i < Cards.Count; i++)
+            {
+                str += i + ": " + Cards[i].ToString() + "\n";
+            }
+            
+            return str;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(ToString());
+        }
     }
 }

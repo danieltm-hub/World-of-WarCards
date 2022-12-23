@@ -1,4 +1,5 @@
-﻿using AST;
+﻿using System.Collections.Generic;
+using AST;
 using GameProgram;
 using Compiler;
 
@@ -6,14 +7,15 @@ public static class Program
 {
     static void Main(string[] args)
     {
-        List<string> paths = new List<string>(){"./bin/Debug/net6.0/Program.dll"};
+        Registerdll();
+        (List<Error> Errors, List<Token> tokens) = ReadUserInput(Path.Join("code.txt"));
 
-        foreach(string path in paths)
-        {
-            Reflection.RegisterDll(path);
-        }
+        if (WarCardProgramTest(Errors, tokens)) SimulationTester.StartGameSimulation();
 
-        string randomInput = File.ReadAllText("./code.txt");
+    }
+    private static (List<Error>, List<Token>) ReadUserInput(string path)
+    {
+        string randomInput = File.ReadAllText(path);
 
         List<Error> Errors = new List<Error>();
         List<Token> tokens = Analyzer.GetTokens("code", randomInput, Errors);
@@ -26,11 +28,9 @@ public static class Program
         {
             Console.WriteLine(error.ToString());
         }
-
-        WarCardProgramTest(Errors, tokens);
+        return (Errors, tokens);
     }
-
-    static void WarCardProgramTest(List<Error> Errors, List<Token> tokens)
+    private static bool WarCardProgramTest(List<Error> Errors, List<Token> tokens)
     {
         Parser parser = new Parser(new TokenStream(tokens));
         WarCardProgram? program = parser.ParseProgram();
@@ -41,17 +41,46 @@ public static class Program
         {
             System.Console.WriteLine("Syntax errors");
             System.Console.WriteLine(string.Join('\n', Errors));
-            return;
+            return false;
         }
 
         if (!program.CheckSemantic(Errors))
         {
             System.Console.WriteLine("Semantic errors");
             System.Console.WriteLine(string.Join('\n', Errors));
-            return;
+            return false;
         }
 
         System.Console.WriteLine(program);
+        return true;
+    }
+
+
+    private static void Registerdll()
+    {
+        string dllPath = Path.Join(".", "dlls");
+        string selfPath = Path.Join(".", "bin", "Debug", "net6.0", "Program.dll");
+
+        List<string> paths = new List<string>() { selfPath };
+        paths.AddRange(ReadDllFiles(dllPath));
+
+        foreach (string path in paths)
+        {
+            Reflection.RegisterDll(path);
+        }
+
+    }
+
+    private static List<string> ReadDllFiles(string path)
+    {
+        List<string> paths = new List<string>() { };
+
+        foreach (string file in Directory.GetFiles(path, "*.dll"))
+        {
+            paths.Add(file);
+        }
+
+        return paths;
     }
 
 }
