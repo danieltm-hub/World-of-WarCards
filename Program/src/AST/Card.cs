@@ -16,6 +16,14 @@ namespace GameProgram
             Location = location;
         }
 
+        public void Play()
+        {
+            foreach (var effect in Effects)
+            {
+                effect.Evaluate();
+            }
+        }
+
         public override bool CheckSemantic(List<Error> errors)
         {
             foreach (var effect in Effects)
@@ -24,5 +32,6 @@ namespace GameProgram
             }
             return true;
         }
+
     }
 }
