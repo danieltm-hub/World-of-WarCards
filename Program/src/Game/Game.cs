@@ -24,12 +24,6 @@ namespace GameProgram
             //UpdateGame();
         }
 
-        public void PrevoiusPlayer()
-        {
-            CurrentPlayerIndex = (CurrentPlayerIndex - 1) % Players.Count;
-            //UpdateGame();
-        }
-
         private void UpdateGame() //Optional
         {
             Players = Players.FindAll(player => player.Health > 0);

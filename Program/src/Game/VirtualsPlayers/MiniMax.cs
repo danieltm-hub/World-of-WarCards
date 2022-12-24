@@ -7,7 +7,7 @@ namespace GameProgram
         GetScore<Game, Player> Score;
 
         int MaxDepth;
-        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 100)
+        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 1000)
         {
             MyPlayer = player; //referece to the player
             Score = score;
@@ -21,10 +21,9 @@ namespace GameProgram
 
             Game toReset = GameManager.CurrentGame.Clone(); //copy initial state
 
-            (double recivedScore, Card card) = MiniMaxCards(GameManager.CurrentGame, 0);
+            (double recivedScore, Card card) = MiniMaxCards(0);
 
-            CheckGame(toReset);
-
+            //CheckGame(toReset);
             CheckTurn();
 
             System.Console.WriteLine("Score: " + recivedScore);
@@ -45,6 +44,8 @@ namespace GameProgram
                 throw new Exception("Error in Play Virtual . Not my turn");
             }
         }
+
+
         private double FinalMove(Game toReset)
         {
             Player? Winner = toReset.Winner();
@@ -54,7 +55,7 @@ namespace GameProgram
             return (Winner == MyPlayer) ? 1 : 0;
         }
 
-        private (double, Card) MiniMaxCards(Game toReset, int depth)
+        private (double, Card) MiniMaxCards(int depth)
         {
             Game Game = GameManager.CurrentGame; //using reference
             Player thisPlayer = Game.CurrentPlayer;
@@ -62,11 +63,10 @@ namespace GameProgram
             if (depth == MaxDepth) return (Score(Game, MyPlayer), thisPlayer.Cards[0]); //depth limit => Aproximity
 
             bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
-
             double bestScore = isMyTurn ? int.MinValue : int.MaxValue; //Set max or min value
-            Card bestCard = thisPlayer.Cards[0];
+            Card bestCard = thisPlayer.Cards[0]; //throw new Exception if player havent cards
 
-            
+            Game gametoReset = Game.Clone(); //Save State
 
             foreach (Card card in thisPlayer.Cards)
             {
@@ -74,13 +74,12 @@ namespace GameProgram
 
                 double scoreMove = 0;
 
-                if (game.Winner() != null) scoreMove = FinalMove(game);
+                if (Game.Winner() != null) scoreMove = FinalMove(Game);
 
                 else
                 {
-                    game.NextPlayer(); //next player
-                    scoreMove = MiniMaxCards(game, depth + 1).Item1;//backtrack
-                    game.PrevoiusPlayer(); //Come back
+                    Game.NextPlayer(); //next player
+                    scoreMove = MiniMaxCards(depth + 1).Item1;//backtrack
                 }
 
                 if (isMyTurn && scoreMove > bestScore) //update best score, in MaxTree
@@ -89,14 +88,13 @@ namespace GameProgram
                     bestCard = card;
                 }
 
-
                 if (!isMyTurn && scoreMove < bestScore) //update best score, in MinTree
                 {
                     bestScore = scoreMove;
                     bestCard = card;
                 }
 
-                GameManager.ResetGame(toReset); //reset game, undo play cart
+                GameManager.ResetGame(gametoReset); //reset state, undo play card, previous player
             }
 
             return (bestScore, bestCard);
