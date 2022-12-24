@@ -31,6 +31,7 @@ namespace GameProgram
         public void ChangeHealth(double amount)
         {
             Health += amount;
+            Health = (Health < 0) ? 0 : Health;
         }
         public Player Clone()
         {

@@ -23,7 +23,7 @@ namespace GameProgram
 
             (double recivedScore, Card card) = MiniMaxCards(0);
 
-            //CheckGame(toReset);
+            CheckGame(toReset);
             CheckTurn();
 
             System.Console.WriteLine("Score: " + recivedScore);
@@ -52,7 +52,7 @@ namespace GameProgram
 
             if (Winner == null) throw new Exception("Error in FinalMove Minimax . No winner");
 
-            return (Winner == MyPlayer) ? 1 : 0;
+            return (Winner == MyPlayer) ? 1 : Score(toReset, MyPlayer);
         }
 
         private (double, Card) MiniMaxCards(int depth)

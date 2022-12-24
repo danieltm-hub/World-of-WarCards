@@ -12,7 +12,7 @@ namespace GameProgram
             System.Console.WriteLine(Separator);
             System.Console.WriteLine("WARNING A GAME STARTED !!!!!");
 
-            MiniMax PC = new MiniMax(GameManager.CurrentGame.Players[1], Scores.LifeScore);
+            MiniMax PC = new MiniMax(GameManager.CurrentGame.Players[1], Scores.MyLifeScore);
 
             while (true)
             {

@@ -22,7 +22,7 @@ namespace GameProgram
 
         public static void ResetGame(Game game)
         {
-            CurrentGame = game;
+            CurrentGame = game.Clone();
         }
     }
 }
