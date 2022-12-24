@@ -32,7 +32,7 @@ namespace GameProgram
 
 
         //Decks
-        public static List<Card> BasicDeck = new List<Card>() { FireballCard};
+        public static List<Card> BasicDeck = new List<Card>() { FireballCard, DamageCard, LightningCard };
 
     }
 }

@@ -41,5 +41,17 @@ namespace GameProgram
             return Name + "( " + str + ")";
         }
 
+        public Card Clone()
+        {
+            List<Effect> effectsClone = new List<Effect>();
+
+            foreach (Effect effect in Effects)
+            {
+                effectsClone.Add(effect);
+            }
+
+            return new Card(Name, effectsClone, new CodeLocation());
+        }
+
     }
 }
