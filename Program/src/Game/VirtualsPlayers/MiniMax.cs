@@ -1,12 +1,13 @@
+using System.Runtime.InteropServices;
 namespace GameProgram
 {
     public class MiniMax : IPlayer
     {
         Player MyPlayer;
-        GetScore<Game> Score;
+        GetScore<Game, Player> Score;
 
         int MaxDepth;
-        public MiniMax(Player player, GetScore<Game> score, int maxDepth = 23000)
+        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 100)
         {
             MyPlayer = player; //referece to the player
             Score = score;
@@ -18,15 +19,24 @@ namespace GameProgram
             CheckTurn();
             System.Console.WriteLine(MyPlayer.Name + " is thinking... \n");
 
+            Game toReset = GameManager.CurrentGame.Clone(); //copy initial state
+
             (double recivedScore, Card card) = MiniMaxCards(GameManager.CurrentGame, 0);
 
-            System.Console.WriteLine("Score: " + recivedScore);
+            CheckGame(toReset);
 
             CheckTurn();
 
+            System.Console.WriteLine("Score: " + recivedScore);
             Thread.Sleep(1000);
             System.Console.WriteLine("Play Card: " + card.ToString() + "\n");
+
             MyPlayer.PlayCard(card);
+        }
+        private void CheckGame(Game toReset)
+        {
+            if (!GameManager.CurrentGame.EqualGame(toReset))
+                throw new Exception("Error in Play Virtual . Game has changed");
         }
         private void CheckTurn()
         {
@@ -38,6 +48,7 @@ namespace GameProgram
         private double FinalMove(Game toReset)
         {
             Player? Winner = toReset.Winner();
+
             if (Winner == null) throw new Exception("Error in FinalMove Minimax . No winner");
 
             return (Winner == MyPlayer) ? 1 : 0;
@@ -45,18 +56,14 @@ namespace GameProgram
 
         private (double, Card) MiniMaxCards(Game toReset, int depth)
         {
-            if (toReset.CurrentPlayer.Health == 0)
-            {
-                toReset.NextPlayer();
-                throw new Exception("Exist a player with 0 health");
-            }
+            Game Game = GameManager.CurrentGame; //using reference
 
-            Player thisPlayer = toReset.CurrentPlayer;
-            bool isMyTurn = thisPlayer.Name == MyPlayer.Name;
+            Player thisPlayer = Game.CurrentPlayer;
+            bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
 
             if (depth == MaxDepth)
             {
-                return (Score(toReset), toReset.CurrentPlayer.Cards[0]); //backtrack limit, use Score Euristic
+                return (Score(Game, MyPlayer), toReset.CurrentPlayer.Cards[0]); //backtrack limit, use Score Euristic
             }
 
             double bestScore = isMyTurn ? int.MinValue : int.MaxValue; //Set max or min value

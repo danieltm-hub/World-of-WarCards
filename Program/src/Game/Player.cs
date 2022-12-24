@@ -22,7 +22,11 @@ namespace GameProgram
         }
         public void PlayCard(Card card)
         {
-            Cards.Remove(card);
+            if (!Cards.Contains(card))
+            {
+                throw new Exception($"Error in Play card , Player does not have this card {card.Name}");
+            }
+            card.Play();
         }
         public void ChangeHealth(double amount)
         {
@@ -40,12 +44,12 @@ namespace GameProgram
 
         public override string ToString()
         {
-            string str = Name + " Health: " + Health + ". Player Cards: \n ";
+            string str = Name + " Health: " + Health + ". Player Cards: \n";
             for (int i = 0; i < Cards.Count; i++)
             {
                 str += i + ": " + Cards[i].ToString() + "\n";
             }
-            
+
             return str;
         }
 

@@ -27,7 +27,7 @@ namespace GameProgram
                 }
 
                 Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
-                System.Console.WriteLine(Separator + $"A TURN FOR {currentPlayer.Name} STARTED !!!!!");
+                System.Console.WriteLine( $"A TURN FOR {currentPlayer.Name} STARTED !!!!!");
 
                 if (currentPlayer.Name == "You")
                 {
@@ -41,7 +41,8 @@ namespace GameProgram
                     PC.Play();
                 }
 
-                
+                GameManager.CurrentGame.NextPlayer();
+                System.Console.WriteLine(turnSeparator);
             }
 
             return;

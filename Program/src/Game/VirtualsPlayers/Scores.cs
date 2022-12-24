@@ -3,57 +3,48 @@ using System;
 
 namespace GameProgram
 {
-    public delegate double GetScore<Game>(Game game);
+    public delegate double GetScore<Game, Player>(Game game, Player player);
     public static class Scores
     {
-        /* score € [0 , 1]   */
-        private static double TotalLife(Game game)
+        /*Scores € [0 , 1] */
+        private static double GamePlayerFilter(Game game, Func<Player, double> FilterStats)
         {
             double total = 0;
-            foreach (var player in game.Players)
+            foreach (Player player in game.Players)
             {
-                total += player.Health;
+                total += FilterStats(player);
             }
-            //if(total == 0)throw new Exception("total life is 0");
-
             return total;
         }
 
-        private static double TotalCards(Game game)
+        public static double MyLifeScore(Game game, Player player)
         {
-            double total = 0;
-            foreach (var player in game.Players)
-            {
-                total += player.Cards.Count;
-            }
-            //if(total == 0)throw new Exception("total cards is 0");
-
-            return total;
-        }
-        public static double MyLifeScore(Game game)
-        {
-            return game.CurrentPlayer.Health / TotalLife(game);
+            return game.CurrentPlayer.Health / GamePlayerFilter(game, player => player.Health);
         }
 
-        public static double LifeScore(Game game)
+        public static double LifeScore(Game game, Player player)
         {
-            return 1 - MyLifeScore(game);
+            return 1 - MyLifeScore(game, player);
         }
 
         public static double NextPlayerLifeScore(Game game)
         {
-            return game.Players[(game.CurrentPlayerIndex + 1) % game.Players.Count].Health / TotalLife(game);
+            return game.Players[(game.CurrentPlayerIndex + 1) % game.Players.Count].Health / GamePlayerFilter(game, player => player.Health);
         }
 
         public static double PreviousPlayerLifeScore(Game game)
         {
-            return game.Players[(game.CurrentPlayerIndex - 1) % game.Players.Count].Health / TotalLife(game);
+            return game.Players[(game.CurrentPlayerIndex - 1) % game.Players.Count].Health / GamePlayerFilter(game, player => player.Health);
         }
 
         public static double MyCardsScore(Game game)
         {
-            return game.CurrentPlayer.Cards.Count / TotalCards(game);
+            return game.CurrentPlayer.Cards.Count / GamePlayerFilter(game, player => player.Cards.Count);
         }
 
+        public static double CardsScore(Game game)
+        {
+            return 1 - MyCardsScore(game);
+        }
     }
 }

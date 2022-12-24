@@ -28,11 +28,11 @@ namespace GameProgram
         public static Card DamageCard = new Card("Damage", ListerE(ListerO(Self()), ListerP(Damage(10))), new CodeLocation());
         public static Card FireballCard = new Card("Fireball", ListerE(ListerO(NextPlayer()), ListerP(Damage(15))), new CodeLocation());
         public static Card LightningCard = new Card("Lightning", ListerE(ListerO(NextPlayer()), ListerP(Damage(10.4))), new CodeLocation());
-        public static Card HealCard = new Card("Heal", ListerE(ListerO(Self()), ListerP(Heal(10))), new CodeLocation());
+        public static Card HealCard = new Card("Heal", ListerE(ListerO(Self()), ListerP(Heal(5))), new CodeLocation());
 
 
         //Decks
-        public static List<Card> BasicDeck = new List<Card>() { DamageCard, FireballCard, LightningCard, HealCard };
+        public static List<Card> BasicDeck = new List<Card>() { FireballCard};
 
     }
 }

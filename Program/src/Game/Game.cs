@@ -21,13 +21,13 @@ namespace GameProgram
         public void NextPlayer()
         {
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
-            UpdateGame();
+            //UpdateGame();
         }
 
         public void PrevoiusPlayer()
         {
             CurrentPlayerIndex = (CurrentPlayerIndex - 1) % Players.Count;
-            UpdateGame();
+            //UpdateGame();
         }
 
         private void UpdateGame() //Optional
@@ -73,6 +73,21 @@ namespace GameProgram
                 str += player.Name + " => Health: " + player.Health + "\n";
             }
             return str;
+        }
+
+        public bool EqualGame(Game other)
+        {
+            if (this.Players.Count != other.Players.Count) return false;
+            if (this.CurrentPlayerIndex != other.CurrentPlayerIndex) return false;
+            if (this.CurrentPlayer.Name != other.CurrentPlayer.Name) return false;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Name != other.Players[i].Name) return false;
+                if (Players[i].Health != other.Players[i].Health) return false;
+            }
+
+            return true;
         }
     }
 }

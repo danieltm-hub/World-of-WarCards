@@ -36,7 +36,7 @@ namespace GameProgram
             string str = "";
             foreach (Effect effect in Effects)
             {
-                str += effect + " ";
+                str += effect.Type + " ";
             }
             return Name + "( " + str + ")";
         }
