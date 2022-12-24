@@ -36,5 +36,14 @@ namespace GameProgram
             return 1 - (TotalLifeGame / TotalMaxLife);
         }
 
+        public static double AllLifeScore()
+        {
+            return GamePlayerFilter((player) => (player.Health));
+        }
+
+        public static double AllMaxLifeScore()
+        {
+            return GamePlayerFilter((player) => (player.MaxHealth));
+        }
     }
 }
