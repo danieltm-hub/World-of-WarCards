@@ -9,12 +9,14 @@ namespace GameProgram
     {
         public string Name { get; private set; }
         public double Health { get; private set; }
+        public double MaxHealth { get; private set; }
         public List<Card> Cards { get; private set; } = new List<Card>();
-        public Player(string name, double health, List<Card> cards)
+        public Player(string name, double health, List<Card> cards, double MaxHealth = 100)
         {
             Name = name;
             Health = health;
             Cards = cards;
+            MaxHealth = 100;
         }
         public void AddCard(Card card)
         {

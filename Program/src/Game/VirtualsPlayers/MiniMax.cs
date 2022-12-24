@@ -4,10 +4,10 @@ namespace GameProgram
     public class MiniMax : IPlayer
     {
         Player MyPlayer;
-        GetScore<Game, Player> Score;
+        GetScore<Player> Score;
 
         int MaxDepth;
-        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 21000)
+        public MiniMax(Player player, GetScore<Player> score, int maxDepth = 21000)
         {
             MyPlayer = player; //referece to the player
             Score = score;
@@ -18,24 +18,21 @@ namespace GameProgram
         {
             CheckTurn();
             System.Console.WriteLine(MyPlayer.Name + " is thinking... \n");
-
             Game toReset = GameManager.CurrentGame.Clone(); //copy initial state
-
             (double recivedScore, Card card) = MiniMaxCards(0);
-
             CheckGame(toReset);
             CheckTurn();
-
             System.Console.WriteLine("Score: " + recivedScore);
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
             System.Console.WriteLine("Play Card: " + card.ToString() + "\n");
-
             MyPlayer.PlayCard(card);
         }
         private void CheckGame(Game toReset)
         {
             if (!GameManager.CurrentGame.EqualGame(toReset))
+            {
                 throw new Exception("Error in Play Virtual . Game has changed, out of Simulation");
+            }
         }
         private void CheckTurn()
         {
@@ -46,27 +43,26 @@ namespace GameProgram
         }
 
 
-        private double FinalMove(Game toReset)
+        private double FinalMove()
         {
-            Player? Winner = toReset.Winner();
+            Player? Winner = GameManager.CurrentGame.Winner();
 
             if (Winner == null) throw new Exception("Error in FinalMove Minimax . No winner");
 
-            return (Winner == MyPlayer) ? 1 : Score(toReset, MyPlayer);
+            return (Winner.Name == MyPlayer.Name) ? 1 : Score(MyPlayer);
         }
 
         private (double, Card) MiniMaxCards(int depth)
         {
-            Game Game = GameManager.CurrentGame; //using reference
-            Player thisPlayer = Game.CurrentPlayer;
+            Player thisPlayer = GameManager.CurrentGame.CurrentPlayer;
 
-            if (depth == MaxDepth) return (Score(Game, MyPlayer), thisPlayer.Cards[0]); //depth limit => Aproximity
+            if (depth == MaxDepth) return (Score(MyPlayer), thisPlayer.Cards[0]); //depth limit => Aproximity
 
             bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
-            double bestScore = isMyTurn ? int.MinValue : int.MaxValue; //Set max or min value
-            //Card bestCard = thisPlayer.Cards[0]; //throw new Exception if player havent cards
-            Card? bestCard = null;
-            Game gametoReset = Game.Clone(); //Save State
+            double bestScore = isMyTurn ? int.MinValue : int.MaxValue;
+
+            Card bestCard = thisPlayer.Cards[0];
+            Game gametoReset = GameManager.CurrentGame.Clone(); //Save State
 
             foreach (Card card in thisPlayer.Cards)
             {
@@ -74,11 +70,11 @@ namespace GameProgram
 
                 double scoreMove = 0;
 
-                if (Game.Winner() != null) scoreMove = FinalMove(Game);
+                if (GameManager.CurrentGame.Winner() != null) scoreMove = FinalMove();
 
                 else
                 {
-                    Game.NextPlayer(); //next player
+                    GameManager.CurrentGame.NextPlayer(); //next player
                     scoreMove = MiniMaxCards(depth + 1).Item1;//backtrack
                 }
 
