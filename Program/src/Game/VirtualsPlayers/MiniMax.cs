@@ -57,20 +57,16 @@ namespace GameProgram
         private (double, Card) MiniMaxCards(Game toReset, int depth)
         {
             Game Game = GameManager.CurrentGame; //using reference
-
             Player thisPlayer = Game.CurrentPlayer;
+
+            if (depth == MaxDepth) return (Score(Game, MyPlayer), thisPlayer.Cards[0]); //depth limit => Aproximity
+
             bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
 
-            if (depth == MaxDepth)
-            {
-                return (Score(Game, MyPlayer), toReset.CurrentPlayer.Cards[0]); //backtrack limit, use Score Euristic
-            }
-
             double bestScore = isMyTurn ? int.MinValue : int.MaxValue; //Set max or min value
-
             Card bestCard = thisPlayer.Cards[0];
 
-            Game game = toReset.Clone(); //copy state
+            
 
             foreach (Card card in thisPlayer.Cards)
             {
