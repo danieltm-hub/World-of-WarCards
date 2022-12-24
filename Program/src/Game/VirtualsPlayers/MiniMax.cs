@@ -35,7 +35,7 @@ namespace GameProgram
         private void CheckGame(Game toReset)
         {
             if (!GameManager.CurrentGame.EqualGame(toReset))
-                throw new Exception("Error in Play Virtual . Game has changed");
+                throw new Exception("Error in Play Virtual . Game has changed, out of Simulation");
         }
         private void CheckTurn()
         {
