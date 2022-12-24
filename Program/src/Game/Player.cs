@@ -11,12 +11,12 @@ namespace GameProgram
         public double Health { get; private set; }
         public double MaxHealth { get; private set; }
         public List<Card> Cards { get; private set; } = new List<Card>();
-        public Player(string name, double health, List<Card> cards, double MaxHealth = 100)
+        public Player(string name, double health, List<Card> cards, double maxhealth = 100)
         {
             Name = name;
             Health = health;
             Cards = cards;
-            MaxHealth = 100;
+            MaxHealth = maxhealth;
         }
         public void AddCard(Card card)
         {
@@ -33,7 +33,7 @@ namespace GameProgram
         public void ChangeHealth(double amount)
         {
             Health += amount;
-            Health = (Health < 0) ? 0 : Health;
+            Health = (Health < 0) ? 0 : (Health > MaxHealth) ? MaxHealth : Health;
         }
         public Player Clone()
         {

@@ -7,7 +7,7 @@ namespace GameProgram
         GetScore<Player> Score;
 
         int MaxDepth;
-        public MiniMax(Player player, GetScore<Player> score, int maxDepth = 21000)
+        public MiniMax(Player player, GetScore<Player> score, int maxDepth = 11)
         {
             MyPlayer = player; //referece to the player
             Score = score;
@@ -22,8 +22,8 @@ namespace GameProgram
             (double recivedScore, Card card) = MiniMaxCards(0);
             CheckGame(toReset);
             CheckTurn();
+            //Thread.Sleep(1000);
             System.Console.WriteLine("Score: " + recivedScore);
-            Thread.Sleep(2000);
             System.Console.WriteLine("Play Card: " + card.ToString() + "\n");
             MyPlayer.PlayCard(card);
         }
@@ -56,8 +56,30 @@ namespace GameProgram
         {
             Player thisPlayer = GameManager.CurrentGame.CurrentPlayer;
 
-            if (depth == MaxDepth) return (Score(MyPlayer), thisPlayer.Cards[0]); //depth limit => Aproximity
+            if (depth >= MaxDepth) // TLE
+            {
+                //System.Console.WriteLine("DEPHT MAX");
+                double CurrentScore = Score(MyPlayer);
+                double variationScore = int.MinValue;
+                Card besttoPlay = thisPlayer.Cards[0];
 
+                Game toReset = GameManager.CurrentGame.Clone();
+
+                foreach (Card card in thisPlayer.Cards)
+                {
+                    thisPlayer.PlayCard(card);
+                    double NextScore = Score(MyPlayer);
+
+                    if (NextScore - CurrentScore > variationScore)
+                    {
+                        variationScore = NextScore - CurrentScore;
+                        besttoPlay = card;
+                    }
+                    GameManager.ResetGame(toReset);
+                }
+
+                return (CurrentScore + variationScore, besttoPlay);
+            }
             bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
             double bestScore = isMyTurn ? int.MinValue : int.MaxValue;
 
