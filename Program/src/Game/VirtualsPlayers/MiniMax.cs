@@ -7,7 +7,7 @@ namespace GameProgram
         GetScore<Game, Player> Score;
 
         int MaxDepth;
-        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 1000)
+        public MiniMax(Player player, GetScore<Game, Player> score, int maxDepth = 21000)
         {
             MyPlayer = player; //referece to the player
             Score = score;
@@ -27,7 +27,7 @@ namespace GameProgram
             CheckTurn();
 
             System.Console.WriteLine("Score: " + recivedScore);
-            Thread.Sleep(1000);
+            Thread.Sleep(5000);
             System.Console.WriteLine("Play Card: " + card.ToString() + "\n");
 
             MyPlayer.PlayCard(card);
@@ -64,8 +64,8 @@ namespace GameProgram
 
             bool isMyTurn = (thisPlayer.Name == MyPlayer.Name);
             double bestScore = isMyTurn ? int.MinValue : int.MaxValue; //Set max or min value
-            Card bestCard = thisPlayer.Cards[0]; //throw new Exception if player havent cards
-
+            //Card bestCard = thisPlayer.Cards[0]; //throw new Exception if player havent cards
+            Card? bestCard = null;
             Game gametoReset = Game.Clone(); //Save State
 
             foreach (Card card in thisPlayer.Cards)
