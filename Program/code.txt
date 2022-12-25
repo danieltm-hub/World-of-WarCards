@@ -1,3 +1,6 @@
+
+Effect lightning = [self(); modifyhealth(2 + 2)]
+
 card carta 1 2{
     if (true) [self(); modifyhealth(1 + 2 * 8 / 14 * sin(16))] 
     else [self(); modifyhealth(2)],
@@ -5,13 +8,11 @@ card carta 1 2{
     [self(); modifyHealth(3)]
 }
 
-Effect aguacate = [self(); modifyhealth(2 + 2)]
-
 card carta2 1 2{
-    if (false) if(true) aguacate else [self(); modifyhealth(1)]
+    if (false) if(true) lightning else [self(); modifyhealth(1)]
     else [self(); modifyhealth(2)]
 }
 
 card carta3 1 2{
-    [self(); initstate([self(); modifyhealth(12)], 4)]
+    [self(); initstate([self(); modifyenergy(12)], 4)]
 }

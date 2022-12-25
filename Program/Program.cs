@@ -11,9 +11,9 @@ public static class Program
     {
         // Create self path
 
-        // Assembly assembly = Assembly.LoadFrom("./bin/Debug/net6.0/Program.dll");
+        Assembly assembly = Assembly.LoadFrom("./bin/Debug/net6.0/Program.dll");
         
-        // Reflection.RegisterDll(assembly);
+        Reflection.RegisterDll(assembly);
 
         // Create external paths
 
@@ -26,7 +26,7 @@ public static class Program
 
             System.Console.WriteLine(path);
 
-            Assembly assembly = Assembly.LoadFile(path);
+            assembly = Assembly.LoadFrom(path);
 
             Reflection.RegisterDll(assembly);
         }

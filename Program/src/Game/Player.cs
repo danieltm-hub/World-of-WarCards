@@ -27,6 +27,11 @@ namespace GameProgram
             Health += Math.Clamp(Health + amount, 0, 20);
         }
 
+        public void ChangeEnergy(double amount)
+        {
+            Energy += Math.Clamp(Energy + amount, 0, 10);
+        }
+
         public void AddTurnInitState(State state)
         {
             OnTurnInitStates.Add(state);
