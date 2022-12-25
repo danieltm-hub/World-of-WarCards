@@ -22,13 +22,8 @@ namespace Compiler
             return constructor.Invoke(new object[] { parameters, location });
         }
 
-        public static void RegisterDll(string path)
+        public static void RegisterDll(Type[] types)
         {
-            Assembly assembly = Assembly.LoadFile(path);
-            Type[] types = assembly.GetExportedTypes();
-
-            System.Console.WriteLine(types.Length);
-
             foreach (Type type in types)
             {
                 System.Console.WriteLine(type.Name);

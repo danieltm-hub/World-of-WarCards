@@ -109,6 +109,14 @@ namespace Compiler
 
             if (CheckToken(TokenType.ID)) name = Reader.Peek().Value;
 
+            Expression? cooldown = ParseExpression();
+
+            if(cooldown == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for cooldown"));
+
+            Expression? energyCost = ParseExpression();
+
+            if(energyCost == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for energy cost"));
+            
             CheckToken(TokenType.LBracket);
 
             do
@@ -125,17 +133,7 @@ namespace Compiler
             }
             while (Reader.Match(TokenType.Comma));
 
-            CheckToken(TokenType.Breaker);
 
-            Expression? cooldown = ParseExpression();
-
-            if(cooldown == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for cooldown"));
-
-            CheckToken(TokenType.Breaker);
-
-            Expression? energyCost = ParseExpression();
-
-            if(energyCost == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for energy cost"));
 
             CheckToken(TokenType.RBracket);
 
