@@ -2,7 +2,7 @@ card carta 1 2{
     if (true) [self(); modifyhealth(1 + 2 * 8 / 14 * sin(16))] 
     else [self(); modifyhealth(2)],
     
-    [self(); modifyHealth(3)];
+    [self(); modifyHealth(3)]
 }
 
 Effect aguacate = [self(); modifyhealth(2 + 2)]

@@ -1,6 +1,8 @@
 ﻿using AST;
-using GameProgram;
 using Compiler;
+using GameProgram;
+using System;
+using System.IO;
 using System.Reflection;
 
 public static class Program
@@ -9,19 +11,24 @@ public static class Program
     {
         // Create self path
 
-        Assembly assembly = Assembly.LoadFrom("./bin/Debug/net6.0/Program.dll");
-        Type[] types = assembly.GetExportedTypes();
+        // Assembly assembly = Assembly.LoadFrom("./bin/Debug/net6.0/Program.dll");
+        
+        // Reflection.RegisterDll(assembly);
 
         // Create external paths
 
-        List<string> paths = new List<string>(){"Program.dll"};
+        DirectoryInfo directory = new DirectoryInfo("./Dlls");
+        FileInfo[] files = directory.GetFiles("*.dll");
 
-        foreach(string path in paths)
+        foreach(FileInfo file in files)
         {
-            assembly = Assembly.LoadFile(path);
-            types = assembly.GetExportedTypes();
+            string path = file.FullName;
 
-            Reflection.RegisterDll(types);
+            System.Console.WriteLine(path);
+
+            Assembly assembly = Assembly.LoadFile(path);
+
+            Reflection.RegisterDll(assembly);
         }
 
         string randomInput = File.ReadAllText("./code.txt");

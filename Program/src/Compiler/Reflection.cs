@@ -22,14 +22,20 @@ namespace Compiler
             return constructor.Invoke(new object[] { parameters, location });
         }
 
-        public static void RegisterDll(Type[] types)
+        public static void RegisterDll(Assembly assembly)
         {
-            foreach (Type type in types)
-            {
-                System.Console.WriteLine(type.Name);
+            string Separator = '\n' + new string('=', 50) + '\n';
 
+            System.Console.WriteLine(Separator);
+            System.Console.WriteLine(assembly.FullName + "  loading...");
+
+            foreach (Type type in assembly.GetExportedTypes())
+            {
+                
                 if (type.IsSubclassOf(typeof(Power)))
                 {
+                    System.Console.WriteLine(type.Name + " is a Power");
+
                     ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
                     if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
@@ -41,8 +47,10 @@ namespace Compiler
                     LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Power);
                 }
 
-                if (type.IsSubclassOf(typeof(Objective)))
+                else if (type.IsSubclassOf(typeof(Objective)))
                 {
+                    System.Console.WriteLine(type.Name + " is an Objective");
+
                     ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
                     if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
@@ -53,7 +61,14 @@ namespace Compiler
 
                     LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Objective);
                 }
-            }            
+
+                else
+                {
+                    System.Console.WriteLine(type.Name + " is not a Power or Objective");
+                }
+            }
+
+            System.Console.WriteLine(Separator);            
         }
 
         public static void RegistrerType(string keyword, Type type)
