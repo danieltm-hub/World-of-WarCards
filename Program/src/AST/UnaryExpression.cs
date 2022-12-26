@@ -8,11 +8,11 @@ namespace AST
     public abstract class UnaryExpression : Expression
     {
         public Expression Argument { get; private set; }
-
         public abstract Func<Expression, bool> IsValid { get; }
+        public abstract string OperationSymbol { get; }
+        public override string Description => $"{OperationSymbol} ( {Argument.Description} )";
 
-
-        public UnaryExpression(Expression argumment, CodeLocation location): base (location) 
+        public UnaryExpression(Expression argumment, CodeLocation location) : base(location)
         {
             Argument = argumment;
         }

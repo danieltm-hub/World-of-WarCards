@@ -36,6 +36,8 @@ namespace AST
        
         public virtual NodeType Type { get; set; }
 
+        public abstract string Description { get; }
+
         protected CodeLocation Location;
 
         public Node(CodeLocation location)
@@ -55,6 +57,7 @@ namespace AST
         Power,
         Card,
 
+        Entity,
     }
 
 

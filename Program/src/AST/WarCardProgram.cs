@@ -6,6 +6,7 @@ namespace AST
     {
         public List<Error> Errors { get; private set; }
         public Dictionary<string, Card> Cards { get; private set; }
+        public override string Description => GetDescription();
         public WarCardProgram(CodeLocation location) : base(location)
         {
             Errors = new List<Error>();
@@ -51,5 +52,18 @@ namespace AST
             return s;
         }
 
+        private string GetDescription()
+        {
+            string separator = '\n' + new string('*', 100) + '\n';
+
+            string description = separator;
+
+            foreach (Card card in Cards.Values)
+            {
+                description += card.Description;
+                description += separator;
+            }
+            return description;
+        }
     }
 }

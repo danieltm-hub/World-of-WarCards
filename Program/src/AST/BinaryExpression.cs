@@ -9,21 +9,22 @@ namespace AST
     {
         public Expression Left { get; private set; }
         public Expression Right { get; private set; }
-
         public abstract Func<Expression, Expression, bool> IsValid { get; }
-
+        public abstract string OperationSymbol { get; }
+        public override string Description => $"{Left.Description} {OperationSymbol} {Right.Description}";
 
         public BinaryExpression(Expression left, Expression right, CodeLocation location) : base(location)
         {
             Left = left;
             Right = right;
         }
+
+
         public override void Evaluate()
         {
             Right.Evaluate();
             Left.Evaluate();
         }
-        
 
         public override bool CheckSemantic(List<Error> errors)
         {

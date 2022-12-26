@@ -19,6 +19,7 @@ namespace AST
             Type = NodeType.Effect;
         }
 
+        public override string Description => GetDescription();
 
         public override bool CheckSemantic(List<Error> errors)
         {
@@ -61,6 +62,33 @@ namespace AST
             {
                 power.Evaluate(players);
             }
+        }
+
+        private string GetDescription()
+        {
+            string description = "";
+
+            List<string> powers = new List<string>();
+
+            foreach (var power in Powers)
+            {
+                powers.Add(power.Description);
+            }
+
+            description += String.Join(", ", powers);
+
+            description += " of ";
+
+            List<string> objectives = new List<string>();
+
+            foreach (var objective in Objectives)
+            {
+                objectives.Add(objective.Description);
+            }
+
+            description += String.Join(", ", objectives);
+
+            return description;
         }
     }
 }

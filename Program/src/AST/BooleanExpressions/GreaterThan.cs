@@ -10,6 +10,7 @@ namespace AST
     {
         public override Func<Expression, Expression, bool> IsValid => (left, right) => left.Type == NodeType.Number && right.Type == NodeType.Number;
         public override NodeType Type { get; set; }
+        public override string OperationSymbol => ">";
         public override object Value { get; set; }
         public GreaterThan(Expression left, Expression right, CodeLocation location) : base(left, right, location)
         {

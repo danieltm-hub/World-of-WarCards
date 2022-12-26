@@ -69,7 +69,7 @@ public static class Program
             return;
         }
 
-        System.Console.WriteLine(program);
+        System.Console.WriteLine(program.Description);
     }
 
 }

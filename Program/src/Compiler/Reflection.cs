@@ -42,9 +42,9 @@ namespace Compiler
 
                     Power instance = (Power)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
                     
-                    RegistrerType(instance.Keyword(), type);
+                    RegistrerType(instance.Keyword, type);
 
-                    LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Power);
+                    LexicStore.RegistrerKeyword(instance.Keyword, TokenType.Power);
                 }
 
                 else if (type.IsSubclassOf(typeof(Objective)))
@@ -57,9 +57,9 @@ namespace Compiler
 
                     Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
                     
-                    RegistrerType(instance.Keyword(), type);
+                    RegistrerType(instance.Keyword, type);
 
-                    LexicStore.RegistrerKeyword(instance.Keyword(), TokenType.Objective);
+                    LexicStore.RegistrerKeyword(instance.Keyword, TokenType.Objective);
                 }
 
                 else

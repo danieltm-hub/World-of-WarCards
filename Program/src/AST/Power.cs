@@ -7,7 +7,7 @@ namespace AST
 {
     public abstract class Power : Node
     {   
-        public abstract string Keyword();
+        public abstract string Keyword{ get; }
         public List<Node> Parameters { get; private set; }
         public abstract List<NodeType> ExpectedTypes { get; }
         public Power(List<Node> parameters, CodeLocation location) : base(location)

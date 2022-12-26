@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,8 @@ namespace AST
 {
     public class NullObjective : Objective
     {
-        public override string Keyword() => "nullobj";
+        public override string Keyword => "nullobj";
+        public override string Description => "Nobody";
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
         public NullObjective(List<Node> parameters, CodeLocation location) : base(parameters, location) { }
 

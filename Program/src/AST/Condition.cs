@@ -10,7 +10,7 @@ namespace AST
         public Expression BooleanCondition { get; private set; }
         public Effect Left { get; private set; }
         public Effect? Right { get; private set; }
-
+        public override string Description => GetDescription();
         public Condition(Expression booleanCondition, Effect left, Effect? right, CodeLocation location) : base(location)
         {
             BooleanCondition = booleanCondition;
@@ -40,13 +40,22 @@ namespace AST
                 Type = NodeType.Error;
             }
 
-            if(Left.Type != NodeType.Effect && (Right == null || Right.Type != NodeType.Effect))
+            if (Left.Type != NodeType.Effect && (Right == null || Right.Type != NodeType.Effect))
             {
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Must recieve an action parameter"));
                 Type = NodeType.Error;
             }
 
             return Type != NodeType.Error && left && right && condition;
+        }
+
+        private string GetDescription()
+        {
+            string description = $"if ( {BooleanCondition.Description} ) {Left.Description}";
+
+            if (Right != null) description += $"\nelse {Right.Description}";
+
+            return description;
         }
     }
 }

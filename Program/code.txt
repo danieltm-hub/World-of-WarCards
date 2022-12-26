@@ -14,5 +14,5 @@ card carta2 1 2{
 }
 
 card carta3 1 2{
-    [self(); initstate([self(); modifyenergy(12)], 4)]
+    [self(); initstate([nullobj(); modifyhealth(12)], 4)]
 }

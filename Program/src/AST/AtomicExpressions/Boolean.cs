@@ -9,6 +9,7 @@ namespace AST
     public class Bool : AtomicExpression
     {
         public override NodeType Type { get => NodeType.Bool; set { } }
+        public override string Description { get => (Value == null) ? " " :  ((bool)Value).ToString() ; }
         public override object Value { get; set; }
         public override void Evaluate() { }
         public Bool(bool value, CodeLocation location) : base(location)
