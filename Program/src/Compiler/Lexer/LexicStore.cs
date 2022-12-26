@@ -36,6 +36,7 @@ namespace Compiler
             {"{", TokenType.LBracket},
             {"}", TokenType.RBracket},
             {",", TokenType.Comma},
+            {".", TokenType.Dot},
             {";", TokenType.Breaker},
 
             {"\"", TokenType.DoubleCommas},
@@ -59,11 +60,13 @@ namespace Compiler
 
         public static void RegistrerOperator(string op, TokenType type)
         {
+            op = op.ToLower();
             Symbols.Add(op, type);
         }
         public static void RegistrerKeyword(string keyword, TokenType type)
         {
-            if(Keywords.ContainsKey(keyword)) throw new Exception($"Keyword {keyword} already exists");
+            keyword = keyword.ToLower();
+            if (Keywords.ContainsKey(keyword)) throw new Exception($"Keyword {keyword} already exists");
             Keywords.Add(keyword, type);
         }
 
@@ -111,11 +114,14 @@ namespace Compiler
         RSquareBracket,
         Breaker,
         Comma,
+        Dot,
         DoubleCommas,
 
         Ignore,
         Assign,
 
+        Entity,
+        Property,
         Effector,
         Power,
         Objective,

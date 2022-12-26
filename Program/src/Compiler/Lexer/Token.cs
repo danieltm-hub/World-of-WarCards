@@ -140,6 +140,24 @@ namespace Compiler
             return true;
         }
 
+        public bool ReadText(out string text)
+        {
+            text = "";
+
+            if (Match("\""))
+            {
+
+                while (!Match("\""))
+                {
+                    if (EOL) return false;
+
+                    text += ReadAny();
+                }
+
+                return true;
+            }
+            return false;
+        }
         public bool ReadUntil(string end, out string text, bool include = false)
         {
             text = "";

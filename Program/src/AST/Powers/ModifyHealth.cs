@@ -29,7 +29,7 @@ namespace AST
 
         private string GetDescription()
         {
-            return $"Modifies health by an amount of {((Expression)Parameters[0]).Description}";
+            return $"modifies health by an amount of ({((Expression)Parameters[0]).Description})";
         }
 
     }

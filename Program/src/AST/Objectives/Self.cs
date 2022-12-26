@@ -10,7 +10,7 @@ namespace AST
     public class Self : Objective
     {
         public override string Keyword => "self";
-        public override string Description => "The current player";
+        public override string Description => "current player";
         public override List<NodeType> ExpectedTypes => new List<NodeType>();
         public Self(List<Node> parameters, CodeLocation location) : base(parameters, location) { }
         public override List<Player> Evaluate()

@@ -31,55 +31,43 @@ namespace Compiler
 
             foreach (Type type in assembly.GetExportedTypes())
             {
-                
-                if (type.IsSubclassOf(typeof(Power)))
-                {
-                    System.Console.WriteLine(type.Name + " is a Power");
-
-                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
-
-                    if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
-
-                    Power instance = (Power)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
-                    
-                    RegistrerType(instance.Keyword, type);
-
-                    LexicStore.RegistrerKeyword(instance.Keyword, TokenType.Power);
-                }
-
-                else if (type.IsSubclassOf(typeof(Objective)))
-                {
-                    System.Console.WriteLine(type.Name + " is an Objective");
-
-                    ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
-
-                    if(classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
-
-                    Objective instance = (Objective)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation()});
-                    
-                    RegistrerType(instance.Keyword, type);
-
-                    LexicStore.RegistrerKeyword(instance.Keyword, TokenType.Objective);
-                }
-
-                else
-                {
-                    System.Console.WriteLine(type.Name + " is not a Power or Objective");
-                }
+                AskForType<Entity>(type, TokenType.Entity);
+                AskForType<Property>(type, TokenType.Property);
+                AskForType<Objective>(type, TokenType.Objective);
+                AskForType<Power>(type, TokenType.Power);
             }
 
-            System.Console.WriteLine(Separator);            
+            System.Console.WriteLine(Separator);
+        }
+
+        private static void AskForType<T>(Type type, TokenType instanceType) where T : IKeyword
+        {
+            if (type.IsSubclassOf(typeof(T)))
+            {
+                System.Console.WriteLine(type.Name + " is a " + typeof(T).Name);
+
+                ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
+
+                if (classConstructor == null) throw new Exception($"Cannot invoke {type.Name}");
+
+                T instance = (T)classConstructor.Invoke(new object[] { new List<Node>(), new CodeLocation() });
+
+                RegistrerType(instance.Keyword, type);
+
+                LexicStore.RegistrerKeyword(instance.Keyword, instanceType);
+            }
         }
 
         public static void RegistrerType(string keyword, Type type)
         {
-            if(TypeStore.ContainsKey(keyword)) throw new Exception($"Key: {keyword} is already in Dictionary");
+            keyword = keyword.ToLower();
+            if (TypeStore.ContainsKey(keyword)) throw new Exception($"Key: {keyword} is already in Dictionary");
             TypeStore.Add(keyword, type);
         }
 
         static Dictionary<string, Type> TypeStore = new Dictionary<string, Type>
         {
-            
+
         };
     }
 

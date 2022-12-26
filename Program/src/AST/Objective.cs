@@ -6,7 +6,7 @@ using GameProgram;
 
 namespace AST
 {
-    public abstract class Objective : Node
+    public abstract class Objective : Node, IKeyword
     {
         public abstract string Keyword { get; }
         public List<Node> Parameters {get; private set;}

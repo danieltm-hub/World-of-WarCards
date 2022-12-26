@@ -9,10 +9,10 @@ card carta 1 2{
 }
 
 card carta2 1 2{
-    if (false) if(true) lightning else [self(); modifyhealth(1)]
+    if ("1" == "1") if(true) lightning else [self(); modifyhealth(1)]
     else [self(); modifyhealth(2)]
 }
 
 card carta3 1 2{
-    [self(); initstate([nullobj(); modifyhealth(12)], 4)]
+    [self(); initstate([nullobj(); modifyhealth(12 + current.health)], 4)]
 }

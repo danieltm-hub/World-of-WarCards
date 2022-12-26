@@ -53,6 +53,12 @@ namespace Compiler
                     continue;
                 }
 
+                if (reader.ReadText(out value))
+                {
+                    tokens.Add(new Token(TokenType.Text, value, reader.Location));
+                    continue;
+                }
+
                 if (MatchSymbol(reader, tokens))
                 {
                     continue;
