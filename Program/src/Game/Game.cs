@@ -16,5 +16,18 @@ namespace GameProgram
             Players.Add(new Player("Player 1", 20, 20));
             Players.Add(new Player("Player 2", 20, 20));
         }
+
+        public Game Clone()
+        {
+            Game clone = new Game();
+
+            foreach (Player player in Players)
+            {
+                clone.Players.Add(player.Clone());
+            }
+            clone.CurrentPlayerIndex = CurrentPlayerIndex;
+
+            return clone;
+        }
     }
 }

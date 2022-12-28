@@ -46,6 +46,13 @@ namespace GameProgram
             return Type == NodeType.Card;
         }
 
+        public void Play()
+        {
+            foreach (var effect in Effects)
+            {
+                effect.Evaluate();
+            }
+        }
         private string GetDescription()
         {
             string description = $"Card: {Name} \n";
@@ -61,6 +68,18 @@ namespace GameProgram
             }
 
             return description;
+        }
+
+        public Card Clone()
+        {
+            List<Effect> effects = new List<Effect>();
+
+            foreach (var effect in Effects)
+            {
+                effects.Add(effect);
+            }
+
+            return new Card(Name, effects, Cooldown, EnergyCost, Location);
         }
     }
 }
