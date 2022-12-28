@@ -17,6 +17,19 @@ namespace GameProgram
             Players = players;
             WinCondition = winCondition;
         }
+
+        public bool IsOver()
+        {
+            return WinCondition.CheckWinCondition(this);
+        }
+
+        public Player Winner()
+        {
+            if (!IsOver()) throw new Exception("Game.Winner() : Game is not over yet");
+
+            return WinCondition.Winner!;
+        }
+
         public Game Clone()
         {
             List<Player> playersClone = new List<Player>();
