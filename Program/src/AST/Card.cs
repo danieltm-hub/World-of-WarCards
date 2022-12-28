@@ -8,7 +8,7 @@ namespace GameProgram
         public string Name { get; private set; }
         public List<Effect> Effects { get; private set; }
         public override string Description => GetDescription();
-        public Expression Cooldown { get; private set; }
+        public Expression Coldown { get; private set; }
         public Expression EnergyCost { get; private set; }
         public Card(string name, List<Effect> effects, Expression cooldown, Expression energyCost, CodeLocation location) : base(location)
         {
@@ -16,7 +16,7 @@ namespace GameProgram
             Name = name;
             Effects = effects;
             Location = location;
-            Cooldown = cooldown;
+            Coldown = cooldown;
             EnergyCost = energyCost;
         }
 
@@ -31,7 +31,7 @@ namespace GameProgram
                 }
             }
 
-            if (!Cooldown.CheckSemantic(errors))
+            if (!Coldown.CheckSemantic(errors))
             {
                 Type = NodeType.Error;
                 errors.Add(new Error(ErrorCode.Invalid, Location, $"Cooldown"));
@@ -57,7 +57,7 @@ namespace GameProgram
         {
             string description = $"Card: {Name} \n";
 
-            description += $"Cooldown: {Cooldown.Description} \n";
+            description += $"Cooldown: {Coldown.Description} \n";
             description += $"EnergyCost: {EnergyCost.Description} \n";
 
             int count = 1;
@@ -79,7 +79,7 @@ namespace GameProgram
                 effects.Add(effect);
             }
 
-            return new Card(Name, effects, Cooldown, EnergyCost, Location);
+            return new Card(Name, effects, Coldown, EnergyCost, Location);
         }
     }
 }

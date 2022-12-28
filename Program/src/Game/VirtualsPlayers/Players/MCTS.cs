@@ -25,8 +25,7 @@ namespace GameProgram
     public class MCTS
     {
         /* Todas las busquedas y extraccion de informacion se hace sobre GameManager,
-        para evitar errores en los gameStates. */
-
+        para evitar errores en los gameStates.*/
         Player myPlayer;
         IStrategy Strategy;
 
@@ -36,13 +35,34 @@ namespace GameProgram
             Strategy = strategy;
         }
 
+        public void Play()
+        {
+
+        }
+
+        public void CheckTurn()
+        {
+            if (GameManager.CurrentGame.CurrentPlayer.Name != myPlayer.Name)
+            {
+                throw new Exception(myPlayer.Name + "CheckTurn MCTS: Not my turn");
+            }
+        }
+
+        
         private List<Card> AvailableCards(Player player)
         {
             List<Card> availableCards = new List<Card>();
 
-            player = SearchPlayer(player);
-
             foreach (Card card in player.Cards)
+            {
+                card.EnergyCost.Evaluate();
+                double cardCost = (double)card.EnergyCost.Value;
+
+                if (cardCost <= player.Energy)
+                {
+                    availableCards.Add(card);
+                }
+            }
 
             return availableCards;
         }
@@ -58,6 +78,15 @@ namespace GameProgram
             }
             throw new Exception("SearchPlayer: Player not found");
         }
+
+        private Card RandomCard(List<Card> cards)
+        {
+            Random random = new Random();
+            int index = random.Next(cards.Count);
+            return cards[index];
+        }
+
+
 
     }
 

@@ -17,15 +17,20 @@ namespace GameProgram
         public double MaxHealth { get; private set; } = 20;
         public double Energy { get; private set; }
         public double MaxEnergy { get; private set; } = 10;
+        public List<Card> Cards { get; private set; }
+        public double[] ColdownCards { get; private set; }
 
-        public HashSet<Card> Cards { get; private set; } = new HashSet<Card>();
-        public Player(string name, double health, double energy)
+        public Player(string name, double health, double energy, List<Card> cards)
         {
             Name = name;
             Health = health;
             Energy = energy;
+            Cards = new List<Card>();
+            AddCards(cards);
+            ColdownCards = new double[Cards.Count];
         }
-        public void AddCards(List<Card> cards)// esto puede ir en el cosntructor mejor
+
+        private void AddCards(List<Card> cards)
         {
             foreach (Card card in cards)
             {
@@ -35,16 +40,44 @@ namespace GameProgram
 
         public bool Play(Card card)
         {
+            int cardIndex = GetCardIndex(card);
+
+            if (cardIndex == -1) throw new Exception(card.Name + "Card not found"); // si no contiene la carta deberia ser una excepcion?
+
             card.EnergyCost.Evaluate();
             double cardCost = (double)card.EnergyCost.Value;
 
-            if (Energy < cardCost || !Cards.Contains(card)) return false;
+            if (ColdownCards[cardIndex] != 0 || Energy < cardCost)
+            {
+                return false;
+            }
 
             ChangeEnergy(-cardCost);
-            Cards.Remove(card);
             card.Play();
+            AddColdown(card, cardIndex);
 
             return true;
+        }
+
+        public int GetCardIndex(Card wantedCard)
+        {
+            int index = -1;
+
+            for (int i = 0; i < Cards.Count; i++)
+            {
+                if (Cards[i].Name == wantedCard.Name)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+        private void AddColdown(Card card, int index)
+        {
+            card.Coldown.Evaluate();
+            ColdownCards[index] = (double)card.Coldown.Value;
         }
         public void ChangeHealth(double amount)
         {
@@ -73,25 +106,55 @@ namespace GameProgram
 
         public Player Clone()
         {
-            Player player = new Player(Name, Health, Energy);
+            string name = Name;
+            double health = Health;
+            double energy = Energy;
 
-            player.Cards = new HashSet<Card>(Cards);
+            List<Card> cardsClone = new List<Card>();
+
+            foreach (Card card in Cards) // clonar las cartas   
+            {
+                cardsClone.Add(card.Clone());
+            }
+
+            Player player = new Player(name, health, energy, cardsClone);
+
+            for (int i = 0; i < ColdownCards.Length; i++) //Clonar los coldowns
+            {
+                player.ColdownCards[i] = ColdownCards[i];
+            }
+
+            foreach (State state in OnTurnInitStates) // Clonar los estados
+            {
+                player.AddTurnInitState(state);
+            }
+
+            foreach (State state in OnPlayCardStates)
+            {
+                player.AddPlayCardState(state);
+            }
+
+            foreach (State state in OnTurnEndStates)
+            {
+                player.AddTurnEndState(state);
+            }
+
+            return player;
+        }
+
+        public bool EqualPlayer(Player player)
+        {
+            if (Name != player.Name) return false;
+            if (Health != player.Health) return false;
+            if (Energy != player.Energy) return false;
+            if (Cards.Count != player.Cards.Count) return false;
 
             foreach (Card card in Cards)
             {
-                player.Cards.Add(card.Clone());
+                if (!player.Cards.Contains(card)) return false;
             }
 
-            player.OnTurnInitStates = new List<State>();
-            player.OnTurnInitStates.AddRange(OnTurnInitStates);
-
-            player.OnPlayCardStates = new List<State>();
-            player.OnPlayCardStates.AddRange(OnPlayCardStates);
-
-            player.OnTurnEndStates = new List<State>();
-            player.OnTurnEndStates.AddRange(OnTurnEndStates);
-
-            return player;
+            return true;
         }
     }
 }

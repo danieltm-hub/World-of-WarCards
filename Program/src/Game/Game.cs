@@ -13,8 +13,7 @@ namespace GameProgram
 
         public Game()
         {
-            Players.Add(new Player("Player 1", 20, 20));
-            Players.Add(new Player("Player 2", 20, 20));
+       
         }
 
         public Game Clone()
@@ -29,5 +28,19 @@ namespace GameProgram
 
             return clone;
         }
+        
+        public bool EqualGame(Game game)
+        {
+            if (CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (!Players[i].EqualPlayer(game.Players[i])) return false;
+            }
+
+            return true;
+        }
+
+
     }
 }
