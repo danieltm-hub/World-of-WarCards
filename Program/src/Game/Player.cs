@@ -12,11 +12,13 @@ namespace GameProgram
         public List<State> OnPlayCardStates { get; private set; } = new List<State>();
         public List<State> OnTurnEndStates { get; private set; } = new List<State>();
 
+        public double MaxHealth { get; private set; } = 20;
+        public double MaxEnergy { get; private set; } = 10;
+        public double RestoreEnergy { get; private set; } = 1;
+
         public string Name { get; private set; }
         public double Health { get; private set; }
-        public double MaxHealth { get; private set; } = 20;
         public double Energy { get; private set; }
-        public double MaxEnergy { get; private set; } = 10;
         public List<Card> Cards { get; private set; }
         public double[] ColdownCards { get; private set; }
 
@@ -28,6 +30,31 @@ namespace GameProgram
             Cards = new List<Card>();
             AddCards(cards);
             ColdownCards = new double[Cards.Count];
+        }
+
+        public void OnTurnInit()
+        {
+            ChangeEnergy(RestoreEnergy);
+            ChangeColdowns();
+            EvaluateStates(OnTurnInitStates);
+        }
+
+        public void OnPlayCard(Card card)
+        {
+            EvaluateStates(OnPlayCardStates);
+        }
+
+        public void OnTurnEnd()
+        {
+            EvaluateStates(OnTurnEndStates);
+        }
+
+        private void EvaluateStates(List<State> states)
+        {
+            foreach (State state in states)
+            {
+                state.Evaluate();
+            }
         }
 
         private void AddCards(List<Card> cards)
@@ -54,6 +81,7 @@ namespace GameProgram
 
             ChangeEnergy(-cardCost);
             card.Play();
+            OnPlayCard(card); /// no se si esto va aqui /////////////////////////
             AddColdown(card, cardIndex);
 
             return true;
@@ -73,6 +101,13 @@ namespace GameProgram
             }
 
             return index;
+        }
+        private void ChangeColdowns()
+        {
+            for (int i = 0; i < ColdownCards.Length; i++)
+            {
+                ColdownCards[i] = Math.Max(ColdownCards[i] - 1, 0);
+            }
         }
         private void AddColdown(Card card, int index)
         {

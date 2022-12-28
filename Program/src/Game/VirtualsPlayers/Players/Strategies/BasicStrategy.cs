@@ -12,4 +12,12 @@ namespace GameProgram
             throw new NotImplementedException();
         }
     }
+
+    public class BasicStadistics : IStadistic
+    {
+        public NodeMCTS SelectNode(List<NodeMCTS> nodes)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

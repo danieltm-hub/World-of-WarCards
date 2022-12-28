@@ -18,6 +18,12 @@ namespace GameProgram
             WinCondition = winCondition;
         }
 
+        public void NextTurn()
+        {
+            CurrentPlayer.OnTurnEnd();
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
+            CurrentPlayer.OnTurnInit();
+        }
         public bool IsOver()
         {
             return WinCondition.CheckWinCondition(this);
