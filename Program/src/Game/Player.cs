@@ -6,7 +6,7 @@ using AST;
 
 namespace GameProgram
 {
-    public class Player
+    public class Player : IClonable<Player>
     {
         public List<State> OnTurnInitStates { get; private set; } = new List<State>();
         public List<State> OnPlayCardStates { get; private set; } = new List<State>();

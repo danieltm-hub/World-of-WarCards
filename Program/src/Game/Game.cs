@@ -5,30 +5,34 @@ using System.Threading.Tasks;
 
 namespace GameProgram
 {
-    public class Game
+    public class Game : IClonable<Game>
     {
         public int CurrentPlayerIndex { get; set; }
         public List<Player> Players = new List<Player>();
         public Player CurrentPlayer => Players[CurrentPlayerIndex];
+        private IWinCondition WinCondition;
 
-        public Game()
+        public Game(List<Player> players, IWinCondition winCondition)
         {
-       
+            Players = players;
+            WinCondition = winCondition;
         }
-
         public Game Clone()
         {
-            Game clone = new Game();
+            List<Player> playersClone = new List<Player>();
 
             foreach (Player player in Players)
             {
-                clone.Players.Add(player.Clone());
+                playersClone.Add(player.Clone());
             }
-            clone.CurrentPlayerIndex = CurrentPlayerIndex;
 
-            return clone;
+            Game gameClone = new Game(playersClone, WinCondition);
+
+            gameClone.CurrentPlayerIndex = CurrentPlayerIndex;
+
+            return gameClone;
         }
-        
+
         public bool EqualGame(Game game)
         {
             if (CurrentPlayerIndex != game.CurrentPlayerIndex) return false;

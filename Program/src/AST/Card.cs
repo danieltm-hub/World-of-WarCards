@@ -3,7 +3,7 @@ using AST;
 
 namespace GameProgram
 {
-    public class Card : Node
+    public class Card : Node, IClonable<Card>
     {
         public string Name { get; private set; }
         public List<Effect> Effects { get; private set; }
