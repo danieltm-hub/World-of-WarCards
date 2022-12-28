@@ -21,6 +21,7 @@ namespace Compiler
             //Simple Signs
             {"+", TokenType.Sum},
             {"-", TokenType.Sub},
+            {"d", TokenType.DRandom},
             {"*", TokenType.Mul},
             {"/", TokenType.Div},
             {"^", TokenType.Pow},
@@ -63,7 +64,7 @@ namespace Compiler
         }
         public static void RegistrerKeyword(string keyword, TokenType type)
         {
-            if(Keywords.ContainsKey(keyword)) throw new Exception($"Keyword {keyword} already exists");
+            if (Keywords.ContainsKey(keyword)) throw new Exception($"Keyword {keyword} already exists");
             Keywords.Add(keyword, type);
         }
 
@@ -91,6 +92,7 @@ namespace Compiler
         // Binary Operators
         Sum,
         Sub,
+        DRandom,
         Mul,
         Div,
         Pow,

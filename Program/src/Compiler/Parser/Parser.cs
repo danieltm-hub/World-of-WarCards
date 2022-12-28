@@ -21,7 +21,7 @@ namespace Compiler
 
         private void variablesAdd(string name, Effect effect)
         {
-            if(name == "") return;
+            if (name == "") return;
 
             if (effectVariables.ContainsKey(name))
             {
@@ -56,7 +56,7 @@ namespace Compiler
                     Card? card = ParseCard();
 
                     if (card != null) program.AddCard(card);
-                    
+
                     else
                     {
                         CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Card"));
@@ -65,16 +65,16 @@ namespace Compiler
                 else if (Reader.Match(TokenType.Effect))
                 {
                     string name = "";
-                    if(CheckToken(TokenType.ID))
+                    if (CheckToken(TokenType.ID))
                     {
                         name = Reader.Peek().Value;
                     }
 
                     CheckToken(TokenType.Assign);
-                    
-                    Effect? toAdd =  ParseEffect();
 
-                    if(toAdd != null)
+                    Effect? toAdd = ParseEffect();
+
+                    if (toAdd != null)
                     {
                         variablesAdd(name, toAdd);
                     }
@@ -111,17 +111,17 @@ namespace Compiler
 
             Expression? cooldown = ParseExpression();
 
-            if(cooldown == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for cooldown"));
+            if (cooldown == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for cooldown"));
 
             Expression? energyCost = ParseExpression();
 
-            if(energyCost == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for energy cost"));
-            
+            if (energyCost == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Numeric Expression for energy cost"));
+
             CheckToken(TokenType.LBracket);
 
             do
             {
-                Effect? effect =  ParseEffect();
+                Effect? effect = ParseEffect();
                 if (effect != null)
                 {
                     effects.Add(effect);
@@ -157,34 +157,34 @@ namespace Compiler
         public Condition? ParseConditional()
         {
             // Current Token is if
-            
+
             CheckToken(TokenType.LParen);
-            
+
             Expression? condition = ParseExpression();
 
-            if(condition == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Boolean Expression"));
+            if (condition == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "A Boolean Expression"));
 
             CheckToken(TokenType.RParen);
 
             Effect? effect = ParseEffect();
 
-            if(effect == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
+            if (effect == null) CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
 
             Effect? elseEffect = null;
 
-            if(Reader.Match(TokenType.Else))
+            if (Reader.Match(TokenType.Else))
             {
                 elseEffect = ParseEffect();
-                
-                if(elseEffect == null)
-                {   
+
+                if (elseEffect == null)
+                {
                     CompilerErrors.Add(new Error(ErrorCode.Expected, Reader.Peek().Location, "An Effect"));
                     return null;
                 }
             }
 
-            if(condition == null || effect == null) return null;
-            
+            if (condition == null || effect == null) return null;
+
             return new Condition(condition, effect, elseEffect, Reader.Peek().Location);
 
 
@@ -327,7 +327,7 @@ namespace Compiler
             return newExpression;
         }
 
-        private Expression? ParseExpressionLv1Maker(Expression? left) // + - > < == !=  >= <=
+        private Expression? ParseExpressionLv1Maker(Expression? left) // + - d > < == !=  >= <=
         {
             Expression? exp = // +
                 ParseBinaryOp(left, TokenType.Sum, (left, right, location) => new Add(left, right, location),
@@ -337,6 +337,12 @@ namespace Compiler
 
             exp = // -
                 ParseBinaryOp(left, TokenType.Sub, (left, right, location) => new Sub(left, right, location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
+
+            if (exp != null) return exp;
+
+            exp = // d
+                ParseBinaryOp(left, TokenType.DRandom, (left, right, location) => new DRandom(left, right, location),
                 (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;

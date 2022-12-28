@@ -22,17 +22,6 @@ namespace Compiler
 
                 if (reader.ReadWhiteSpace()) continue;
 
-                if (reader.ReadID(out value))
-                {
-                    if (LexicStore.MatchKeyword(value))
-                        tokens.Add(new Token(LexicStore.Keywords[value], value, reader.Location));
-
-                    else
-                        tokens.Add(new Token(TokenType.ID, value, reader.Location));
-        
-                    continue;
-                }
-
                 if (reader.Match("-", false) && !MatchPrevious(tokens, TokenType.Number, TokenType.RParen))
                 {
                     reader.Match("-");
@@ -55,6 +44,17 @@ namespace Compiler
 
                 if (MatchSymbol(reader, tokens))
                 {
+                    continue;
+                }
+
+                if (reader.ReadID(out value))
+                {
+                    if (LexicStore.MatchKeyword(value))
+                        tokens.Add(new Token(LexicStore.Keywords[value], value, reader.Location));
+
+                    else
+                        tokens.Add(new Token(TokenType.ID, value, reader.Location));
+
                     continue;
                 }
 
