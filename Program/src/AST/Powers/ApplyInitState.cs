@@ -33,7 +33,7 @@ namespace AST
             Expression duration = (Expression)Parameters[1];
             duration.Evaluate();
             
-            return $"At the start of turn {effect.Description} for {duration.Value} turns";
+            return $"At the start of turn \"{effect.Description}\" for {duration.Value} turns";
         }
     }
 }

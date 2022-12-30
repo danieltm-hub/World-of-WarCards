@@ -5,11 +5,26 @@ using System.Threading.Tasks;
 
 namespace AST
 {
-    public abstract class Entity : AtomicExpression
+    public abstract class Entity : AtomicExpression, IKeyword
     {
-        public Entity(CodeLocation location) : base(location) 
-        { 
+        public abstract string Keyword { get; }
+        public List<Node> Parameters { get; private set; }
+        public Entity(List<Node> parameters, CodeLocation location) : base(location)
+        {
+            Parameters = parameters;
             Type = NodeType.Entity;
+        }
+
+        public override bool CheckSemantic(List<Error> errors)
+        {
+            if(Parameters.Count != 0)
+            {
+                errors.Add(new Error(ErrorCode.Expected, Location, $"Method recieves {0} and {Parameters.Count} where given"));
+                Type = NodeType.Error;
+                return false;
+            }
+
+            return true;
         }
     }
 }

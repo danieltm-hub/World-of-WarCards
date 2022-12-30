@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GameProgram;
 namespace AST
 {
-    public abstract class Power : Node
+    public abstract class Power : Node, IKeyword
     {   
         public abstract string Keyword{ get; }
         public List<Node> Parameters { get; private set; }

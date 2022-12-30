@@ -60,5 +60,10 @@ namespace AST
         Entity,
     }
 
+    public interface IKeyword
+    {
+        string Keyword { get; }
+    }
+
 
 }
