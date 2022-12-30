@@ -7,6 +7,12 @@ namespace GameProgram
 {
     public static class GameManager
     {
-        public static Game CurrentGame = new Game();
+        public static Game CurrentGame = new Game(new List<Player>(), 0, new EnemyDefeated());
+
+        public static void StartGame(List<Player> players)
+        {
+            CurrentGame = new Game(players, 0, new EnemyDefeated());
+        }
+        
     }
 }

@@ -3,13 +3,32 @@ using AST;
 
 namespace GameProgram
 {
-    public class Card : Node
+    public class Card : Node, IClonable<Card>
     {
         public string Name { get; private set; }
         public List<Effect> Effects { get; private set; }
         public override string Description => GetDescription();
-        public Expression Coldown { get; private set; }
-        public Expression EnergyCost { get; private set; }
+        private Expression EnergyCost;
+        public double EnergyCostValue
+        {
+            get
+            {
+                EnergyCost.Evaluate();
+                return Math.Max(0, (double)EnergyCost.Value);
+            }
+        }
+        private Expression Coldown;
+        public double ColdownValue 
+        { 
+            get
+            {
+                Coldown.Evaluate();
+                return Math.Max(0, (double)Coldown.Value);
+            }
+        }
+
+        public double CurrentColdown = 0;
+
         public Card(string name, List<Effect> effects, Expression coldown, Expression energyCost, CodeLocation location) : base(location)
         {
             Type = NodeType.Card;
@@ -18,6 +37,11 @@ namespace GameProgram
             Location = location;
             Coldown = coldown;
             EnergyCost = energyCost;
+        }
+
+        public Card Clone()
+        {
+            return new Card(Name, Effects, Coldown, EnergyCost, Location);
         }
 
         public override bool CheckSemantic(List<Error> errors)
@@ -62,5 +86,13 @@ namespace GameProgram
 
             return description;
         }
+
+        public void Play()
+        {
+            Effects.ForEach(effect => effect.Evaluate());
+            CurrentColdown = ColdownValue;
+        }
+
+        public void ReduceColdown() => CurrentColdown = Math.Max(0, CurrentColdown-1);
     }
 }
