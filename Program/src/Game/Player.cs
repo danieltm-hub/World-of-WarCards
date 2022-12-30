@@ -80,8 +80,8 @@ namespace GameProgram
             }
 
             ChangeEnergy(-cardCost);
+            OnPlayCard(card);
             card.Play();
-            OnPlayCard(card); /// no se si esto va aqui /////////////////////////
             AddColdown(card, cardIndex);
 
             return true;
@@ -141,10 +141,6 @@ namespace GameProgram
 
         public Player Clone()
         {
-            string name = Name;
-            double health = Health;
-            double energy = Energy;
-
             List<Card> cardsClone = new List<Card>();
 
             foreach (Card card in Cards) // clonar las cartas   
@@ -152,7 +148,7 @@ namespace GameProgram
                 cardsClone.Add(card.Clone());
             }
 
-            Player player = new Player(name, health, energy, cardsClone);
+            Player player = new Player(Name, Health, Energy, cardsClone);
 
             for (int i = 0; i < ColdownCards.Length; i++) //Clonar los coldowns
             {

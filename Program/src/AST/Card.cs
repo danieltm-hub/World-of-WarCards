@@ -72,14 +72,7 @@ namespace GameProgram
 
         public Card Clone()
         {
-            List<Effect> effects = new List<Effect>();
-
-            foreach (var effect in Effects)
-            {
-                effects.Add(effect);
-            }
-
-            return new Card(Name, effects, Coldown, EnergyCost, Location);
+            return new Card(Name, Effects, Coldown, EnergyCost, Location);
         }
     }
 }
