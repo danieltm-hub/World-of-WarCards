@@ -9,7 +9,10 @@ namespace GameProgram
     {
         public List<Player> Players = new List<Player>();
         public Player CurrentPlayer => Players[CurrentPlayerIndex];
-        public int CurrentPlayerIndex { get; set; }
+        public int CurrentPlayerIndex { get; private set; }
+        
+        public int Max {get; private set;}
+        public int Min {get; private set;}
 
         public IWinCondition WinCondition;
 
@@ -44,7 +47,6 @@ namespace GameProgram
         public void PlayCard(Card card)
         {
             if(!CurrentPlayer.PlayCard(card)) return;
-
             ReduceColdown();
         }
 
