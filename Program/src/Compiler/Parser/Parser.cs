@@ -341,12 +341,6 @@ namespace Compiler
 
             if (exp != null) return exp;
 
-            exp = // d
-                ParseBinaryOp(left, TokenType.Dice, (left, right, location) => new Dice(left, right, location),
-                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
-
-            if (exp != null) return exp;
-
             // booleans
             exp = // <
                 ParseBinaryOp(left, TokenType.Smaller, (left, right, location) => new SmallerThan(left, right, location),
@@ -404,6 +398,12 @@ namespace Compiler
             exp = // /
                 ParseBinaryOp(left, TokenType.Div, (left, right, location) => new Div(left, right, location),
                 (left) => (ParseExpressionLv3(left)), (left) => (ParseExpressionLv2Maker(left)));
+
+            if (exp != null) return exp;
+
+            exp = // d
+                ParseBinaryOp(left, TokenType.Dice, (left, right, location) => new Dice(left, right, location),
+                (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;
 
