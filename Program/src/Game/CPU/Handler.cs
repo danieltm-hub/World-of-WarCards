@@ -23,8 +23,8 @@ namespace GameProgram
 
             List<Card> toPlay = GetCards();
 
-            IsPreviousGame(initialGame);
-
+            IsPreviousGame(initialGame);  
+            
             PlayCards(toPlay);
 
             for (int i = 0; i < toPlay.Count; i++)
@@ -58,7 +58,7 @@ namespace GameProgram
             }
 
             GameManager.CurrentGame = initialGame;
-            
+
             return toReturn;
         }
 

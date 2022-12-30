@@ -74,6 +74,11 @@ namespace GameProgram
             Energy = Math.Clamp(Energy + amount, 0, MaxEnergy);
         }
 
+        public void ResetEnergy()
+        {
+            Energy = MaxEnergy;
+        }
+
         public void AddTurnInitState(State state)
         {
             OnTurnInitStates.Add(state);

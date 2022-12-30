@@ -40,7 +40,7 @@ namespace GameProgram
             CurrentPlayer.OnTurnEndStates.ForEach(state => state.Evaluate());
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
             CurrentPlayer.OnTurnInitStates.ForEach(state => state.Evaluate());
-
+            ResetEnergy();
             ReduceColdown();
         }
 
