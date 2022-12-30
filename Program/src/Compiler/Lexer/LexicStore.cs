@@ -21,7 +21,7 @@ namespace Compiler
             //Simple Signs
             {"+", TokenType.Sum},
             {"-", TokenType.Sub},
-            {"d", TokenType.DRandom},
+            {"d", TokenType.Dice},
             {"*", TokenType.Mul},
             {"/", TokenType.Div},
             {"^", TokenType.Pow},
@@ -96,7 +96,7 @@ namespace Compiler
         // Binary Operators
         Sum,
         Sub,
-        DRandom,
+        Dice,
         Mul,
         Div,
         Pow,

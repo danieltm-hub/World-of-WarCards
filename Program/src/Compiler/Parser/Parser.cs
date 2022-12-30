@@ -342,7 +342,7 @@ namespace Compiler
             if (exp != null) return exp;
 
             exp = // d
-                ParseBinaryOp(left, TokenType.DRandom, (left, right, location) => new DRandom(left, right, location),
+                ParseBinaryOp(left, TokenType.Dice, (left, right, location) => new Dice(left, right, location),
                 (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
             if (exp != null) return exp;

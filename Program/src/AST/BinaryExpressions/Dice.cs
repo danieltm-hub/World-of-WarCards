@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace AST
 {
-    public class DRandom : BinaryExpression
+    public class Dice : BinaryExpression
     {
         public override Func<Expression, Expression, bool> IsValid => (left, right) => left.Type == NodeType.Number && right.Type == NodeType.Number;
         public override NodeType Type { get; set; }
         public override string OperationSymbol => "d";
         public override object Value { get; set; }
-        public DRandom(Expression left, Expression right, CodeLocation location) : base(left, right, location)
+        public Dice(Expression left, Expression right, CodeLocation location) : base(left, right, location)
         {
             Type = NodeType.Number;
             Value = 0;
