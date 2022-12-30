@@ -4,6 +4,7 @@ using GameProgram;
 using System;
 using System.IO;
 using System.Reflection;
+using KeyboardMenu;
 
 public static class Program
 {
@@ -70,6 +71,12 @@ public static class Program
         }
 
         System.Console.WriteLine(program.Description);
+        List<Card> cards = program.Cards.Values.ToList();
+        PlayGame game = new PlayGame(cards);
+        Console.ReadKey(true);
+        game.Start();
     }
+
+
 
 }

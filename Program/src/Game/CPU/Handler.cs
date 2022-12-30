@@ -17,7 +17,7 @@ namespace GameProgram
         public void Play()
         {
             IsCurrent();
-            Game initialGame = GameManager.CurrentGame.Clone();
+            Game initialGame = GameManager.CurrentGame;
 
             List<Card> toPlay = GetCards();
 
@@ -71,7 +71,7 @@ namespace GameProgram
         protected void PlayCards(List<Card> cards) => cards.ForEach(card => GameManager.CurrentGame.PlayCard(card));
         public void IsCurrent()
         {
-            if (myPlayer.Name == GameManager.CurrentGame.CurrentPlayer.Name) throw new Exception($"It is not {myPlayer.Name}'s turn, is {GameManager.CurrentGame.CurrentPlayer.Name}'s turn");
+            if (myPlayer.Name != GameManager.CurrentGame.CurrentPlayer.Name) throw new Exception($"It is not {myPlayer.Name}'s turn, is {GameManager.CurrentGame.CurrentPlayer.Name}'s turn");
         }
         public void IsPreviousGame(Game expected)
         {

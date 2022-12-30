@@ -13,6 +13,9 @@ namespace GameProgram
         {
             CurrentGame = new Game(players, 0, new EnemyDefeated());
         }
-        
+        public static void TerminateGame()
+        {
+            CurrentGame = new Game(new List<Player>(), 0, new EnemyDefeated());
+        }
     }
 }

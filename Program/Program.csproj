@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Figgle" Version="0.4.1" />
+    <PackageReference Include="Pastel" Version="4.1.0" />
+  </ItemGroup>
+
 </Project>
