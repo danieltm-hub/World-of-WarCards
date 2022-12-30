@@ -401,7 +401,7 @@ namespace Compiler
 
             if (exp != null) return exp;
 
-            exp = // d
+            exp = // dice
                 ParseBinaryOp(left, TokenType.Dice, (left, right, location) => new Dice(left, right, location),
                 (left) => ParseExpressionLv2(left), (left) => ParseExpressionLv1Maker(left));
 
