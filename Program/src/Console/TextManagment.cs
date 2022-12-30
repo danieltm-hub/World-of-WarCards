@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace KeyboardMenu
+namespace Visual
 {
     class TextManagment
     {

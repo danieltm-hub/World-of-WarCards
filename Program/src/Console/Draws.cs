@@ -3,8 +3,10 @@ using Figgle;
 using Pastel;
 using AST;
 using GameProgram;
+using System.Text.RegularExpressions;
 
-namespace KeyboardMenu
+
+namespace Visual
 {
     class Draw
     {
@@ -66,7 +68,9 @@ namespace KeyboardMenu
 
         public static void WriteText(string text,int x, int y, int width, int height, string hexColor = "#FFFFFF", string bgColor = "#000000")
         {
-            List<string> print = TextManagment.Normalize(text, width, height);
+            string normal;
+            normal = Regex.Replace(text,"\n", "");
+            List<string> print = TextManagment.Normalize(normal, width, height);
             foreach (string item in print)
             {
                 WriteAt(item.PastelBg(bgColor), x, y, hexColor);

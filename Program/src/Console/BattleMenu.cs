@@ -1,7 +1,7 @@
 using static System.Console;
 using AST;
 using GameProgram;
-namespace KeyboardMenu
+namespace Visual
 {
     class BattleMenu
     {
@@ -86,11 +86,9 @@ namespace KeyboardMenu
                 for (int j = 0; j < GameManager.CurrentGame.CurrentPlayer.Cards.Count; j++)
                 {
                     Card currentCard = GameManager.CurrentGame.CurrentPlayer.Cards[j];
-                    string current;
                     string hexColor;
                     if (j == SelectedCard) continue;
                     hexColor = "#FF50FF";
-                    current = "";
                     if (currentCard.CurrentColdown > 0)
                     {
                         Draw.DrawCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, "A9A9A9");

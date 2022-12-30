@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Visual;
 
 namespace GameProgram
 {
@@ -24,6 +25,11 @@ namespace GameProgram
             IsPreviousGame(initialGame);
 
             PlayCards(toPlay);
+
+            for (int i = 0; i < toPlay.Count; i++)
+            {
+                Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i+1);
+            }
 
             initialGame.NextTurn();
         }

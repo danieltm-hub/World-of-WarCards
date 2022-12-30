@@ -1,6 +1,6 @@
 using static System.Console;
 
-namespace KeyboardMenu
+namespace Visual
 {
     public class Menu
     {

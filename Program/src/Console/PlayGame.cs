@@ -5,7 +5,7 @@ using AST;
 using GameProgram;
 
 
-namespace KeyboardMenu
+namespace Visual
 {
     class PlayGame
     {
@@ -17,49 +17,49 @@ namespace KeyboardMenu
         public void StartAGame()
         {
             // #region  Players
-            Player Pepe = new Player("Pepe", 20, 20, 6, new List<Card>() { });
-            Player Juan = new Player("Juan", 20, 20, 6, new List<Card>() { });
+            Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
+            Player Juan = new Player("Juan", 20, 20, 6, WarCards);
             // RandomPlayer Pepin = new RandomPlayer(Pepe);
             // PlayerRandom Tontin = new PlayerRandom("Tontin", 20, 20, new List<Card>() { });
             // PlayerEasy tuHermana = new PlayerEasy("Tu Hermana", 20, 20, new List<Card>(){});
             // #endregion
 
-             
-            
-            GameManager.StartGame(new List<Player>(){Juan, Pepe});
+
+
+            GameManager.StartGame(new List<Player>() { Juan, Pepe });
         }
         public void StartIAGame()
         {
-            
-            Player Pepe = new Player("Pepe", 20, 20, 6, new List<Card>() { });
-            Player Juan = new Player("Juan", 20, 20, 6, new List<Card>() { });
+
+            Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
+            Player Juan = new Player("Juan", 20, 20, 6, WarCards);
             RandomPlayer Pepin = new RandomPlayer(Pepe);
             Pepe.SetCPU(Pepin);
             RandomPlayer Tontin = new RandomPlayer(Juan);
             Juan.SetCPU(Tontin);
-                
-            GameManager.StartGame(new List<Player>(){Juan, Pepe});
+
+            GameManager.StartGame(new List<Player>() { Juan, Pepe });
         }
         public void Start()
         {
-            int x = Console.BufferWidth/2;
-            int y = Console.BufferHeight/2;
-            string[] loadingBar = new string[11]{"▒▒▒▒▒▒▒▒▒▒ 0%" ,
-                                                 "█▒▒▒▒▒▒▒▒▒ 10%",
-                                                 "██▒▒▒▒▒▒▒▒ 20%",
-                                                 "███▒▒▒▒▒▒▒ 30%",
-                                                 "████▒▒▒▒▒▒ 40%" ,
-                                                 "█████▒▒▒▒▒ 50%  ",
-                                                 "██████▒▒▒▒ 60%  ",
-                                                 "███████▒▒▒ 70%  ",
-                                                 "████████▒▒ 80%  ",
-                                                 "█████████▒ 90%  ",
-                                                 "██████████ 100%"};
-            TextAnimation.AnimateFrames(new string[3]{"Iniciando juego.", "Iniciando juego..", "Iniciando juego..."}, 250, 3, "#00FF00", x ,y);
-            TextAnimation.AnimateFrames(loadingBar, 150, 1, "#00FF00", x, y);
-            System.Console.WriteLine();
-            Draw.WriteAt("Presione cualquier letra", x , y, "#00FF00");
-            System.Console.ReadKey(true);
+            // int x = Console.BufferWidth/2;
+            // int y = Console.BufferHeight/2;
+            // string[] loadingBar = new string[11]{"▒▒▒▒▒▒▒▒▒▒ 0%" ,
+            //                                      "█▒▒▒▒▒▒▒▒▒ 10%",
+            //                                      "██▒▒▒▒▒▒▒▒ 20%",
+            //                                      "███▒▒▒▒▒▒▒ 30%",
+            //                                      "████▒▒▒▒▒▒ 40%" ,
+            //                                      "█████▒▒▒▒▒ 50%  ",
+            //                                      "██████▒▒▒▒ 60%  ",
+            //                                      "███████▒▒▒ 70%  ",
+            //                                      "████████▒▒ 80%  ",
+            //                                      "█████████▒ 90%  ",
+            //                                      "██████████ 100%"};
+            // TextAnimation.AnimateFrames(new string[3]{"Iniciando juego.", "Iniciando juego..", "Iniciando juego..."}, 250, 3, "#00FF00", x ,y);
+            // TextAnimation.AnimateFrames(loadingBar, 150, 1, "#00FF00", x, y);
+            // System.Console.WriteLine();
+            // Draw.WriteAt("Presione cualquier letra", x , y, "#00FF00");
+            // System.Console.ReadKey(true);
             RunMainMenu();
         }
 
@@ -74,9 +74,9 @@ namespace KeyboardMenu
             switch (SelectedIndex)
             {
                 case 0:
-                    // StartAGame();
-                    // RunBattleMenu();
-                    RunChooseCharacterMenu();
+                    StartAGame();
+                    RunBattleMenu();
+                    // RunChooseCharacterMenu();
                     break;
                 case 1:
                     RunOptionsMenu();
@@ -92,23 +92,19 @@ namespace KeyboardMenu
 
         private void RunChooseCharacterMenu()
         {
-
-            
-            
-            //!get from the DLL
             List<Card> availableCards = WarCards;
-            
+
             Console.Clear();
             Draw.DrawBorders("#FF0000");
 
-            Draw.WriteAt("Ingrese el nombre del Player 1: " , 1, 1);
+            Draw.WriteAt("Ingrese el nombre del Player 1: ", 1, 1);
             string name1 = Console.ReadLine()!;
             List<Card> cards1 = new List<Card>();
-            
+
             PrintAvailableCards(availableCards);
             int n = 1;
             Console.CursorVisible = true;
-            while (cards1.Count < 4) //!the top is 8 modify later
+            while (cards1.Count < 8)
             {
                 Console.SetCursorPosition(1, n + availableCards.Count + 4);
                 //se podian repetir las cartas?
@@ -124,18 +120,18 @@ namespace KeyboardMenu
                     n++;
                 }
             }
-            
+
             Console.Clear();
             Draw.DrawBorders("#FF0000");
 
-            Draw.WriteAt("Ingrese el nombre del player 2: " , 1, 1);
+            Draw.WriteAt("Ingrese el nombre del player 2: ", 1, 1);
             string name2 = Console.ReadLine()!;
             List<Card> cards2 = new List<Card>();
 
             PrintAvailableCards(availableCards);
 
             n = 1;
-            while (cards2.Count < 4) //!the top is 8 modify later
+            while (cards2.Count < 8)
             {
                 Console.SetCursorPosition(1, n + availableCards.Count + 4);
                 try
@@ -152,7 +148,7 @@ namespace KeyboardMenu
             }
 
 
-            List<Player> players = new List<Player>(){new Player(name1, 20, 20, 6, cards1), new Player(name2, 20, 20, 6, cards2)};
+            List<Player> players = new List<Player>() { new Player(name1, 20, 20, 6, cards1), new Player(name2, 20, 20, 6, cards2) };
             Game newGame = new Game(players, 0, new EnemyDefeated());
             GameManager.StartGame(players);
             RunBattleMenu();
@@ -160,12 +156,12 @@ namespace KeyboardMenu
 
         private void PrintAvailableCards(List<Card> availableCards)
         {
-            Draw.WriteAt("Cartas disponibles" ,1,2);
+            Draw.WriteAt("Cartas disponibles", 1, 2);
             for (int i = 0; i < availableCards.Count; i++)
             {
-                Draw.WriteAt($"{i + 1} - {availableCards[i].Name}", 1 , i + 3);
+                Draw.WriteAt($"{i + 1} - {availableCards[i].Name}", 1, i + 3);
             }
-            Draw.WriteAt("Ingrese el numero de la carta que desea agregar" , 1, availableCards.Count + 4);
+            Draw.WriteAt("Ingrese el numero de la carta que desea agregar", 1, availableCards.Count + 4);
         }
         private void RunBattleMenu()
         {
@@ -191,7 +187,7 @@ namespace KeyboardMenu
 
             string[] options = new string[4] { "JUGAR CARTA", "LEER CARTA", "PASAR", "SALIR" };
 
-            
+
             List<Player> players = GameManager.CurrentGame.Players;
             BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
             selectedCard = battleMenu.RunCards();
@@ -202,7 +198,7 @@ namespace KeyboardMenu
                 case 0:
                     GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard].Play();
                     Draw.WriteText($"se jugo la carta {selectedCard + 1}", borderLeft, 1, borderWidth, borderHeight);
-                    if(GameManager.CurrentGame.IsOver())
+                    if (GameManager.CurrentGame.IsOver())
                     {
                         RunEndGameMenu();
                         break;
@@ -249,7 +245,7 @@ namespace KeyboardMenu
             }
         }
 
-         private void SimulateVirtualGame()
+        private void SimulateVirtualGame()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Clear();
@@ -287,26 +283,25 @@ namespace KeyboardMenu
 
             string[] optionsIA = { "JUGAR", "SALIR" };
 
-            
+
             List<Player> players = GameManager.CurrentGame.Players;
             BattleMenu battleMenu = new BattleMenu(optionsIA, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
             selectedIndex = battleMenu.RunMenuIA();
 
-            switch(selectedIndex)
+            switch (selectedIndex)
             {
                 case 0:
                     //se garantiza que el jugador actual sea la IA
-                    if(GameManager.CurrentGame.CurrentPlayer.CPU != null)
+                    if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
                     {
-                        GameManager.CurrentGame.CurrentPlayer.CPU.Play();    
+                        GameManager.CurrentGame.CurrentPlayer.CPU.Play();
                     }
-                    
-;
-                    if(GameManager.CurrentGame.IsOver())
+                    if (GameManager.CurrentGame.IsOver())
                     {
                         RunEndGameMenu();
                         break;
                     }
+                    // Draw.WriteAt();
                     Console.ReadKey(true);
                     BattleIA();
                     break;
@@ -323,7 +318,7 @@ namespace KeyboardMenu
             Console.Clear();
             string prompt = FiggleFonts.Larry3d.Render(" CREDITOS ");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(1,1);
+            Console.SetCursorPosition(1, 1);
             System.Console.WriteLine();
             Console.WriteLine(prompt);
             string credits = @"
@@ -336,7 +331,7 @@ namespace KeyboardMenu
             Este juego usa recursos de http://www.patorjk.com/
             Presione cualquier letra para volver al menu principal";
 
-            TextAnimation.AnimateTyping(credits, 25, Console.BufferWidth/8, Console.BufferHeight/4, "#FF0000");
+            TextAnimation.AnimateTyping(credits, 25, Console.BufferWidth / 8, Console.BufferHeight / 4, "#FF0000");
             System.Console.ReadKey(true);
             RunMainMenu();
 
@@ -357,12 +352,11 @@ namespace KeyboardMenu
             System.Console.ReadKey(true);
             RunOptionsMenu();
         }
-
         private void RunEndGameMenu()
         {
             Console.Clear();
             string winner = FiggleFonts.Larry3d.Render("El ganador es: " + GameManager.CurrentGame.Winner().Name);
-            Console.SetCursorPosition(1,1);
+            Console.SetCursorPosition(1, 1);
             Console.WriteLine(winner.Pastel("#00FF00"));
             Draw.DrawBorders("#00FF00");
             string prompt = FiggleFonts.Larry3d.Render(" FIN DEL JUEGO");
@@ -383,15 +377,15 @@ namespace KeyboardMenu
         }
         private void Exit()
         {
-            int x = Console.BufferWidth/2;
-            int y = Console.BufferHeight/2;
-            string[] exit = new string[3]{"Saliendo del juego.", "Saliendo del juego..", "Saliendo del juego..."};
-            TextAnimation.AnimateFrames(exit, 250, 3, "#FFFF00", x, y);
-            System.Console.WriteLine();
-            TextAnimation.AnimateTyping("Gracias por jugar, presione cualquier tecla", 10, x, y, "FFFF00");
-            System.Console.WriteLine();
-            Console.CursorVisible = false;
-            System.Console.ReadKey(true);
+            // int x = Console.BufferWidth/2;
+            // int y = Console.BufferHeight/2;
+            // string[] exit = new string[3]{"Saliendo del juego.", "Saliendo del juego..", "Saliendo del juego..."};
+            // TextAnimation.AnimateFrames(exit, 250, 3, "#FFFF00", x, y);
+            // System.Console.WriteLine();
+            // TextAnimation.AnimateTyping("Gracias por jugar, presione cualquier tecla", 10, x, y, "FFFF00");
+            // System.Console.WriteLine();
+            // Console.CursorVisible = false;
+            // System.Console.ReadKey(true);
             Environment.Exit(0);
         }
     }

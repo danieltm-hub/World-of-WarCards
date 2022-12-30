@@ -1,7 +1,7 @@
 using System;
 using Pastel;
 
-namespace KeyboardMenu
+namespace Visual
 {
     public class TextAnimation
     {

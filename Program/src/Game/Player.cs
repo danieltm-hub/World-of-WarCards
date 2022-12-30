@@ -66,12 +66,12 @@ namespace GameProgram
 
         public void ChangeHealth(double amount)
         {
-            Health += Math.Clamp(Health + amount, 0, MaxHealth);
+            Health = Math.Clamp(Health + amount, 0, MaxHealth);
         }
 
         public void ChangeEnergy(double amount)
         {
-            Energy += Math.Clamp(Energy + amount, 0, MaxEnergy);
+            Energy = Math.Clamp(Energy + amount, 0, MaxEnergy);
         }
 
         public void AddTurnInitState(State state)
