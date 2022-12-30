@@ -33,9 +33,7 @@ namespace GameProgram
         }
     }
 
-
-
-    public class MCTS
+    public class MCTS : IPlayer
     {
         /* Todas las busquedas y extraccion de informacion se hace sobre GameManager,
         para evitar errores en los gameStates.*/
@@ -55,14 +53,18 @@ namespace GameProgram
         public void Play()
         {
             CheckTurn();
+
             Game initialgame = GameManager.CurrentGame.Clone();
 
             List<Card> BestMoves = new List<Card>();
+
             BestMoves = BestMove();
 
             CheckGame(initialgame);
+
             PlayCards(BestMoves);
         }
+
         private void PlayCards(List<Card> toPlay)
         {
             foreach (Card card in toPlay)
@@ -70,6 +72,7 @@ namespace GameProgram
                 myPlayer.Play(card);
             }
         }
+
         public void CheckGame(Game gameState)
         {
             if (!gameState.EqualGame(GameManager.CurrentGame))
@@ -77,6 +80,7 @@ namespace GameProgram
                 throw new Exception(myPlayer.Name + "CheckGame MCTS: GameStates are not equal, SimulationError");
             }
         }
+
         public void CheckTurn()
         {
             if (GameManager.CurrentGame.CurrentPlayer.Name != myPlayer.Name)
@@ -84,28 +88,7 @@ namespace GameProgram
                 throw new Exception(myPlayer.Name + "CheckTurn MCTS: Not my turn");
             }
         }
-        private (List<Card>, double) AvailableCards(Player player)
-        {
-            List<Card> availableCards = new List<Card>();
-            double minEnergyCard = double.MaxValue;
 
-            for (int i = 0; i < player.Cards.Count; i++)
-            {
-                if (player.ColdownCards[i] == 0)
-                {
-                    player.Cards[i].EnergyCost.Evaluate();
-                    double cardCost = (double)player.Cards[i].EnergyCost.Value;
-
-                    if (player.Energy >= cardCost)
-                    {
-                        minEnergyCard = Math.Min(minEnergyCard, cardCost);
-                        availableCards.Add(player.Cards[i]);
-                    }
-                }
-            }
-
-            return (availableCards, minEnergyCard);
-        }
         private Player SearchPlayer(Player player)
         {
             foreach (Player gamer in GameManager.CurrentGame.Players)
@@ -117,57 +100,92 @@ namespace GameProgram
             }
             throw new Exception("SearchPlayer: Player not found");
         }
+
+        private (List<Card>, double) AvailableCards(Player player)
+        {
+            List<Card> availableCards = new List<Card>();
+
+            double minEnergyCard = double.MaxValue;
+
+            for (int i = 0; i < player.Cards.Count; i++)
+            {
+                if (player.ColdownCards[i] == 0)
+                {
+                    player.Cards[i].EnergyCost.Evaluate();
+
+                    double cardCost = (double)player.Cards[i].EnergyCost.Value;
+
+                    if (player.Energy >= cardCost)
+                    {
+                        minEnergyCard = Math.Min(minEnergyCard, cardCost);
+
+                        availableCards.Add(player.Cards[i]);
+                    }
+                }
+            }
+
+            return (availableCards, minEnergyCard);
+        }
+
         private List<Card> RandomMove(List<List<Card>> availableMoves)
         {
             Random random = new Random();
-            int index = random.Next(availableMoves.Count);
-            return availableMoves[index];
+
+            return availableMoves[random.Next() % availableMoves.Count];
         }
-        private List<List<Card>> AvailableMoves(Player player, List<Card> selected, List<Card> available, int index, double minEnergyCard)
+
+        private List<List<Card>> AvailableMoves(List<Card> Available, bool[] mk, List<Card> Selected, double energy)
         {
-            if (index >= available.Count || player.Energy < minEnergyCard)
+            List<List<Card>> Moves = new List<List<Card>>();
+
+            if (Selected.Count != 0)
             {
-                return new List<List<Card>> { selected };
+                Moves.Add(CloneCardList(Selected));
             }
 
-            List<List<Card>> moves = new List<List<Card>>();
-
-            for (int i = 0; i < available.Count; i++)
+            for (int i = 0; i < Available.Count; i++)
             {
-                available[i].EnergyCost.Evaluate();
-                double cardCost = (double)available[i].EnergyCost.Value;
-
-                if (player.Energy >= cardCost)
+                if (!mk[i])
                 {
-                    player.ChangeEnergy(-cardCost);
+                    Available[i].EnergyCost.Evaluate();
+                    double cardCost = (double)Available[i].EnergyCost.Value;
 
-                    selected.Add(available[i]);
+                    if (energy - cardCost >= 0)
+                    {
+                        mk[i] = true;
+                        Selected.Add(Available[i]);
 
-                    moves.AddRange(AvailableMoves(player, selected, available, i + 1, minEnergyCard));
+                        Moves.AddRange(AvailableMoves(Available, mk, Selected, energy - cardCost));
 
-                    selected.RemoveAt(selected.Count - 1);
-
-                    player.ChangeEnergy(cardCost);
+                        Selected.Remove(Available[i]);
+                        mk[i] = false;
+                    }
                 }
             }
-            return moves;
+
+            return Moves;
         }
 
-        private string HashMove(List<Card> cards)
+        private static List<Card> CloneCardList(List<Card> toClone)
         {
-            string hash = "";
-            foreach (Card card in cards)
+            List<Card> clone = new List<Card>();
+
+            foreach (Card card in toClone)
             {
-                hash += card.Name + ' ';
+                clone.Add(card);
             }
-            return hash;
+
+            return clone;
         }
 
         private List<Card> BestMove()
         {
             Stopwatch Crono = new Stopwatch();
+
             Crono.Start();
+
             List<NodeMCTS> Options = MonteCarlosTreeSearch(Crono);
+
             return Select.SelectNode(Options).Moves;
         }
 
@@ -175,6 +193,7 @@ namespace GameProgram
         {
             return time.ElapsedMilliseconds > TimeLimit;
         }
+
         private List<NodeMCTS> MonteCarlosTreeSearch(Stopwatch time)
         {
             Game game = GameManager.CurrentGame; //solo para no tener que escribirlo todo
@@ -193,11 +212,12 @@ namespace GameProgram
             }
 
 
-            (List<Card>, double) availableCards = AvailableCards(game.CurrentPlayer);
-            List<List<Card>> AllMoves = AvailableMoves(game.CurrentPlayer, new List<Card>(), availableCards.Item1, 0, availableCards.Item2);
+            List<Card> availableCards = AvailableCards(game.CurrentPlayer).Item1;
 
+            List<List<Card>> AllMoves = AvailableMoves(availableCards, new bool[availableCards.Count], new List<Card>(), game.CurrentPlayer.Energy);
 
             List<NodeMCTS> childs = new List<NodeMCTS>();
+
             Game toReset = GameManager.CurrentGame.Clone();
 
             while (AllMoves.Count > 0)
@@ -207,6 +227,8 @@ namespace GameProgram
                 AllMoves.Remove(move);
 
                 PlayMove(move); //GameManager.CurrentGame.CurrentPlayer.Play(every card of move);
+
+                GameManager.CurrentGame.NextTurn(); // pass
 
                 childs.Add(MakeNode(MonteCarlosTreeSearch(time), move)); // backtracking get stadistics
 
@@ -242,9 +264,4 @@ namespace GameProgram
             }
         }
     }
-
-
-
-
-
 }
