@@ -18,7 +18,8 @@ namespace GameProgram
         public void Play()
         {
             IsCurrent();
-            Game initialGame = GameManager.CurrentGame;
+           
+            Game initialGame = GameManager.CurrentGame.Clone();
 
             List<Card> toPlay = GetCards();
 
@@ -28,17 +29,16 @@ namespace GameProgram
 
             for (int i = 0; i < toPlay.Count; i++)
             {
-                Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i+1);
+                Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i + 2);
             }
 
-            initialGame.NextTurn();
+            GameManager.CurrentGame.NextTurn();
         }
         public abstract List<Card> GetCards();
 
         public List<Card> PlayGenerator()
         {
-            Game initialGame = GameManager.CurrentGame;
-            GameManager.CurrentGame = initialGame.Clone();
+            Game initialGame = GameManager.CurrentGame.Clone();
 
             List<Card> toReturn = new List<Card>();
 
@@ -58,6 +58,7 @@ namespace GameProgram
             }
 
             GameManager.CurrentGame = initialGame;
+            
             return toReturn;
         }
 
@@ -81,7 +82,7 @@ namespace GameProgram
         }
         public void IsPreviousGame(Game expected)
         {
-            if (GameManager.CurrentGame != expected) throw new Exception($"The game has changed after simulation");
+            if (!GameManager.CurrentGame.IsSameGame(expected)) throw new Exception("The game was changed in Simulations");
         }
 
     }

@@ -1,41 +1,22 @@
 
-Effect lightning = [self(); modifyhealth(2 + 2)]
+Effect lightning = [next(); modifyhealth(-10)]
 
-card Seno 1 2{
-    if (true) [self(); modifyhealth(1 d 2 * 8 / 14 * sin(16))] 
-    else [self(); modifyhealth(2)],
-    
-    [self(); modifyHealth(3)]
-}
+Effect fire = [next(); modifyhealth(-5)]
 
-card Lightning 1 2{
-    if ("1" == "1") if(true) lightning else [self(); modifyhealth(1)]
-    else [self(); modifyhealth(2)]
-}
+Effect poison = [next(); modifyhealth(-1)]
 
-card Lolazo 1 2{
-    [self(); initstate([self(); modifyhealth(12 + current.health)], 4)]
+Effect frost = [next(); modifyhealth(-1)]
+
+
+
+card ThunderBall 4 1 
+{
+    lightning
 }
 
-card Nada 10 1{
-    [next(); modifyhealth(0)]
+card Fireball 4 1
+{
+    fire
 }
 
-card Ataque 10 2{
-    [next(); modifyhealth(-2)]
-}
-card AtaqueMedio 12 4{
-    [next(); modifyhealth(-4)]
-}
-card AtaqueFuerte 14 6{
-    [next(); modifyhealth(-7)]
-}
-card curarse 10 2{
-    [next(); modifyhealth(2)]
-}
-card curarsemedio 12 4{
-    [next(); modifyhealth(4)]
-}
-card curarsefuerte 14 6{
-    [next(); modifyhealth(7)]
-}
+

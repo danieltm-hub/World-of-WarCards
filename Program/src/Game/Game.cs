@@ -10,9 +10,9 @@ namespace GameProgram
         public List<Player> Players = new List<Player>();
         public Player CurrentPlayer => Players[CurrentPlayerIndex];
         public int CurrentPlayerIndex { get; private set; }
-        
-        public int Max {get; private set;}
-        public int Min {get; private set;}
+
+        public int Max { get; private set; }
+        public int Min { get; private set; }
 
         public IWinCondition WinCondition;
 
@@ -27,7 +27,7 @@ namespace GameProgram
         {
             List<Player> players = new List<Player>();
 
-            foreach(Player player in Players)
+            foreach (Player player in Players)
             {
                 players.Add(player.Clone());
             }
@@ -46,7 +46,7 @@ namespace GameProgram
 
         public void PlayCard(Card card)
         {
-            if(!CurrentPlayer.PlayCard(card)) return;
+            if (!CurrentPlayer.PlayCard(card)) return;
             ReduceColdown();
         }
 
@@ -57,11 +57,25 @@ namespace GameProgram
 
         public Player Winner()
         {
-            if(WinCondition.Winner == null) throw new Exception("There is no current winner");  
+            if (WinCondition.Winner == null) throw new Exception("There is no current winner");
 
             return WinCondition.Winner;
         }
 
         public void ReduceColdown() => Players.ForEach(player => player.ReduceColdown());
+
+        public bool IsSameGame(Game game)
+        {
+            if(Players.Count != game.Players.Count) return false;
+
+            if(CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (!Players[i].IsSamePlayer(game.Players[i])) return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -196,7 +196,7 @@ namespace Visual
             switch (selectedIndex)
             {
                 case 0:
-                    GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard].Play();
+                    GameManager.CurrentGame.PlayCard(GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard]);
                     Draw.WriteText($"se jugo la carta {selectedCard + 1}", borderLeft, 1, borderWidth, borderHeight);
                     if (GameManager.CurrentGame.IsOver())
                     {

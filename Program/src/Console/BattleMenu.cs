@@ -96,7 +96,7 @@ namespace Visual
                     else { Draw.DrawCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
                 }
                 Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
-                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.EnergyCostValue, selectedCard.CurrentColdown, selectedCard.Description, SelectedCard, cardSHeight, cardSWidth, "#FF0000");
+                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.EnergyCostValue, selectedCard.CurrentColdown, selectedCard.Description, SelectedCard>7? 6 : SelectedCard, cardSHeight, cardSWidth, "#FF0000");
 
                 ResetColor();
                 Draw.DrawPlayerStats(GameManager.CurrentGame.Players);

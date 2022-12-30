@@ -30,7 +30,7 @@ namespace GameProgram
             MaxHealth = health;
             Energy = energy;
             MaxEnergy = energy;
-            Will = Math.Clamp(will,0,8);
+            Will = Math.Clamp(will, 0, 8);
             MaxWill = Will;
             Cards = cards;
         }
@@ -110,5 +110,23 @@ namespace GameProgram
         }
         public void FillWill() => Will = MaxWill;
         public void ReduceColdown() => Cards.ForEach(card => card.ReduceColdown());
+
+        public bool IsSamePlayer(Player player)
+        {
+            if(Name != player.Name) return false;
+            if(MaxHealth != player.MaxHealth) return false;
+            if(Health != player.Health) return false;
+            if(MaxEnergy != player.MaxEnergy) return false;
+            if(Energy != player.Energy) return false;
+
+            if(player.Cards.Count != Cards.Count) return false;
+
+            for (int i = 0; i < Cards.Count; i++)
+            {
+                if(!Cards[i].IsSameCard(player.Cards[i])) return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -18,8 +18,8 @@ namespace GameProgram
             }
         }
         private Expression Coldown;
-        public double ColdownValue 
-        { 
+        public double ColdownValue
+        {
             get
             {
                 Coldown.Evaluate();
@@ -93,6 +93,15 @@ namespace GameProgram
             CurrentColdown = ColdownValue;
         }
 
-        public void ReduceColdown() => CurrentColdown = Math.Max(0, CurrentColdown-1);
+        public void ReduceColdown() => CurrentColdown = Math.Max(0, CurrentColdown - 1);
+
+        public bool IsSameCard(Card card)
+        {
+            if (Name != card.Name) return false;
+            if (EnergyCostValue != card.EnergyCostValue) return false;
+            if (ColdownValue != card.ColdownValue) return false;
+
+            return Effects.Count == card.Effects.Count;
+        }
     }
 }
