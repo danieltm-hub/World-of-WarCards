@@ -24,6 +24,7 @@ namespace GameProgram
             List<Card> toPlay = GetCards();
 
             IsPreviousGame(initialGame);  
+            // GameManager.CurrentGame = initialGame;
             
             PlayCards(toPlay);
 
@@ -32,7 +33,7 @@ namespace GameProgram
                 Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i + 2);
             }
 
-            GameManager.CurrentGame.NextTurn();
+            initialGame.NextTurn();
         }
         public abstract List<Card> GetCards();
 

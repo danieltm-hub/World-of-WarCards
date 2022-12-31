@@ -19,4 +19,12 @@ card Fireball 4 1
     fire
 }
 
+card Fireballf 4 1
+{
+    fire
+}
 
+card Fireballq 4 1
+{
+    fire
+}

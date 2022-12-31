@@ -118,17 +118,17 @@ namespace GameProgram
 
         public bool IsSamePlayer(Player player)
         {
-            if(Name != player.Name) return false;
-            if(MaxHealth != player.MaxHealth) return false;
-            if(Health != player.Health) return false;
-            if(MaxEnergy != player.MaxEnergy) return false;
-            if(Energy != player.Energy) return false;
+            if (Name != player.Name) return false;
+            if (MaxHealth != player.MaxHealth) return false;
+            if (Health != player.Health) return false;
+            if (MaxEnergy != player.MaxEnergy) return false;
+            if (Energy != player.Energy) return false;
 
-            if(player.Cards.Count != Cards.Count) return false;
+            if (player.Cards.Count != Cards.Count) return false;
 
             for (int i = 0; i < Cards.Count; i++)
             {
-                if(!Cards[i].IsSameCard(player.Cards[i])) return false;
+                if (!Cards[i].IsSameCard(player.Cards[i])) return false;
             }
 
             return true;

@@ -16,16 +16,10 @@ namespace Visual
         }
         public void StartAGame()
         {
-            // #region  Players
+           
             Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
             Player Juan = new Player("Juan", 20, 20, 6, WarCards);
-            // RandomPlayer Pepin = new RandomPlayer(Pepe);
-            // PlayerRandom Tontin = new PlayerRandom("Tontin", 20, 20, new List<Card>() { });
-            // PlayerEasy tuHermana = new PlayerEasy("Tu Hermana", 20, 20, new List<Card>(){});
-            // #endregion
-
-
-
+  
             GameManager.StartGame(new List<Player>() { Juan, Pepe });
         }
         public void StartIAGame()
@@ -218,6 +212,7 @@ namespace Visual
                     RunBattleMenu();
                     break;
                 case 3:
+                    // GameManager.TerminateGame();
                     RunMainMenu();
                     break;
             }
@@ -292,16 +287,15 @@ namespace Visual
             {
                 case 0:
                     //se garantiza que el jugador actual sea la IA
-                    if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
-                    {
-                        GameManager.CurrentGame.CurrentPlayer.CPU.Play();
-                    }
                     if (GameManager.CurrentGame.IsOver())
                     {
                         RunEndGameMenu();
                         break;
                     }
-                    // Draw.WriteAt();
+                    if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
+                    {
+                        GameManager.CurrentGame.CurrentPlayer.CPU.Play();
+                    }
                     Console.ReadKey(true);
                     BattleIA();
                     break;
@@ -367,7 +361,6 @@ namespace Visual
             switch (SelectedIndex)
             {
                 case 0:
-                    GameManager.TerminateGame();
                     RunMainMenu();
                     break;
                 case 1:
