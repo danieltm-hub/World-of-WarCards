@@ -72,9 +72,7 @@ public static class Program
 
         System.Console.WriteLine(program.Description);
         List<Card> cards = program.Cards.Values.ToList();
-        PlayGame game = new PlayGame(cards);
-        Console.ReadKey(true);
-        game.Start();
+       
     }
 
 
