@@ -4,7 +4,6 @@ using GameProgram;
 using System;
 using System.IO;
 using System.Reflection;
-using Visual;
 
 public static class Program
 {
