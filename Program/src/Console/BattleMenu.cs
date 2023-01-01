@@ -5,48 +5,6 @@ namespace Visual
 {
     class BattleMenu
     {
-        private int SelectedIndex;
-        private int SelectedCard;
-        private string[] Options;
-
-        List<Player> Players;
-
-        int borderLeft;
-        int borderRight;
-        int borderWidth;
-        int borderHeight;
-        int maxWidth;
-        int maxHeight;
-        int bottomBorderY;
-        int topBorderY;
-        int midConsole;
-        int fifthConsole;
-        int cardSHeight;
-        int cardSWidth;
-        int cardHeight;
-        int cardWidth;
-
-        public BattleMenu(string[] options, List<Player> players, int borderLeft, int borderRight, int borderWidth, int borderHeight, int maxWidth, int maxHeight, int bottomBorderY, int topBorderY, int midConsole, int fifthConsole, int cardSHeight, int cardSWidth, int cardHeight, int cardWidth)
-        {
-            Options = options;
-            Players = players;
-            this.borderLeft = borderLeft;
-            this.borderRight = borderRight;
-            this.borderWidth = borderWidth;
-            this.borderHeight = borderHeight;
-            this.maxWidth = maxWidth;
-            this.maxHeight = maxHeight;
-            this.bottomBorderY = bottomBorderY;
-            this.topBorderY = topBorderY;
-            this.midConsole = midConsole;
-            this.fifthConsole = fifthConsole;
-            this.cardSHeight = cardSHeight;
-            this.cardSWidth = cardSWidth;
-            this.cardHeight = cardHeight;
-            this.cardWidth = cardWidth;
-        }
-
-
         public void DisplayOptions()
         {
             CursorVisible = false;
@@ -91,7 +49,7 @@ namespace Visual
                     else { Draw.DrawCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
                 }
                 Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
-                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.EnergyCostValue, selectedCard.CurrentColdown, selectedCard.Description, SelectedCard>7? 6 : SelectedCard, cardSHeight, cardSWidth, "#FF0000");
+                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.Description, SelectedCard>7? 6 : SelectedCard, cardSHeight, cardSWidth);
 
                 ResetColor();
                 Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
@@ -101,7 +59,6 @@ namespace Visual
                 Draw.DrawFloor(bottomBorderY);
             }
         }
-
         public void DisplayOptionsForIA()
         {
             CursorVisible = false;
@@ -133,8 +90,6 @@ namespace Visual
             Draw.DrawBordersExtra(midConsole, fifthConsole, bottomBorderY, maxHeight);
             Draw.DrawFloor(bottomBorderY);
         }
-
-
         public int RunMenu()
         {
             ConsoleKey keyPressed;
@@ -186,8 +141,6 @@ namespace Visual
 
             return SelectedIndex;
         }
-
-
         public int RunCards()
         {
             ConsoleKey keyPressed;
@@ -215,5 +168,50 @@ namespace Visual
             Task.Delay(1000).Wait();
             return SelectedCard;
         }
+
+
+        #region Variables
+        private int SelectedIndex;
+        private int SelectedCard;
+        private string[] Options;
+
+        List<Player> Players;
+
+        int borderLeft;
+        int borderRight;
+        int borderWidth;
+        int borderHeight;
+        int maxWidth;
+        int maxHeight;
+        int bottomBorderY;
+        int topBorderY;
+        int midConsole;
+        int fifthConsole;
+        int cardSHeight;
+        int cardSWidth;
+        int cardHeight;
+        int cardWidth;
+
+        public BattleMenu(string[] options, List<Player> players, int borderLeft, int borderRight, int borderWidth, int borderHeight, int maxWidth, int maxHeight, int bottomBorderY, int topBorderY, int midConsole, int fifthConsole, int cardSHeight, int cardSWidth, int cardHeight, int cardWidth)
+        {
+            Options = options;
+            Players = players;
+            this.borderLeft = borderLeft;
+            this.borderRight = borderRight;
+            this.borderWidth = borderWidth;
+            this.borderHeight = borderHeight;
+            this.maxWidth = maxWidth;
+            this.maxHeight = maxHeight;
+            this.bottomBorderY = bottomBorderY;
+            this.topBorderY = topBorderY;
+            this.midConsole = midConsole;
+            this.fifthConsole = fifthConsole;
+            this.cardSHeight = cardSHeight;
+            this.cardSWidth = cardSWidth;
+            this.cardHeight = cardHeight;
+            this.cardWidth = cardWidth;
+        }
+        #endregion
+    
     }
 }

@@ -81,25 +81,26 @@ namespace Visual
             WriteAt(("╠" + width + "╣").Pastel(heColor), x*cardWidth + 1, cardHeight + 2);
             WriteAt(("╚" + width + "╝").Pastel(heColor), x*cardWidth + 1, Console.BufferHeight-2);
         }
-        public static void DrawSelectedCard(string cardSName, double value, double cooldown, string about, int x, int cardSHeight, int cardSWidth,string heColor)
+        public static void DrawSelectedCard(string cardSName, string about, int x, int cardSHeight, int cardSWidth)
         {
-            
             string hexColor = "#FFFFFF";
             if(cardSName.Length > cardSWidth-1) cardSName = cardSName.Substring(0, cardSWidth-1);
             string width = "";
+
             for (int i = 0; i < cardSWidth-2; i++)
             {
                 width += "═";
             }
-            WriteAt(" ".PastelBg("#FF9898"), x*cardSWidth + 1 , cardSHeight, x*cardSWidth + cardSWidth, cardSHeight + cardSHeight); //background
-            WriteAt(("╔" + width +"╗").PastelBg("#FF9898"), x*cardSWidth + 1 , cardSHeight);
-            WriteAt(cardSName.PastelBg("#FF9898"), x*cardSWidth + 2, cardSHeight + 1);
-            WriteAt("║".PastelBg("#FF9898"), x*cardSWidth + 1, cardSHeight + 1, x*cardSWidth + 1, Console.BufferHeight-1);
-            if(x!=0) WriteAt("║".PastelBg("#FF9898"), (x+1)*cardSWidth, cardSHeight + 1, (x+1)*cardSWidth, Console.BufferHeight-1);
-            else{ WriteAt("║".PastelBg("#FF9898"), cardSWidth, cardSHeight + 1, cardSWidth , Console.BufferHeight-1);}
-            WriteAt(("╠" + width + "╣").PastelBg("#FF9898"), x*cardSWidth + 1, cardSHeight + 2);
-            WriteAt(("╚" + width + "╝").PastelBg("#FF9898"), x*cardSWidth + 1, Console.BufferHeight-2);
-            WriteText(about, x*cardSWidth + 2, cardSHeight + 3, cardSWidth -2, cardSHeight, hexColor, "#FF9898");
+            
+            WriteAt(" ".PastelBg("#222582"), x*cardSWidth + 1 , cardSHeight, x*cardSWidth + cardSWidth, cardSHeight + cardSHeight); //background
+            WriteAt(("╔" + width +"╗").PastelBg("#222582"), x*cardSWidth + 1 , cardSHeight);
+            WriteAt(cardSName.PastelBg("#222582"), x*cardSWidth + 2, cardSHeight + 1);
+            WriteAt("║".PastelBg("#222582"), x*cardSWidth + 1, cardSHeight + 1, x*cardSWidth + 1, Console.BufferHeight-1);
+            if(x!=0) WriteAt("║".PastelBg("#222582"), (x+1)*cardSWidth, cardSHeight + 1, (x+1)*cardSWidth, Console.BufferHeight-1);
+            else{ WriteAt("║".PastelBg("#222582"), cardSWidth, cardSHeight + 1, cardSWidth , Console.BufferHeight-1);}
+            WriteAt(("╠" + width + "╣").PastelBg("#222582"), x*cardSWidth + 1, cardSHeight + 2);
+            WriteAt(("╚" + width + "╝").PastelBg("#222582"), x*cardSWidth + 1, Console.BufferHeight-2);
+            WriteText(about, x*cardSWidth + 2, cardSHeight + 3, cardSWidth -2, cardSHeight, hexColor, "#222582");
         }
         public static void DrawBorders(string hexColor = "#FFFFFF")
         {
@@ -115,10 +116,9 @@ namespace Visual
         public static void DrawBordersExtra(int midConsole, int fifthConsole, int bottomBorderY, int maxHeight)
         {
             WriteAt("╦", midConsole - fifthConsole, 0, "#FF0000"); WriteAt("╦", midConsole + fifthConsole, 0, "#FF0000");
-            
-            WriteAt("║", midConsole - fifthConsole, 1, midConsole - fifthConsole, maxHeight - bottomBorderY, "#FF0000"); //vertical top
-            WriteAt("║", midConsole + fifthConsole, 1, midConsole + fifthConsole, maxHeight - bottomBorderY, "#FF0000"); //vertical
-            WriteAt("═", midConsole - fifthConsole, maxHeight - bottomBorderY, midConsole + fifthConsole, maxHeight - bottomBorderY, "#FF0000"); //top
+            WriteAt("║", midConsole - fifthConsole, 1, midConsole - fifthConsole, maxHeight - bottomBorderY, "#FF0000");
+            WriteAt("║", midConsole + fifthConsole, 1, midConsole + fifthConsole, maxHeight - bottomBorderY, "#FF0000");
+            WriteAt("═", midConsole - fifthConsole, maxHeight - bottomBorderY, midConsole + fifthConsole, maxHeight - bottomBorderY, "#FF0000");
             WriteAt("╚", midConsole - fifthConsole, maxHeight - bottomBorderY, "#FF0000");
             WriteAt("╝", midConsole + fifthConsole, maxHeight - bottomBorderY, "#FF0000");
             WriteAt($"{GameManager.CurrentGame.CurrentPlayer.Name} es tu turno", midConsole - fifthConsole + 1, 1, "#FF0000");

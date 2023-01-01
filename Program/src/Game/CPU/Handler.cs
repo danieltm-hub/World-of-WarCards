@@ -24,16 +24,16 @@ namespace GameProgram
             List<Card> toPlay = GetCards();
 
             IsPreviousGame(initialGame);  
-            // GameManager.CurrentGame = initialGame;
+            GameManager.CurrentGame = initialGame;
             
             PlayCards(toPlay);
 
             for (int i = 0; i < toPlay.Count; i++)
             {
-                Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i + 2);
+                Draw.WriteAt($"{myPlayer.Name} jugo " + toPlay[i].Name, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, i + 2, "#8900FF");
             }
-
-            initialGame.NextTurn();
+            Draw.WriteAt($"{myPlayer.Name} decidió pasar turno", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, toPlay.Count + 2, "#8900FF");
+            GameManager.CurrentGame.NextTurn();
         }
         public abstract List<Card> GetCards();
 

@@ -60,8 +60,9 @@ namespace GameProgram
             {
                 cards.Add(card.Clone());
             }
-
-            return new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards);
+            Player clone = new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards);
+            if(this.CPU != null) clone.SetCPU(this.CPU);
+            return clone;
         }
 
         public void ChangeHealth(double amount)
