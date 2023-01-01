@@ -16,10 +16,10 @@ namespace Visual
         }
         public void StartAGame()
         {
-           
+
             Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
             Player Juan = new Player("Juan", 20, 20, 6, WarCards);
-  
+
             GameManager.StartGame(new List<Player>() { Juan, Pepe });
         }
         public void StartIAGame()
@@ -54,7 +54,11 @@ namespace Visual
             // System.Console.WriteLine();
             // Draw.WriteAt("Presione cualquier letra", x , y, "#00FF00");
             // System.Console.ReadKey(true);
-            RunMainMenu();
+            // RunMainMenu();
+            // StartAGame();
+            // RunBattleMenu();
+            StartIAGame();
+            SimulateVirtualGame();
         }
 
         private void RunMainMenu()
@@ -187,11 +191,27 @@ namespace Visual
             selectedCard = battleMenu.RunCards();
             selectedIndex = battleMenu.RunMenu();
             Draw.DrawPlayerStats(players);
+            Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard];
+
             switch (selectedIndex)
             {
                 case 0:
-                    GameManager.CurrentGame.PlayCard(GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard]);
-                    Draw.WriteText($"se jugo la carta {selectedCard + 1}", borderLeft, 1, borderWidth, borderHeight);
+                    if (toPlay.CurrentColdown > 0)
+                    {
+                        Draw.WriteText($"La carta {toPlay.Name} está en Cooldown", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
+                        Console.ReadKey(true);
+                        RunBattleMenu();
+                        break;
+                    }
+                    if (toPlay.EnergyCostValue > GameManager.CurrentGame.CurrentPlayer.Energy)
+                    {
+                        Draw.WriteText($"No tienes suficiente energía para jugar la carta {toPlay.Name}", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
+                        Console.ReadKey(true);
+                        RunBattleMenu();
+                        break;
+                    }
+                    GameManager.CurrentGame.PlayCard(toPlay);
+                    Draw.WriteText($"Se jugó la carta {toPlay.Name}", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
                     if (GameManager.CurrentGame.IsOver())
                     {
                         RunEndGameMenu();
@@ -201,23 +221,23 @@ namespace Visual
                     RunBattleMenu();
                     break;
                 case 1:
-                    Draw.WriteText(GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard].Description, borderLeft, 1, borderWidth, borderHeight);
+                    Draw.WriteText(toPlay.Description, borderLeft, 2, borderWidth, borderHeight, "#8900FF");
                     Console.ReadKey(true);
                     RunBattleMenu();
                     break;
                 case 2:
-                    Draw.WriteText($"{GameManager.CurrentGame.CurrentPlayer.Name} ha decidido pasar turno", borderLeft, 1, borderWidth, borderHeight);
+                    Draw.WriteText($"{GameManager.CurrentGame.CurrentPlayer.Name} ha decidido pasar turno", borderLeft, 1, borderWidth, borderHeight, "#8900FF");
                     GameManager.CurrentGame.NextTurn();
                     Console.ReadKey(true);
                     RunBattleMenu();
                     break;
                 case 3:
                     // GameManager.TerminateGame();
-                    RunMainMenu();
+                    // RunMainMenu();
+                    Console.Clear();
                     break;
             }
         }
-
         private void RunOptionsMenu()
         {
             string prompt = FiggleFonts.Larry3d.Render(" OPCIONES ");
@@ -242,15 +262,15 @@ namespace Visual
 
         private void SimulateVirtualGame()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            int x = Console.BufferWidth/2;
+            int y = Console.BufferHeight/2;
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
             string prompt = FiggleFonts.Larry3d.Render(" SIMULACION DE VIRTUALES ");
-            System.Console.WriteLine();
             System.Console.WriteLine(prompt);
+            TextAnimation.AnimateTyping(" Simulando juego virtual...", 50, x, y);
             System.Console.WriteLine();
-            TextAnimation.AnimateTyping(" Simulando juego virtual...");
-            System.Console.WriteLine(" Presione cualquier letra para empezar");
-            Draw.DrawBorders("#FF0000");
+            Draw.WriteAt(" Presione cualquier letra para empezar", x, y + 1);
             System.Console.ReadKey(true);
             BattleIA();
         }
@@ -295,6 +315,7 @@ namespace Visual
                     if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
                     {
                         GameManager.CurrentGame.CurrentPlayer.CPU.Play();
+                        GameManager.CurrentGame.NextTurn();
                     }
                     Console.ReadKey(true);
                     BattleIA();

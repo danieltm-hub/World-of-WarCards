@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Visual
 {
@@ -7,9 +8,36 @@ namespace Visual
     {
         public static List<string> Normalize(string text, int width, int heigth)
         {
-            List<string> listText= new List<string>();
-            if(heigth<1) return listText;
-            if(text.Length < width) 
+            List<string> listText = new List<string>();
+            if (heigth < 1) return listText;
+            string[] splited;
+            if (text.Contains("\n"))
+            {
+                splited = text.Split("\n");
+                int numberofLines = splited.Length;
+                int numberofLinesLeft = numberofLines % heigth;
+                if (numberofLines - numberofLinesLeft > 0)
+                {
+                    for (int i = 0; i < numberofLines - numberofLinesLeft; i++)
+                    {
+                        splited[i] = Regex.Replace(splited[i], "\n", " ");
+                        NormalizeRec(splited[i], width, heigth - listText.Count - 1, 0, listText);
+                        if (listText.Count >= heigth) return listText;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < numberofLines; i++)
+                    {
+                        splited[i] = Regex.Replace(splited[i], "\n", " ");
+                        NormalizeRec(splited[i], width, heigth - listText.Count - 1, 0, listText);
+                        if (listText.Count >= heigth) return listText;
+                    }
+                    return listText;
+                }
+
+            }
+            if (text.Length < width)
             {
                 listText.Add(text);
                 return listText;
@@ -21,22 +49,24 @@ namespace Visual
             }
 
         }
-        public static void NormalizeRec(string text, int width, int height, int index, List<string> list)
+        private static void NormalizeRec(string text, int width, int height, int index, List<string> list)
         {
-            if(index == height) 
+            if (index == height)
             {
-                list.Add(text.Substring(0, Math.Min(width, text.Length-1)));
+                list.Add(text.Substring(0, Math.Min(width, text.Length - 1)));
                 return;
             }
-            if(text.Length<width) 
+            if (text.Length < width)
             {
                 list.Add(text);
                 return;
             }
             string newText = text.Substring(0, width);
             list.Add(newText);
-            NormalizeRec(text.Substring(width), width, height, index+1, list);
+            NormalizeRec(text.Substring(width), width, height, index + 1, list);
         }
+
+
     }
 }
-    
+

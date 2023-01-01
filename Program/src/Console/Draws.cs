@@ -68,9 +68,7 @@ namespace Visual
 
         public static void WriteText(string text,int x, int y, int width, int height, string hexColor = "#FFFFFF", string bgColor = "#000000")
         {
-            string normal;
-            normal = Regex.Replace(text,"\n", "");
-            List<string> print = TextManagment.Normalize(normal, width, height);
+            List<string> print = TextManagment.Normalize(text, width, height);
             foreach (string item in print)
             {
                 WriteAt(item.PastelBg(bgColor), x, y, hexColor);
@@ -90,10 +88,8 @@ namespace Visual
             WriteAt("║".Pastel(heColor), x*cardWidth + 1, cardHeight + 1, x*cardWidth + 1, Console.BufferHeight-1);
             if(x!=0) WriteAt("║".Pastel(heColor), (x+1)*cardWidth, cardHeight + 1, (x+1)*cardWidth, Console.BufferHeight-1);
             else{ WriteAt("║".Pastel(heColor), cardWidth, cardHeight + 1, cardWidth , Console.BufferHeight-1);}
-            WriteAt(("╠" + width +"╣").Pastel(heColor), x*cardWidth + 1, cardHeight + 2);
-            WriteAt(("╚"+width+"╝").Pastel(heColor), x*cardWidth + 1, Console.BufferHeight-2);
-            WriteAt($"VAL: {value}".Pastel(heColor), x*cardWidth + 2, cardHeight + 3);
-            WriteAt($"COOL: {cooldown}".Pastel(heColor), x*cardWidth + 2, cardHeight + 4);
+            WriteAt(("╠" + width + "╣").Pastel(heColor), x*cardWidth + 1, cardHeight + 2);
+            WriteAt(("╚" + width + "╝").Pastel(heColor), x*cardWidth + 1, Console.BufferHeight-2);
         }
         public static void DrawSelectedCard(string cardSName, double value, double cooldown, string about, int x, int cardSHeight, int cardSWidth,string heColor)
         {
@@ -113,9 +109,7 @@ namespace Visual
             else{ WriteAt("║".PastelBg("#FF9898"), cardSWidth, cardSHeight + 1, cardSWidth , Console.BufferHeight-1);}
             WriteAt(("╠" + width + "╣").PastelBg("#FF9898"), x*cardSWidth + 1, cardSHeight + 2);
             WriteAt(("╚" + width + "╝").PastelBg("#FF9898"), x*cardSWidth + 1, Console.BufferHeight-2);
-            WriteAt($"VAL: {value}".PastelBg("#FF9898"), x*cardSWidth + 2, cardSHeight + 3);
-            WriteAt($"COOL: {cooldown}".PastelBg("#FF9898"), x*cardSWidth + 2, cardSHeight + 4);
-            WriteText(about, x*cardSWidth + 2, cardSHeight + 5, cardSWidth -2, cardSHeight, hexColor, "#FF9898");
+            WriteText(about, x*cardSWidth + 2, cardSHeight + 3, cardSWidth -2, cardSHeight, hexColor, "#FF9898");
         }
         public static void DrawBorders(string hexColor = "#FFFFFF")
         {

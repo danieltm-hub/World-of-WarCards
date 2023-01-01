@@ -53,11 +53,10 @@ namespace Visual
         {
             CursorVisible = false;
             Console.Clear();
-            BackgroundColor = ConsoleColor.Black;
             if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
             {
                 //TODO un display options para las ia 
-                DisplayForIA();
+                DisplayOptionsForIA();
             }
             else
             {
@@ -68,13 +67,11 @@ namespace Visual
                     if (i == SelectedIndex)
                     {
                         ForegroundColor = ConsoleColor.Red;
-                        BackgroundColor = ConsoleColor.Black;
                         prefix = "*";
                     }
                     else
                     {
                         ForegroundColor = ConsoleColor.White;
-                        BackgroundColor = ConsoleColor.Black;
                         prefix = "";
                     }
                     SetCursorPosition(Console.BufferWidth - 20, Console.BufferHeight - 1 + i * 10);
@@ -107,11 +104,10 @@ namespace Visual
             }
         }
 
-        public void DisplayForIA()
+        public void DisplayOptionsForIA()
         {
             CursorVisible = false;
             Console.Clear();
-            BackgroundColor = ConsoleColor.Black;
             string[] optionsIA = { "JUGAR", "SALIR" };
             for (int i = 0; i < optionsIA.Length; i++)
             {
@@ -120,13 +116,11 @@ namespace Visual
                 if (i == SelectedIndex)
                 {
                     ForegroundColor = ConsoleColor.Red;
-                    BackgroundColor = ConsoleColor.Black;
                     prefix = "*";
                 }
                 else
                 {
                     ForegroundColor = ConsoleColor.White;
-                    BackgroundColor = ConsoleColor.Black;
                     prefix = "";
                 }
                 SetCursorPosition(Console.BufferWidth - 20, Console.BufferHeight - 1 + i * 10);
@@ -174,7 +168,7 @@ namespace Visual
             do
             {
                 Console.Clear();
-                DisplayForIA();
+                DisplayOptionsForIA();
                 string[] optionsIA = { "JUGAR", "SALIR" };
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
@@ -218,7 +212,9 @@ namespace Visual
                 }
             }
             while (keyPressed != ConsoleKey.Enter);
-
+            Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
+            Draw.WriteAt("Has seleccionado la carta: " + toPlay.Name, borderLeft, 2, "#8900FF");
+            Task.Delay(1000).Wait();
             return SelectedCard;
         }
     }

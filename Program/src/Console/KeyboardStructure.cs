@@ -29,13 +29,11 @@ namespace Visual
                     if (i == SelectedIndex)
                     {
                         ForegroundColor = ConsoleColor.Red;
-                        BackgroundColor = ConsoleColor.Black;
                         prefix = "*";
                     }
                     else
                     {
                         ForegroundColor = ConsoleColor.White;
-                        BackgroundColor = ConsoleColor.Black;
                         prefix = "";
                     }
                     Console.SetCursorPosition(Console.BufferWidth/2, Console.BufferHeight/2 +i);
