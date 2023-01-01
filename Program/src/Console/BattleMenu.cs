@@ -26,8 +26,6 @@ namespace Visual
         int cardHeight;
         int cardWidth;
 
-        private Draw draw = new Draw();
-
         public BattleMenu(string[] options, List<Player> players, int borderLeft, int borderRight, int borderWidth, int borderHeight, int maxWidth, int maxHeight, int bottomBorderY, int topBorderY, int midConsole, int fifthConsole, int cardSHeight, int cardSWidth, int cardHeight, int cardWidth)
         {
             Options = options;

@@ -58,7 +58,7 @@ namespace Visual
             // StartAGame();
             // RunBattleMenu();
             StartIAGame();
-            SimulateVirtualGame();
+            BattleIA();
         }
 
         private void RunMainMenu()
@@ -203,9 +203,16 @@ namespace Visual
                         RunBattleMenu();
                         break;
                     }
-                    if (toPlay.EnergyCostValue > GameManager.CurrentGame.CurrentPlayer.Energy)
+                    else if (toPlay.EnergyCostValue > GameManager.CurrentGame.CurrentPlayer.Energy)
                     {
                         Draw.WriteText($"No tienes suficiente energía para jugar la carta {toPlay.Name}", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
+                        Console.ReadKey(true);
+                        RunBattleMenu();
+                        break;
+                    }
+                    else if (GameManager.CurrentGame.CurrentPlayer.GetWill() == 0)
+                    {
+                        Draw.WriteText($"No tienes voluntad para jugar, pasa turno", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
                         Console.ReadKey(true);
                         RunBattleMenu();
                         break;
@@ -312,10 +319,10 @@ namespace Visual
                         RunEndGameMenu();
                         break;
                     }
+                    Player test = GameManager.CurrentGame.CurrentPlayer;
                     if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
                     {
                         GameManager.CurrentGame.CurrentPlayer.CPU.Play();
-                        GameManager.CurrentGame.NextTurn();
                     }
                     Console.ReadKey(true);
                     BattleIA();

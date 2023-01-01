@@ -10,16 +10,6 @@ namespace Visual
 {
     class Draw
     {
-        public Draw()
-        {
-            origRow = Console.CursorTop;
-            origCol = Console.CursorLeft;
-            
-        }
-        
-        protected static int origRow;
-        protected static int origCol;
-        
         public static void WriteAt(string s, int x, int y, string hexColor = "#FFFFFF")
         {
             try
@@ -152,6 +142,7 @@ namespace Visual
                 WriteAt(player.Name, x, y, hexColor);
                 WriteAt($" Health: {player.Health}", x, y + 1, hexColor);
                 WriteAt($" Energy: {player.Energy}", x, y + 2, hexColor);
+                WriteAt($" Will:    {player.GetWill()}", x, y +3, hexColor);
                 x = Console.BufferWidth / 2 + Console.BufferWidth / 5 + 1;
                 hexColor = "#0000FF";
             }

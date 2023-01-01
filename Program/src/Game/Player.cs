@@ -133,5 +133,10 @@ namespace GameProgram
 
             return true;
         }
+
+        public int GetWill()
+        {
+            return Will;
+        }
     }
 }
