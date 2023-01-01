@@ -21,7 +21,7 @@ namespace GameProgram
         public double Energy { get; private set; }
         private int MaxWill;
         private int Will;
-        public Handler? CPU { get; private set; }
+        public Handler Controller { get; private set; }
 
         public Player(string name, double health, double energy, int will, List<Card> cards)
         {
@@ -33,9 +33,10 @@ namespace GameProgram
             Will = Math.Clamp(will, 0, 8);
             MaxWill = Will;
             Cards = cards;
+            Controller = new Human(this);
         }
 
-        private Player(string name, double health, double maxHealth, double energy, double maxEnergy, int will, int maxWill, List<Card> cards)
+        private Player(string name, double health, double maxHealth, double energy, double maxEnergy, int will, int maxWill, List<Card> cards, Handler controller)
         {
             Name = name;
             Health = health;
@@ -45,11 +46,12 @@ namespace GameProgram
             Will = will;
             MaxWill = maxWill;
             Cards = cards;
+            Controller = controller;
         }
 
         public void SetCPU(Handler cpu)
         {
-            CPU = cpu;
+            Controller = cpu;
         }
 
         public Player Clone()
@@ -61,7 +63,7 @@ namespace GameProgram
                 cards.Add(card.Clone());
             }
 
-            return new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards);
+            return new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards, Controller);
         }
 
         public void ChangeHealth(double amount)

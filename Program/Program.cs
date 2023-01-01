@@ -12,7 +12,7 @@ public static class Program
         // Create self path
 
         Assembly assembly = Assembly.LoadFrom("./bin/Debug/net6.0/Program.dll");
-        
+
         Reflection.RegisterDll(assembly);
 
         // Create external paths
@@ -20,7 +20,7 @@ public static class Program
         DirectoryInfo directory = new DirectoryInfo("./Dlls");
         FileInfo[] files = directory.GetFiles("*.dll");
 
-        foreach(FileInfo file in files)
+        foreach (FileInfo file in files)
         {
             string path = file.FullName;
 
@@ -71,7 +71,15 @@ public static class Program
 
         System.Console.WriteLine(program.Description);
         List<Card> cards = program.Cards.Values.ToList();
-       
+
+        Player one = new Player("PC", 20, 3, 3, cards);
+        Player two = new Player("You", 20, 3, 3, cards);
+
+        one.SetCPU(new RandomPlayer(one));
+
+        GameManager.StartGame(new List<Player>{one, two});
+
+        SimulationTester.StartGameSimulation();
     }
 
 

@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +18,20 @@ namespace GameProgram
         public void Play()
         {
             IsCurrent();
-           
+
             Game initialGame = GameManager.CurrentGame.Clone();
 
             List<Card> toPlay = GetCards();
 
-            IsPreviousGame(initialGame);  
+            IsPreviousGame(initialGame);
             // GameManager.CurrentGame = initialGame;
-            
+
             PlayCards(toPlay);
 
-            System.Console.WriteLine($"{myPlayer.Name} played {string.Join(' ', toPlay.Select( card=> card.Name))} cards");
+            System.Console.WriteLine($"{myPlayer.Name} played {string.Join(' ', toPlay.Select(card => card.Name))} cards");
 
-            initialGame.NextTurn();
+            Thread.SpinWait(1000);
+            GameManager.CurrentGame.NextTurn();
         }
         public abstract List<Card> GetCards();
 
