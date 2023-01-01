@@ -54,11 +54,11 @@ namespace Visual
             // System.Console.WriteLine();
             // Draw.WriteAt("Presione cualquier letra", x , y, "#00FF00");
             // System.Console.ReadKey(true);
-            // RunMainMenu();
+            RunMainMenu();
             // StartAGame();
             // RunBattleMenu();
-            StartIAGame();
-            BattleIA();
+            // StartIAGame();
+            // BattleIA();
         }
 
         private void RunMainMenu()
@@ -239,9 +239,8 @@ namespace Visual
                     RunBattleMenu();
                     break;
                 case 3:
-                    // GameManager.TerminateGame();
-                    // RunMainMenu();
-                    Console.Clear();
+                    RunMainMenu();
+                    // Console.Clear();
                     break;
             }
         }
