@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AST;
+using Visual;
 
 namespace GameProgram
 {
@@ -97,16 +98,31 @@ namespace GameProgram
 
         public bool PlayCard(Card card)
         {
-            if (!CanPlay(card)) return false;
+            if (!CanPlay(card)) 
+            {
+            Draw.WriteAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
+            Console.ReadKey();
+            return false;
+            }
+            
 
             ChangeEnergy(-card.EnergyCostValue);
 
             OnPlayCardStates.ForEach(state => state.Evaluate());
 
             card.Play();
+            
+            Draw.WriteAt($"Se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
+            Console.ReadKey();
+            Draw.WriteAt($"                                  ", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
 
             Will--;
 
+            Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
+            Console.CursorVisible = true;
+            Draw.WriteAt("se hizo una modificacion", Console.BufferWidth/2, Console.BufferHeight/2);
+            Console.ReadKey(true);
+            Draw.WriteAt("                          ", Console.BufferWidth/2, Console.BufferHeight/2);
             return true;
         }
 
