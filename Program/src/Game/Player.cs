@@ -22,7 +22,7 @@ namespace GameProgram
         public double Energy { get; private set; }
         private int MaxWill;
         private int Will;
-        public Handler? CPU { get; private set; }
+        public Handler Controller { get; private set; }
 
         public Player(string name, double health, double energy, int will, List<Card> cards)
         {
@@ -34,9 +34,10 @@ namespace GameProgram
             Will = Math.Clamp(will, 0, 8);
             MaxWill = Will;
             Cards = cards;
+            Controller = new Human(this);
         }
 
-        private Player(string name, double health, double maxHealth, double energy, double maxEnergy, int will, int maxWill, List<Card> cards)
+        private Player(string name, double health, double maxHealth, double energy, double maxEnergy, int will, int maxWill, List<Card> cards, Handler controller)
         {
             Name = name;
             Health = health;
@@ -46,12 +47,13 @@ namespace GameProgram
             Will = will;
             MaxWill = maxWill;
             Cards = cards;
+            Controller = controller;
         }
-
         public void SetCPU(Handler cpu)
         {
-            CPU = cpu;
+            Controller = cpu;
         }
+
 
         public Player Clone()
         {
@@ -61,9 +63,8 @@ namespace GameProgram
             {
                 cards.Add(card.Clone());
             }
-            Player clone = new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards);
-            if(this.CPU != null) clone.SetCPU(this.CPU);
-            return clone;
+
+            return new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards, Controller);
         }
 
         public void ChangeHealth(double amount)
@@ -98,20 +99,20 @@ namespace GameProgram
 
         public bool PlayCard(Card card)
         {
-            if (!CanPlay(card)) 
+            if (!CanPlay(card))
             {
-            Draw.WriteAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
-            Console.ReadKey();
-            return false;
+                Draw.WriteAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
+                Console.ReadKey();
+                return false;
             }
-            
+
 
             ChangeEnergy(-card.EnergyCostValue);
 
             OnPlayCardStates.ForEach(state => state.Evaluate());
 
             card.Play();
-            
+
             Draw.WriteAt($"Se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
             Console.ReadKey();
             Draw.WriteAt($"                                  ", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
@@ -120,15 +121,33 @@ namespace GameProgram
 
             Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
             Console.CursorVisible = true;
-            Draw.WriteAt("se hizo una modificacion", Console.BufferWidth/2, Console.BufferHeight/2);
+            Draw.WriteAt("se hizo una modificacion", Console.BufferWidth / 2, Console.BufferHeight / 2);
             Console.ReadKey(true);
-            Draw.WriteAt("                          ", Console.BufferWidth/2, Console.BufferHeight/2);
+            Draw.WriteAt("                          ", Console.BufferWidth / 2, Console.BufferHeight / 2);
             return true;
         }
 
-        public bool CanPlay(Card card)
+        public bool CanPlay(Card card, bool print = false)
         {
-            return card.EnergyCostValue <= Energy && card.CurrentColdown == 0 && Will > 0;
+            if (Will <= 0)
+            {
+                if (print) System.Console.WriteLine(Name + " don't have necessary will");
+                return false;
+            }
+
+            if (card.CurrentColdown > 0)
+            {
+                if (print) System.Console.WriteLine(card.Name + " in Coldown");
+                return false;
+            }
+
+            if (Energy < card.EnergyCostValue)
+            {
+                if (print) System.Console.WriteLine(Name + " have " + Energy + " and need " + card.EnergyCostValue);
+                return false;
+            }
+
+            return true;
         }
         public void FillWill() => Will = MaxWill;
         public void ReduceColdown() => Cards.ForEach(card => card.ReduceColdown());
