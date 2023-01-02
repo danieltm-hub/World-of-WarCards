@@ -93,8 +93,7 @@ namespace GameProgram
                 }
             }
 
-            if (cont != cardsToPlay.Count) System.Console.WriteLine("No se juagron todas las cartas recibidas");
-
+           // if (cont != cardsToPlay.Count) System.Console.WriteLine("No se juagron todas las cartas recibidas");
         }
 
         public void IsPreviousGame(Game expected)
