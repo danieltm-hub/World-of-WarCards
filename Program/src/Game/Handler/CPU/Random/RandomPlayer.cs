@@ -9,7 +9,7 @@ namespace GameProgram
     {
         public RandomPlayer(Player player) : base(player) { }
        
-        public override List<Card> GetCards()
+        public override HashSet<string> GetCards()
         {
             return PlayGenerator();
         }

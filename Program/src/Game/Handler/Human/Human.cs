@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using AST;
@@ -7,23 +8,26 @@ namespace GameProgram
     public class Human : Handler
     {
         public Human(Player player) : base(player) { }
-        public override List<Card> GetCards()
+        public override HashSet<string> GetCards()
         {
-            Game clone = GameManager.CurrentGame.Clone();
-            List<Card> toPlay = HumanController();
-            GameManager.CurrentGame = clone;
-            return new List<Card>();
+            Game initialGame = GameManager.CurrentGame;
+            GameManager.CurrentGame = initialGame.Clone();
+
+            HashSet<string> toPlay = HumanController();
+
+            GameManager.CurrentGame = initialGame;
+
+            return new HashSet<string>();
+
         }
 
-        public List<Card> HumanController()
+        public HashSet<string> HumanController()
         {
-            List<Card> cardtoPlay = new List<Card>();
+            HashSet<string> cardtoPlay = new HashSet<string>();
 
             while (true)
             {
                 Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
-
-                SimulationTester.PrintPlayer(currentPlayer);
 
                 System.Console.WriteLine("Do you want to see the description of a card? [press 1]");
                 System.Console.WriteLine("Do you want play a card? [press 2]");
@@ -43,10 +47,11 @@ namespace GameProgram
                 {
                     System.Console.WriteLine("Choose a card to play:");
                     Card? card = ReadCard();
+
                     if (card != null)
                     {
-                        currentPlayer.PlayCard(card);
-                        cardtoPlay.Add(card);
+                        GameManager.CurrentGame.PlayCard(card);
+                        cardtoPlay.Add(card.Name);
                     }
                 }
 

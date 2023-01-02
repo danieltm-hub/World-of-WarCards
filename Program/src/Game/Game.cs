@@ -10,10 +10,6 @@ namespace GameProgram
         public List<Player> Players = new List<Player>();
         public Player CurrentPlayer => Players[CurrentPlayerIndex];
         public int CurrentPlayerIndex { get; private set; }
-
-        public int Max { get; private set; }
-        public int Min { get; private set; }
-
         public IWinCondition WinCondition;
 
         public Game(List<Player> players, int currentPlayerIndex, IWinCondition winCondition)
@@ -46,7 +42,11 @@ namespace GameProgram
 
         public void PlayCard(Card card)
         {
-            if (!CurrentPlayer.PlayCard(card)) return;
+            if (!CurrentPlayer.PlayCard(card))
+            {
+                System.Console.WriteLine("Can't play " + card.Name);
+                return;
+            }
             ReduceColdown();
         }
 
@@ -66,9 +66,9 @@ namespace GameProgram
 
         public bool IsSameGame(Game game)
         {
-            if(Players.Count != game.Players.Count) return false;
+            if (Players.Count != game.Players.Count) return false;
 
-            if(CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
+            if (CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
 
             for (int i = 0; i < Players.Count; i++)
             {

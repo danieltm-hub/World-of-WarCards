@@ -41,7 +41,9 @@ namespace GameProgram
 
         public Card Clone()
         {
-            return new Card(Name, Effects, Coldown, EnergyCost, Location);
+            Card clon = new Card(Name, Effects, Coldown, EnergyCost, Location);
+            clon.CurrentColdown = CurrentColdown;
+            return clon;
         }
 
         public override bool CheckSemantic(List<Error> errors)

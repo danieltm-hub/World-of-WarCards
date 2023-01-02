@@ -9,7 +9,6 @@ namespace GameProgram
     public abstract class Handler
     {
         private Player myPlayer;
-
         public Handler(Player player)
         {
             myPlayer = player;
@@ -21,25 +20,29 @@ namespace GameProgram
 
             Game initialGame = GameManager.CurrentGame.Clone();
 
-            List<Card> toPlay = GetCards();
+            HashSet<string> toPlay = GetCards();
 
             IsPreviousGame(initialGame);
-            // GameManager.CurrentGame = initialGame;
 
             PlayCards(toPlay);
 
-            System.Console.WriteLine($"{myPlayer.Name} played {string.Join(' ', toPlay.Select(card => card.Name))} cards");
+            System.Console.WriteLine($"{myPlayer.Name} played {string.Join(' ', toPlay)} cards");
 
-            Thread.SpinWait(1000);
             GameManager.CurrentGame.NextTurn();
         }
-        public abstract List<Card> GetCards();
-
-        public List<Card> PlayGenerator()
+        public abstract HashSet<string> GetCards();
+        public void IsCurrent()
         {
-            Game initialGame = GameManager.CurrentGame.Clone();
+            if (myPlayer.Name != GameManager.CurrentGame.CurrentPlayer.Name) throw new Exception($"It is not {myPlayer.Name}'s turn, is {GameManager.CurrentGame.CurrentPlayer.Name}'s turn");
+        }
 
-            List<Card> toReturn = new List<Card>();
+        public HashSet<string> PlayGenerator()
+        {
+            Game initialGame = GameManager.CurrentGame;
+
+            GameManager.CurrentGame = initialGame.Clone();
+
+            HashSet<string> toReturn = new HashSet<string>();
 
             Random randomGenerator = new Random();
 
@@ -49,9 +52,11 @@ namespace GameProgram
 
                 int index = randomGenerator.Next(availableCards.Count + 1);
 
-                if (index == availableCards.Count || availableCards.Count == 0) break;
+               
+                if (index == availableCards.Count) break;
 
-                toReturn.Add(availableCards[index]);
+
+                toReturn.Add(availableCards[index].Name);
 
                 GameManager.CurrentGame.PlayCard(availableCards[index]);
             }
@@ -64,21 +69,33 @@ namespace GameProgram
         public List<Card> AvailableCards()
         {
             List<Card> toReturn = new List<Card>();
-            Player player = GameManager.CurrentGame.CurrentPlayer;
 
             foreach (Card card in GameManager.CurrentGame.CurrentPlayer.Cards)
             {
-                if (player.CanPlay(card)) toReturn.Add(card);
+                if (GameManager.CurrentGame.CurrentPlayer.CanPlay(card)) toReturn.Add(card);
             }
 
             return toReturn;
         }
 
-        protected void PlayCards(List<Card> cards) => cards.ForEach(card => GameManager.CurrentGame.PlayCard(card));
-        public void IsCurrent()
+        private void PlayCards(HashSet<string> cardsToPlay)
         {
-            if (myPlayer.Name != GameManager.CurrentGame.CurrentPlayer.Name) throw new Exception($"It is not {myPlayer.Name}'s turn, is {GameManager.CurrentGame.CurrentPlayer.Name}'s turn");
+            Player getPlayer = GameManager.CurrentGame.CurrentPlayer;
+            int cont = 0;
+
+            foreach (Card card in getPlayer.Cards)
+            {
+                if (cardsToPlay.Contains(card.Name))
+                {
+                    GameManager.CurrentGame.PlayCard(card);
+                    cont++;
+                }
+            }
+
+            if (cont != cardsToPlay.Count) System.Console.WriteLine("No se juagron todas las cartas recibidas");
+
         }
+
         public void IsPreviousGame(Game expected)
         {
             if (!GameManager.CurrentGame.IsSameGame(expected)) throw new Exception("The game was changed in Simulations");

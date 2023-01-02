@@ -111,9 +111,27 @@ namespace GameProgram
             return true;
         }
 
-        public bool CanPlay(Card card)
+        public bool CanPlay(Card card, bool print = false)
         {
-            return card.EnergyCostValue <= Energy && card.CurrentColdown == 0 && Will > 0;
+            if (Will <= 0)
+            {
+                if (print) System.Console.WriteLine(Name + " don't have necessary will");
+                return false;
+            }
+
+            if (card.CurrentColdown > 0)
+            {
+                if (print) System.Console.WriteLine(card.Name + " in Coldown");
+                return false;
+            }
+
+            if (Energy < card.EnergyCostValue)
+            {
+                if (print) System.Console.WriteLine(Name + " have " + Energy + " and need " + card.EnergyCostValue);
+                return false;
+            }
+            
+            return true;
         }
         public void FillWill() => Will = MaxWill;
         public void ReduceColdown() => Cards.ForEach(card => card.ReduceColdown());

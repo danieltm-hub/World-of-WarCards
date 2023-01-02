@@ -1,4 +1,5 @@
-
+using System.Threading;
+using AST;
 namespace GameProgram
 {
     public static class SimulationTester
@@ -17,22 +18,26 @@ namespace GameProgram
             {
                 PrintCurrentGame();
 
-                Player? winner = GameManager.CurrentGame.Winner();
+                System.Console.WriteLine();
+                
+                Thread.SpinWait(1000);
 
-                if (winner != null)
+                if (GameManager.CurrentGame.IsOver())
                 {
                     System.Console.WriteLine(Separator + "WAIT A MINUTE !!!!!");
-                    System.Console.WriteLine($"THE WINNER IS {winner.Name}");
+                    System.Console.WriteLine($"THE WINNER IS {GameManager.CurrentGame.Winner().Name}");
                     break;
                 }
 
                 Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
-                System.Console.WriteLine($"A TURN FOR {currentPlayer.Name} STARTED !!!!!");
+
+                System.Console.WriteLine($"A TURN FOR {currentPlayer.Name} STARTED !!!!!\n");
 
                 currentPlayer.Controller.Play();
 
-                GameManager.CurrentGame.NextTurn();
                 System.Console.WriteLine(turnSeparator);
+
+                Thread.SpinWait(1000);
             }
 
             return;
