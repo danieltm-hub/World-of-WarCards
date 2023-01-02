@@ -30,7 +30,7 @@ namespace Visual
                     for (int i = 0; i < numberofLines; i++)
                     {
                         splited[i] = Regex.Replace(splited[i], "\n", " ");
-                        NormalizeRec(splited[i], width, heigth - listText.Count - 1, 0, listText);
+                        NormalizeRec(splited[i], width, (heigth - listText.Count - 1)<0? 0 : (heigth - listText.Count), 0, listText);
                         if (listText.Count >= heigth) return listText;
                     }
                     return listText;
@@ -53,7 +53,7 @@ namespace Visual
         {
             if (index == height)
             {
-                list.Add(text.Substring(0, Math.Min(width, text.Length - 1)));
+                list.Add(text.Substring(0, Math.Min(width, Math.Min(text.Length - 1, 0))));
                 return;
             }
             if (text.Length < width)

@@ -9,9 +9,8 @@ namespace Visual
         {
             CursorVisible = false;
             Console.Clear();
-            if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
+            if (GameManager.CurrentGame.CurrentPlayer.Controller is RandomPlayer)
             {
-                //TODO un display options para las ia 
                 DisplayOptionsForIA();
             }
             else
@@ -111,8 +110,9 @@ namespace Visual
                     SelectedIndex = SelectedIndex >= Options.Length ? 0 : SelectedIndex;
                 }
             }
-            while (keyPressed != ConsoleKey.Enter);
-
+            while (keyPressed != ConsoleKey.Enter && keyPressed != ConsoleKey.Escape);
+            if(keyPressed == ConsoleKey.Escape) return 3;
+            
             return SelectedIndex;
         }
         public int RunMenuIA()
@@ -125,7 +125,6 @@ namespace Visual
                 string[] optionsIA = { "JUGAR", "SALIR" };
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
-
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
                     SelectedIndex--;
@@ -151,6 +150,7 @@ namespace Visual
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
 
+                
                 if (keyPressed == ConsoleKey.LeftArrow)
                 {
                     SelectedCard--;
@@ -161,8 +161,10 @@ namespace Visual
                     SelectedCard++;
                     SelectedCard = SelectedCard >= GameManager.CurrentGame.CurrentPlayer.Cards.Count ? 0 : SelectedCard;
                 }
+                
             }
-            while (keyPressed != ConsoleKey.Enter);
+            while (keyPressed != ConsoleKey.Enter && keyPressed != ConsoleKey.Escape);
+            if(keyPressed == ConsoleKey.Escape) return -1;
             Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
             Draw.WriteAt("Has seleccionado la carta: " + toPlay.Name, borderLeft, 2, "#8900FF");
             Task.Delay(1000).Wait();

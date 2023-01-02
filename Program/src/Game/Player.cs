@@ -113,17 +113,9 @@ namespace GameProgram
 
             card.Play();
 
-            Draw.WriteAt($"Se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
-            Console.ReadKey();
-            Draw.WriteAt($"                                  ", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
-
             Will--;
 
             Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
-            Console.CursorVisible = true;
-            Draw.WriteAt("se hizo una modificacion", Console.BufferWidth / 2, Console.BufferHeight / 2);
-            Console.ReadKey(true);
-            Draw.WriteAt("                          ", Console.BufferWidth / 2, Console.BufferHeight / 2);
             return true;
         }
 
@@ -137,7 +129,7 @@ namespace GameProgram
 
             if (card.CurrentColdown > 0)
             {
-                if (print) System.Console.WriteLine(card.Name + " in Coldown");
+                if (print) System.Console.WriteLine(card.Name + " in Cooldown");
                 return false;
             }
 

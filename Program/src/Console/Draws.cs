@@ -140,13 +140,35 @@ namespace Visual
             foreach (Player player in list)
             {
                 WriteAt(player.Name, x, y, hexColor);
-                WriteAt($" Health: {player.Health}", x, y + 1, hexColor);
-                WriteAt($" Energy: {player.Energy}", x, y + 2, hexColor);
-                WriteAt($" Will:    {player.GetWill()}", x, y +3, hexColor);
+                WriteAt($" Health: {Bars(player.Health, player.MaxHealth)} " + $"{player.Health}/{player.MaxHealth}", x, y + 1, "#00FF00");
+                WriteAt($" Energy: {Bars(player.Energy, player.MaxEnergy)} " + $"{player.Energy}/{player.MaxEnergy}", x, y + 3, "#FFFF00");
+                WriteAt($" Will: {WillDots(player.GetWill())} ", x, y + 5, "#e6b700");
                 x = Console.BufferWidth / 2 + Console.BufferWidth / 5 + 1;
                 hexColor = "#0000FF";
             }
 
+        }
+
+        private static string Bars(double actual, double max)
+        {
+            string bar = "<";
+            for (int i = 0; i < max; i++)
+            {
+                if (i < actual) bar += "█";
+                else bar += "░";
+            }
+            bar += ">";
+            return bar;
+        }
+
+        private static string WillDots(int n)
+        {
+            string dots = "";
+            for (int i = 0; i < n; i++)
+            {
+                dots += " • ";
+            }
+            return dots;
         }
 
         public static void DrawPlayerImage(int bottomBorderY)

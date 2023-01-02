@@ -189,6 +189,7 @@ namespace Visual
             List<Player> players = GameManager.CurrentGame.Players;
             BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
             selectedCard = battleMenu.RunCards();
+            if(selectedCard==-1) RunMainMenu();
             selectedIndex = battleMenu.RunMenu();
             Draw.DrawPlayerStats(players);
             Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[selectedCard];
@@ -199,6 +200,7 @@ namespace Visual
                     if (toPlay.CurrentColdown > 0)
                     {
                         Draw.WriteText($"La carta {toPlay.Name} está en Cooldown", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
+                        TextAnimation.AnimateTyping("Presione cualquier tecla para continuar", 5, borderLeft, 3, "#8900ff");
                         Console.ReadKey(true);
                         RunBattleMenu();
                         break;
@@ -219,12 +221,12 @@ namespace Visual
                     }
                     GameManager.CurrentGame.PlayCard(toPlay);
                     Draw.WriteText($"Se jugó la carta {toPlay.Name}", borderLeft, 2, borderWidth, borderHeight, "#8900FF");
+                    Console.ReadKey(true);
                     if (GameManager.CurrentGame.IsOver())
                     {
                         RunEndGameMenu();
                         break;
                     }
-                    Console.ReadKey(true);
                     RunBattleMenu();
                     break;
                 case 1:
@@ -319,9 +321,9 @@ namespace Visual
                         break;
                     }
                     Player test = GameManager.CurrentGame.CurrentPlayer;
-                    if (GameManager.CurrentGame.CurrentPlayer.CPU != null)
+                    if (GameManager.CurrentGame.CurrentPlayer.Controller != null)
                     {
-                        GameManager.CurrentGame.CurrentPlayer.CPU.Play();
+                        GameManager.CurrentGame.CurrentPlayer.Controller.Play();
                     }
                     Console.ReadKey(true);
                     BattleIA();
