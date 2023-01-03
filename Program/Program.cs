@@ -25,7 +25,7 @@ public static class Program
         {
             string path = file.FullName;
 
-            // System.Console.WriteLine(path);
+            System.Console.WriteLine(path);
 
             assembly = Assembly.LoadFrom(path);
 
@@ -37,14 +37,14 @@ public static class Program
         List<Error> Errors = new List<Error>();
         List<Token> tokens = Analyzer.GetTokens("code", randomInput, Errors);
 
-        // foreach (var token in tokens)
-        // {
-        //     Console.WriteLine(token.ToString());
-        // }
-        // foreach (var error in Errors)
-        // {
-        //     Console.WriteLine(error.ToString());
-        // }
+        foreach (var token in tokens)
+        {
+            Console.WriteLine(token.ToString());
+        }
+        foreach (var error in Errors)
+        {
+            Console.WriteLine(error.ToString());
+        }
 
         WarCardProgramTest(Errors, tokens);
     }
@@ -58,22 +58,22 @@ public static class Program
 
         if (Errors.Count != 0)
         {
-            // System.Console.WriteLine("Syntax errors");
-            // System.Console.WriteLine(string.Join('\n', Errors));
+            System.Console.WriteLine("Syntax errors");
+            System.Console.WriteLine(string.Join('\n', Errors));
             return;
         }
 
         if (!program.CheckSemantic(Errors))
         {
-            // System.Console.WriteLine("Semantic errors");
-            // System.Console.WriteLine(string.Join('\n', Errors));
+            System.Console.WriteLine("Semantic errors");
+            System.Console.WriteLine(string.Join('\n', Errors));
             return;
         }
 
-        // System.Console.WriteLine(program.Description);
+        System.Console.WriteLine(program.Description);
         List<Card> cards = program.Cards.Values.ToList();
         PlayGame game = new PlayGame(cards);
-        // Console.ReadKey(true);
+        Console.ReadKey(true);
         game.Start();
     }
 
