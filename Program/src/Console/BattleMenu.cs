@@ -27,18 +27,25 @@ namespace Visual
 
                 for (int j = 0; j < GameManager.CurrentGame.CurrentPlayer.Cards.Count; j++)
                 {
-                    Card currentCard = GameManager.CurrentGame.CurrentPlayer.Cards[j];
+                    Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
+                    Card currentCard = currentPlayer.Cards[j];
+
                     string hexColor;
+
                     if (j == Indexes.Item1) continue;
+
                     hexColor = "#FF50FF";
-                    if (currentCard.CurrentColdown > 0)
+
+                    if (currentPlayer.Cooldowns[j] > 0)
                     {
-                        Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, "A9A9A9");
+                        Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentPlayer.Cooldowns[j], j, cardWidth, cardHeight, "A9A9A9");
                     }
-                    else { Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
+
+                    else { Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentPlayer.Cooldowns[j], j, cardWidth, cardHeight, hexColor); }
                 }
+
                 Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[Indexes.Item1];
-                Draw.PrintSCard(selectedCard.Name, selectedCard.EnergyCostValue, selectedCard.CurrentColdown, Indexes.Item1>7? 6 : Indexes.Item1, cardWidth, cardHeight);
+                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.Description, Indexes.Item1 > 7 ? 6 : Indexes.Item1, cardSHeight, cardSWidth);
 
                 ResetColor();
                 Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
@@ -66,8 +73,8 @@ namespace Visual
             Draw.DrawBordersExtra(midConsole, fifthConsole, bottomBorderY, maxHeight);
             Draw.DrawFloor(bottomBorderY);
         }
-        
-        public (int,int) RunMenuIA()
+
+        public (int, int) RunMenuIA()
         {
             ConsoleKey keyPressed;
             do
@@ -92,7 +99,7 @@ namespace Visual
             Indexes.Item2 = 1;
             return Indexes;
         }
-        public (int,int) GetIndexes()
+        public (int, int) GetIndexes()
         {
             ConsoleKey keyPressed;
             do
@@ -114,25 +121,25 @@ namespace Visual
                     Indexes.Item1 = Indexes.Item1 >= GameManager.CurrentGame.CurrentPlayer.Cards.Count ? 0 : Indexes.Item1;
                     return Indexes;
                 }
-                
+
             }
             while (keyPressed != ConsoleKey.D1 && keyPressed != ConsoleKey.Escape && keyPressed != ConsoleKey.D2 && keyPressed != ConsoleKey.D3 && keyPressed != ConsoleKey.D4);
             switch (keyPressed)
             {
                 case ConsoleKey.D1:
-                Indexes.Item2 = -2;
+                    Indexes.Item2 = -2;
                     return Indexes;
                 case ConsoleKey.D2:
-                Indexes.Item2 = -3;
+                    Indexes.Item2 = -3;
                     return Indexes;
                 case ConsoleKey.D3:
-                Indexes.Item2 = -4;
+                    Indexes.Item2 = -4;
                     return Indexes;
                 case ConsoleKey.Escape:
-                Indexes.Item2 = -1;
+                    Indexes.Item2 = -1;
                     return Indexes;
                 case ConsoleKey.D4:
-                Indexes.Item2 = -1;
+                    Indexes.Item2 = -1;
                     return Indexes;
             }
             return Indexes;
@@ -140,7 +147,7 @@ namespace Visual
 
 
         #region Variables
-        private (int,int) Indexes = (0,0);
+        private (int, int) Indexes = (0, 0);
         private string[] Options;
 
         List<Player> Players;
@@ -180,6 +187,6 @@ namespace Visual
             this.cardWidth = cardWidth;
         }
         #endregion
-    
+
     }
 }

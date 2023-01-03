@@ -3,7 +3,7 @@ using AST;
 
 namespace GameProgram
 {
-    public class Card : Node, IClonable<Card>
+    public class Card : Node
     {
         public string Name { get; private set; }
         public List<Effect> Effects { get; private set; }
@@ -17,31 +17,24 @@ namespace GameProgram
                 return Math.Max(0, (double)EnergyCost.Value);
             }
         }
-        private Expression Coldown;
-        public double ColdownValue
+        private Expression Cooldown;
+        public int CooldownValue
         {
             get
             {
-                Coldown.Evaluate();
-                return Math.Max(0, (double)Coldown.Value);
+                Cooldown.Evaluate();
+                return Math.Max(0, (int)Cooldown.Value);
             }
         }
 
-        public double CurrentColdown = 0;
-
-        public Card(string name, List<Effect> effects, Expression coldown, Expression energyCost, CodeLocation location) : base(location)
+        public Card(string name, List<Effect> effects, Expression cooldown, Expression energyCost, CodeLocation location) : base(location)
         {
             Type = NodeType.Card;
             Name = name;
             Effects = effects;
             Location = location;
-            Coldown = coldown;
+            Cooldown = cooldown;
             EnergyCost = energyCost;
-        }
-
-        public Card Clone()
-        {
-            return new Card(Name, Effects, Coldown, EnergyCost, Location);
         }
 
         public override bool CheckSemantic(List<Error> errors)
@@ -55,10 +48,10 @@ namespace GameProgram
                 }
             }
 
-            if (!Coldown.CheckSemantic(errors))
+            if (!Cooldown.CheckSemantic(errors))
             {
                 Type = NodeType.Error;
-                errors.Add(new Error(ErrorCode.Invalid, Location, $"Coldown"));
+                errors.Add(new Error(ErrorCode.Invalid, Location, $"Cooldown"));
             }
 
             if (!EnergyCost.CheckSemantic(errors))
@@ -74,7 +67,7 @@ namespace GameProgram
         {
             string description = $"Card: {Name} \n";
 
-            description += $"Coldown: {Coldown.Description} \n";
+            description += $"Cooldown: {Cooldown.Description} \n";
             description += $"EnergyCost: {EnergyCost.Description} \n";
 
             int count = 1;
@@ -90,18 +83,7 @@ namespace GameProgram
         public void Play()
         {
             Effects.ForEach(effect => effect.Evaluate());
-            CurrentColdown = ColdownValue;
         }
 
-        public void ReduceColdown() => CurrentColdown = Math.Max(0, CurrentColdown - 1);
-
-        public bool IsSameCard(Card card)
-        {
-            if (Name != card.Name) return false;
-            if (EnergyCostValue != card.EnergyCostValue) return false;
-            if (ColdownValue != card.ColdownValue) return false;
-
-            return Effects.Count == card.Effects.Count;
-        }
     }
 }

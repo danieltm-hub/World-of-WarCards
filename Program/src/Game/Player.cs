@@ -13,15 +13,15 @@ namespace GameProgram
         public List<State> OnPlayCardStates { get; private set; } = new List<State>();
         public List<State> OnTurnEndStates { get; private set; } = new List<State>();
 
-
         public List<Card> Cards { get; private set; } = new List<Card>();
+        public int[] Cooldowns { get; private set; }
         public string Name { get; private set; }
         public double MaxHealth { get; private set; }
         public double Health { get; private set; }
         public double MaxEnergy { get; private set; }
         public double Energy { get; private set; }
         private int MaxWill;
-        private int Will;
+        public int Will { get; private set; }
         public Handler Controller { get; private set; }
 
         public Player(string name, double health, double energy, int will, List<Card> cards)
@@ -34,10 +34,14 @@ namespace GameProgram
             Will = Math.Clamp(will, 0, 8);
             MaxWill = Will;
             Cards = cards;
+            Cooldowns = new int[Cards.Count];
             Controller = new Human(this);
         }
 
-        private Player(string name, double health, double maxHealth, double energy, double maxEnergy, int will, int maxWill, List<Card> cards, Handler controller)
+        private Player
+        (string name, double health, double maxHealth, double energy, double maxEnergy, int will,
+         int maxWill, List<State> onTurnInitStates, List<State> onPlayCardStates, List<State> onTurnEndStates,
+         List<Card> cards, int[] cooldown, Handler controller)
         {
             Name = name;
             Health = health;
@@ -46,25 +50,42 @@ namespace GameProgram
             MaxEnergy = maxEnergy;
             Will = will;
             MaxWill = maxWill;
+            OnTurnInitStates = onTurnInitStates;
+            OnPlayCardStates = onPlayCardStates;
+            OnTurnEndStates = onTurnEndStates;
             Cards = cards;
+            Cooldowns = cooldown;
             Controller = controller;
         }
+
         public void SetCPU(Handler cpu)
         {
             Controller = cpu;
         }
 
-
         public Player Clone()
         {
-            List<Card> cards = new List<Card>();
 
-            foreach (Card card in Cards)
+            List<State> onTurnInit = new List<State>();
+            OnTurnInitStates.ForEach(state => onTurnInit.Add(state));
+
+            List<State> onPlayCard = new List<State>();
+            OnPlayCardStates.ForEach(state => onPlayCard.Add(state));
+
+            List<State> onTurnEnd = new List<State>();
+            OnTurnEndStates.ForEach(state => onTurnEnd.Add(state));
+
+            List<Card> cards = new List<Card>();
+            int[] cooldowns = new int[Cards.Count];
+
+            for (int i = 0; i < Cooldowns.Length; i++)
             {
-                cards.Add(card.Clone());
+                cooldowns[i] = Cooldowns[i];
             }
 
-            return new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will, MaxWill, cards, Controller);
+            return
+            new Player(Name, Health, MaxHealth, Energy, MaxEnergy, Will,
+            MaxWill, onTurnInit, onPlayCard, onTurnEnd, cards, cooldowns, Controller);
         }
 
         public void ChangeHealth(double amount)
@@ -97,15 +118,16 @@ namespace GameProgram
             OnPlayCardStates.Add(state);
         }
 
-        public bool PlayCard(Card card)
+        public bool PlayCard(int cardIndex)
         {
-            if (!CanPlay(card))
+            Card card = Cards[cardIndex];
+
+            if (!CanPlay(cardIndex))
             {
                 Draw.PrintAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
                 Console.ReadKey();
                 return false;
             }
-
 
             ChangeEnergy(-card.EnergyCostValue);
 
@@ -114,57 +136,31 @@ namespace GameProgram
             card.Play();
 
             Will--;
+            Cooldowns[cardIndex] = card.CooldownValue;
 
             Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
             return true;
         }
 
-        public bool CanPlay(Card card, bool print = false)
+        public bool CanPlay(int cardIndex)
         {
-            if (Will <= 0)
-            {
-                if (print) System.Console.WriteLine(Name + " don't have necessary will");
-                return false;
-            }
-
-            if (card.CurrentColdown > 0)
-            {
-                if (print) System.Console.WriteLine(card.Name + " in Cooldown");
-                return false;
-            }
-
-            if (Energy < card.EnergyCostValue)
-            {
-                if (print) System.Console.WriteLine(Name + " have " + Energy + " and need " + card.EnergyCostValue);
-                return false;
-            }
-
-            return true;
+            return Will > 0 && Cooldowns[cardIndex] > 0 && Cards[cardIndex].EnergyCostValue <= Energy;
         }
-        public void FillWill() => Will = MaxWill;
-        public void ReduceColdown() => Cards.ForEach(card => card.ReduceColdown());
 
+        public void FillWill() => Will = MaxWill;
+        public void ReduceCooldown() => Cooldowns.Select(cooldown => cooldown = Math.Max(cooldown - 1, 0));
         public bool IsSamePlayer(Player player)
         {
             if (Name != player.Name) return false;
-            if (MaxHealth != player.MaxHealth) return false;
             if (Health != player.Health) return false;
-            if (MaxEnergy != player.MaxEnergy) return false;
             if (Energy != player.Energy) return false;
 
-            if (player.Cards.Count != Cards.Count) return false;
-
-            for (int i = 0; i < Cards.Count; i++)
+            for (int i = 0; i < Cooldowns.Length; i++)
             {
-                if (!Cards[i].IsSameCard(player.Cards[i])) return false;
+                if (Cooldowns[i] != player.Cooldowns[i]) return false;
             }
 
             return true;
-        }
-
-        public int GetWill()
-        {
-            return Will;
         }
     }
 }
