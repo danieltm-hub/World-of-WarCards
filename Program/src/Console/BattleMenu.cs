@@ -1,6 +1,7 @@
 using static System.Console;
 using AST;
 using GameProgram;
+using Pastel;
 namespace Visual
 {
     class BattleMenu
@@ -18,19 +19,8 @@ namespace Visual
                 for (int i = 0; i < Options.Length; i++)
                 {
                     string currentOption = Options[i];
-                    string prefix;
-                    if (i == SelectedIndex)
-                    {
-                        ForegroundColor = ConsoleColor.Red;
-                        prefix = "*";
-                    }
-                    else
-                    {
-                        ForegroundColor = ConsoleColor.White;
-                        prefix = "";
-                    }
-                    SetCursorPosition(Console.BufferWidth - 20, Console.BufferHeight - 1 + i * 10);
-                    Console.WriteLine($"{prefix}  {currentOption}");
+                    SetCursorPosition(Console.BufferWidth - 19, (Console.BufferHeight - 7) + i);
+                    Console.WriteLine($"{currentOption}".Pastel("#8900ff"));
 
                 }
                 ResetColor();
@@ -39,19 +29,19 @@ namespace Visual
                 {
                     Card currentCard = GameManager.CurrentGame.CurrentPlayer.Cards[j];
                     string hexColor;
-                    if (j == SelectedCard) continue;
+                    if (j == Indexes.Item1) continue;
                     hexColor = "#FF50FF";
                     if (currentCard.CurrentColdown > 0)
                     {
-                        Draw.DrawCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, "A9A9A9");
+                        Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, "A9A9A9");
                     }
-                    else { Draw.DrawCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
+                    else { Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
                 }
-                Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
-                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.Description, SelectedCard>7? 6 : SelectedCard, cardSHeight, cardSWidth);
+                Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[Indexes.Item1];
+                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.Description, Indexes.Item1>7? 6 : Indexes.Item1, cardSHeight, cardSWidth);
 
                 ResetColor();
-                Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
+                Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
                 Draw.DrawPlayerImage(bottomBorderY);
                 Draw.DrawBorders("#FF0000");
                 Draw.DrawBordersExtra(midConsole, fifthConsole, bottomBorderY, maxHeight);
@@ -62,60 +52,22 @@ namespace Visual
         {
             CursorVisible = false;
             Console.Clear();
-            string[] optionsIA = { "JUGAR", "SALIR" };
-            for (int i = 0; i < optionsIA.Length; i++)
+            for (int i = 0; i < Options.Length; i++)
             {
-                string currentOption = optionsIA[i];
-                string prefix;
-                if (i == SelectedIndex)
-                {
-                    ForegroundColor = ConsoleColor.Red;
-                    prefix = "*";
-                }
-                else
-                {
-                    ForegroundColor = ConsoleColor.White;
-                    prefix = "";
-                }
+                string currentOption = Options[i];
                 SetCursorPosition(Console.BufferWidth - 20, Console.BufferHeight - 1 + i * 10);
-                Console.WriteLine($"{prefix}  {currentOption}");
-
+                Console.WriteLine($"{currentOption}".Pastel("#8900ff"));
             }
 
             ResetColor();
-            Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
+            Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
             Draw.DrawPlayerImage(bottomBorderY);
             Draw.DrawBorders("#FF0000");
             Draw.DrawBordersExtra(midConsole, fifthConsole, bottomBorderY, maxHeight);
             Draw.DrawFloor(bottomBorderY);
         }
-        public int RunMenu()
-        {
-            ConsoleKey keyPressed;
-            do
-            {
-                Console.Clear();
-                DisplayOptions();
-                ConsoleKeyInfo keyInfo = ReadKey(true);
-                keyPressed = keyInfo.Key;
-
-                if (keyPressed == ConsoleKey.UpArrow)
-                {
-                    SelectedIndex--;
-                    SelectedIndex = SelectedIndex < 0 ? Options.Length - 1 : SelectedIndex;
-                }
-                else if (keyPressed == ConsoleKey.DownArrow)
-                {
-                    SelectedIndex++;
-                    SelectedIndex = SelectedIndex >= Options.Length ? 0 : SelectedIndex;
-                }
-            }
-            while (keyPressed != ConsoleKey.Enter && keyPressed != ConsoleKey.Escape);
-            if(keyPressed == ConsoleKey.Escape) return 3;
-            
-            return SelectedIndex;
-        }
-        public int RunMenuIA()
+        
+        public (int,int) RunMenuIA()
         {
             ConsoleKey keyPressed;
             do
@@ -125,22 +77,22 @@ namespace Visual
                 string[] optionsIA = { "JUGAR", "SALIR" };
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
-                if (keyPressed == ConsoleKey.UpArrow)
+                if (keyPressed == ConsoleKey.D1)
                 {
-                    SelectedIndex--;
-                    SelectedIndex = SelectedIndex < 0 ? optionsIA.Length - 1 : SelectedIndex;
+                    Indexes.Item2 = 0;
+                    return Indexes;
                 }
-                else if (keyPressed == ConsoleKey.DownArrow)
+                else if (keyPressed == ConsoleKey.D2)
                 {
-                    SelectedIndex++;
-                    SelectedIndex = SelectedIndex >= optionsIA.Length ? 0 : SelectedIndex;
+                    Indexes.Item2 = 1;
+                    return Indexes;
                 }
             }
-            while (keyPressed != ConsoleKey.Enter);
-
-            return SelectedIndex;
+            while (keyPressed != ConsoleKey.Escape);
+            Indexes.Item2 = 1;
+            return Indexes;
         }
-        public int RunCards()
+        public (int,int) GetIndexes()
         {
             ConsoleKey keyPressed;
             do
@@ -150,39 +102,53 @@ namespace Visual
                 ConsoleKeyInfo keyInfo = ReadKey(true);
                 keyPressed = keyInfo.Key;
 
-                
                 if (keyPressed == ConsoleKey.LeftArrow)
                 {
-                    SelectedCard--;
-                    SelectedCard = SelectedCard < 0 ? GameManager.CurrentGame.CurrentPlayer.Cards.Count - 1 : SelectedCard;
+                    Indexes.Item1--;
+                    Indexes.Item1 = Indexes.Item1 < 0 ? GameManager.CurrentGame.CurrentPlayer.Cards.Count - 1 : Indexes.Item1;
+                    return Indexes;
                 }
                 else if (keyPressed == ConsoleKey.RightArrow)
                 {
-                    SelectedCard++;
-                    SelectedCard = SelectedCard >= GameManager.CurrentGame.CurrentPlayer.Cards.Count ? 0 : SelectedCard;
+                    Indexes.Item1++;
+                    Indexes.Item1 = Indexes.Item1 >= GameManager.CurrentGame.CurrentPlayer.Cards.Count ? 0 : Indexes.Item1;
+                    return Indexes;
                 }
                 
             }
-            while (keyPressed != ConsoleKey.Enter && keyPressed != ConsoleKey.Escape);
-            if(keyPressed == ConsoleKey.Escape) return -1;
-            Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[SelectedCard];
-            Draw.WriteAt("Has seleccionado la carta: " + toPlay.Name, borderLeft, 2, "#8900FF");
-            Task.Delay(1000).Wait();
-            return SelectedCard;
+            while (keyPressed != ConsoleKey.D1 && keyPressed != ConsoleKey.Escape && keyPressed != ConsoleKey.D2 && keyPressed != ConsoleKey.D3 && keyPressed != ConsoleKey.D4);
+            switch (keyPressed)
+            {
+                case ConsoleKey.D1:
+                Indexes.Item2 = -2;
+                    return Indexes;
+                case ConsoleKey.D2:
+                Indexes.Item2 = -3;
+                    return Indexes;
+                case ConsoleKey.D3:
+                Indexes.Item2 = -4;
+                    return Indexes;
+                case ConsoleKey.Escape:
+                Indexes.Item2 = -1;
+                    return Indexes;
+                case ConsoleKey.D4:
+                Indexes.Item2 = -1;
+                    return Indexes;
+            }
+            return Indexes;
         }
 
 
         #region Variables
-        private int SelectedIndex;
-        private int SelectedCard;
+        private (int,int) Indexes = (0,0);
         private string[] Options;
 
         List<Player> Players;
 
-        int borderLeft;
+        public int borderLeft;
         int borderRight;
-        int borderWidth;
-        int borderHeight;
+        public int borderWidth;
+        public int borderHeight;
         int maxWidth;
         int maxHeight;
         int bottomBorderY;

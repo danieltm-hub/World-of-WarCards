@@ -101,7 +101,7 @@ namespace GameProgram
         {
             if (!CanPlay(card))
             {
-                Draw.WriteAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
+                Draw.PrintAt($"no se pudo jugar la carta {card.Name}", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, "#8900FF");
                 Console.ReadKey();
                 return false;
             }
@@ -115,7 +115,7 @@ namespace GameProgram
 
             Will--;
 
-            Draw.DrawPlayerStats(GameManager.CurrentGame.Players);
+            Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
             return true;
         }
 

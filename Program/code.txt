@@ -28,3 +28,62 @@ card Fireballq 4 1
 {
     fire
 }
+
+card Fireball1 4 1
+{
+    fire
+}
+
+card Fireball2 4 1
+{
+    fire
+}
+
+card Fireball3 4 1
+{
+    fire
+}
+
+card Fireball4 4 1
+{
+    fire
+}
+
+card Fireball5 4 1
+{
+    fire
+}
+
+card Fireball6 4 1
+{
+    fire
+}
+
+card Fireball7 4 1
+{
+    fire
+}
+
+card Fireball8 4 1
+{
+    fire
+}
+
+card Fireball9 4 1
+{
+    fire
+}
+
+card Fireball10 4 1
+{
+    fire
+}
+
+card Fireball11 4 1
+{
+    fire
+}
+card Fireball12 4 1
+{
+    fire
+}

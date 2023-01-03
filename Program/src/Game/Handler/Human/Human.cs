@@ -24,9 +24,7 @@ namespace GameProgram
 
         public HashSet<string> HumanController()
         {
-            HashSet<string> cardtoPlay = new HashSet<string>();
-
-            
+            HashSet<string> cardtoPlay = new HashSet<string>();  
             return cardtoPlay;
         }
 

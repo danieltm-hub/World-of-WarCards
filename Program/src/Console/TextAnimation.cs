@@ -49,7 +49,7 @@ namespace Visual
                 foreach (string frame in frames)
                 {
                     Console.Clear();
-                    Draw.WriteAt(frame, x, y, print);
+                    Draw.PrintAt(frame, x, y, print);
                     Task.Delay(delay).Wait(); // o Thread.Sleep(delay);
                 }
             }
