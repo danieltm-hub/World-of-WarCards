@@ -27,14 +27,13 @@ namespace Visual
         ///<summary>Prints an array of pixels in a given position (x,y) of the console </summary>
         protected static void PrintImage(string[] s, int x, int y, string hexColor = "#FFFFFF")
         {
-            int n = 0;
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (int i = 0; i < s.Length - 1; i++)
             {
-                Console.SetCursorPosition(x, y + n);
+                Console.SetCursorPosition(x, y - s.Length + i + 1);
                 Console.Write(s[i].Pastel(hexColor));
-                n--;
             }
         }
+
         ///<summary>Prints a string in a given area (x-xx,y-yy) of the console </summary>
         protected static void WriteAt(string s, int x, int y, int xx, int yy, string hexColor = "#FFFFFF")
         {
@@ -55,6 +54,7 @@ namespace Visual
                 Console.WriteLine(e.Message);
             }
         }
+
         ///<summary>Writes a formated text in a given area (x-width,y-height) of the console </summary>
         public static void WriteText(string text, int x, int y, int width, int height, string hexColor = "#FFFFFF", string bgColor = "#000000")
         {
@@ -70,22 +70,57 @@ namespace Visual
         {
             if (cardName.Length > cardWidth - 1) cardName = cardName.Substring(0, cardWidth - 1);
             string width = "";
-            for (int i = 0; i < cardWidth - 2; i++)
+            for (int i = 0; i < cardWidth - 2 + (-4); i++)
             {
                 width += "═";
             }
-            PrintAt(("╔" + width + "╗").Pastel(heColor), x * cardWidth + 1, cardHeight);
-            PrintAt(cardName, x * cardWidth + 2, cardHeight + 1);
-            WriteAt("║".Pastel(heColor), x * cardWidth + 1, cardHeight + 1, x * cardWidth + 1, Console.BufferHeight - 1);
-            if (x != 0) WriteAt("║".Pastel(heColor), (x + 1) * cardWidth, cardHeight + 1, (x + 1) * cardWidth, Console.BufferHeight - 1);
-            else { WriteAt("║".Pastel(heColor), cardWidth, cardHeight + 1, cardWidth, Console.BufferHeight - 1); }
-            PrintAt(("╠" + width + "╣").Pastel(heColor), x * cardWidth + 1, cardHeight + 2);
-            PrintAt(("╚" + width + "╝").Pastel(heColor), x * cardWidth + 1, Console.BufferHeight - 2);
+            PrintAt(("╔" + width + "╗").Pastel(heColor), x * cardWidth + (+2) + 1, cardHeight);
+            PrintAt(cardName, x * cardWidth + 2 + (+2), cardHeight + 1);
+            WriteAt("║".Pastel(heColor), x * cardWidth + 1 + (+2) , cardHeight + 1, x * cardWidth + 1+ (+2), Console.BufferHeight - 1);
+            if (x != 0) WriteAt("║".Pastel(heColor), (x + 1) * cardWidth + (-2), cardHeight + 1, (x + 1) * cardWidth+ (-2), Console.BufferHeight - 1);
+            else { WriteAt("║".Pastel(heColor), cardWidth+ (-2), cardHeight + 1, cardWidth+ (-2), Console.BufferHeight - 1); }
+            PrintAt(("╠" + width + "╣").Pastel(heColor), x * cardWidth + 1 + (+2), cardHeight + 2);
+            PrintAt(("╚" + width + "╝").Pastel(heColor), x * cardWidth + 1 + (+2), Console.BufferHeight - 2);
+        }
+
+        public static void PrintSCard(string cardName, double value, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
+        {
+            if (cardName.Length > cardWidth - 1) cardName = cardName.Substring(0, cardWidth - 1);
+            string width = "";
+            
+            if (x == 0) 
+            {
+                for (int i = 0; i < cardWidth; i++)
+            {
+                width += "═";
+            }
+                WriteAt(" ".PastelBg("#222582"), x * cardWidth + 1 , cardHeight-1, x * cardWidth + cardWidth + 2, cardHeight + cardHeight); //background
+                PrintAt(("╔" + width + "╗").PastelBg("#222582"), x * cardWidth + 1, cardHeight-1);
+                PrintAt(cardName.PastelBg("#222582"), x * cardWidth + 2, cardHeight + 1-1);
+                WriteAt("║".PastelBg("#222582"), x * cardWidth + 1 , cardHeight + 1-1, x * cardWidth + 1, Console.BufferHeight - 1);
+                WriteAt("║".PastelBg("#222582"), (x + 1) * cardWidth + (+2), cardHeight + 1-1, (x + 1) * cardWidth + (+2), Console.BufferHeight - 1);
+                PrintAt(("╠" + width + "╣").PastelBg("#222582"), x * cardWidth + 1, cardHeight + 2-1);
+                PrintAt(("╚" + width + "╝").PastelBg("#222582"), x * cardWidth + 1, Console.BufferHeight - 2);
+            }
+            else 
+            { 
+                for (int i = 0; i < cardWidth+2; i++)
+            {
+                width += "═";
+            }
+                WriteAt(" ".PastelBg("#222582"), x * cardWidth + 1 + (-2), cardHeight-1, x * cardWidth + cardWidth + (+2), cardHeight + cardHeight); //background
+                PrintAt(("╔" + width + "╗").PastelBg("#222582"), x * cardWidth + 1 + (-2), cardHeight-1);
+                PrintAt(cardName.PastelBg("#222582"), x * cardWidth + 2 + (-2), cardHeight + 1-1);
+                WriteAt("║".PastelBg("#222582"), x * cardWidth + 1 + (-2), cardHeight + 1-1, x * cardWidth + 1 + (-2), Console.BufferHeight - 1);
+                WriteAt("║".PastelBg("#222582"), x * cardWidth + cardWidth +2, cardHeight + 1-1, x * cardWidth + cardWidth +2, Console.BufferHeight - 1);
+                PrintAt(("╠" + width + "╣").PastelBg("#222582"), x * cardWidth + 1 + (-2), cardHeight + 2 -1);
+                PrintAt(("╚" + width + "╝").PastelBg("#222582"), x * cardWidth + 1 + (-2), Console.BufferHeight - 2);
+            }
+            
         }
         ///<summary>Prints a game card with the description</summary>
-        public static void DrawSelectedCard(string cardSName, string about, int x, int cardSHeight, int cardSWidth)
+        public static void ShowCards(string cardSName, string about, int x, int cardSHeight, int cardSWidth)
         {
-            string hexColor = "#FFFFFF";
             if (cardSName.Length > cardSWidth - 1) cardSName = cardSName.Substring(0, cardSWidth - 1);
             string width = "";
 
@@ -102,7 +137,7 @@ namespace Visual
             else { WriteAt("║".PastelBg("#222582"), cardSWidth, cardSHeight + 1, cardSWidth, Console.BufferHeight - 1); }
             PrintAt(("╠" + width + "╣").PastelBg("#222582"), x * cardSWidth + 1, cardSHeight + 2);
             PrintAt(("╚" + width + "╝").PastelBg("#222582"), x * cardSWidth + 1, Console.BufferHeight - 2);
-            WriteText(about, x * cardSWidth + 2, cardSHeight + 3, cardSWidth - 2, cardSHeight, hexColor, "#222582");
+            WriteText(about, x*cardSWidth + 2, cardSHeight + 3, cardSWidth -2, cardSHeight, "#FFFFFF", "#222582");
         }
         ///<summary>Draws the border of the console</summary>
         public static void DrawBorders(string hexColor = "#FFFFFF")
@@ -156,9 +191,9 @@ namespace Visual
 
         private static string Bars(double actual, double max)
         {
-            int adjusted = (int)((actual*40)/max);
+            int adjusted = (int)((actual*20)/max);
             string bar = "<";
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 20; i++)
             {
                 if (i < adjusted) bar += "█";
                 else bar += "░";
@@ -228,7 +263,7 @@ namespace Visual
                     Console.ReadKey();
                     WriteAt(" ", 1, Console.BufferHeight/2, Console.BufferWidth-1, Console.BufferHeight-1);
                 }
-                DrawSelectedCard(cards[i].Name, cards[i].Description, j, Console.BufferWidth / 6, Console.BufferHeight / 2);
+                ShowCards(cards[i].Name, cards[i].Description, j, Console.BufferWidth / 6, Console.BufferHeight / 2);
                 j++;
             }
             DrawBorders("#FF0000");

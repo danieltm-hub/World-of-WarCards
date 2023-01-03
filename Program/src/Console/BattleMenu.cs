@@ -38,7 +38,7 @@ namespace Visual
                     else { Draw.PrintCard((currentCard.Name), currentCard.EnergyCostValue, currentCard.CurrentColdown, j, cardWidth, cardHeight, hexColor); }
                 }
                 Card selectedCard = GameManager.CurrentGame.CurrentPlayer.Cards[Indexes.Item1];
-                Draw.DrawSelectedCard(selectedCard.Name, selectedCard.Description, Indexes.Item1>7? 6 : Indexes.Item1, cardSHeight, cardSWidth);
+                Draw.PrintSCard(selectedCard.Name, selectedCard.EnergyCostValue, selectedCard.CurrentColdown, Indexes.Item1>7? 6 : Indexes.Item1, cardWidth, cardHeight);
 
                 ResetColor();
                 Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
