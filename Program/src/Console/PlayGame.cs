@@ -29,7 +29,7 @@ namespace Visual
             Player Juan = new Player("Juan", 20, 20, 6, WarCards);
             RandomPlayer Pepin = new RandomPlayer(Pepe);
             Pepe.SetCPU(Pepin);
-            RandomPlayer Tontin = new RandomPlayer(Juan);
+            MCTS Tontin = new MCTS(BasicStratergy.BasicLifeLScore, Juan);
             Juan.SetCPU(Tontin);
 
             GameManager.StartGame(new List<Player>() { Juan, Pepe });

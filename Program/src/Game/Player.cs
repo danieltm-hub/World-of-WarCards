@@ -117,7 +117,7 @@ namespace GameProgram
             OnPlayCardStates.Add(state);
         }
 
-        public bool PlayCard(int cardIndex)
+        public bool PlayCard(int cardIndex, bool print = true)
         {
             Card card = Cards[cardIndex];
 
@@ -137,7 +137,7 @@ namespace GameProgram
             Will--;
             Cooldowns[cardIndex] = card.CooldownValue;
 
-            Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
+            if (print) Draw.PrintPlayerStats(GameManager.CurrentGame.Players);
             return true;
         }
 
@@ -147,7 +147,13 @@ namespace GameProgram
         }
 
         public void FillWill() => Will = MaxWill;
-        public void ReduceCooldown() => Cooldowns.Select(cooldown => cooldown = Math.Max(cooldown - 1, 0));
+        public void ReduceCooldown() 
+        {
+            for(int i = 0 ; i < Cooldowns.Length; i++)
+            {
+                Cooldowns[i] = Math.Max(Cooldowns[i] - 1, 0);
+            }
+        }
         public bool IsSamePlayer(Player player)
         {
             if (Name != player.Name) return false;

@@ -9,7 +9,7 @@ namespace GameProgram
 {
     public abstract class Handler
     {
-        private Player myPlayer;
+        public Player myPlayer { get; private set; }
         public Handler(Player player)
         {
             myPlayer = player;
@@ -26,10 +26,9 @@ namespace GameProgram
             IsPreviousGame(initialGame);
 
             PlayCards(toPlay);
-            
+
             string toPrint = String.Join("\n", toPlay.Select(card => GameManager.CurrentGame.CurrentPlayer.Cards[card].Name));
-            Draw.WriteText(toPrint, Console.BufferWidth/2 - Console.BufferWidth/5 +1, 2, Console.BufferWidth/2 + Console.BufferWidth/5, Console.BufferHeight / 4 - 1, "#8900FF");
-            Draw.WriteText($"{myPlayer.Name} decide pasar turno", Console.BufferWidth/2 - Console.BufferWidth/5 +1, 2, Console.BufferWidth/2 + Console.BufferWidth/5, Console.BufferHeight / 4 - 1, "#8900FF");
+            Draw.WriteText(toPrint, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, Console.BufferWidth / 2 + Console.BufferWidth / 5, Console.BufferHeight / 4 - 1, "#8900FF");
             GameManager.CurrentGame.NextTurn();
         }
 
@@ -73,6 +72,42 @@ namespace GameProgram
             return toReturn;
         }
 
+        public List<List<int>> AllGeneratorPlays(List<int> selected, List<int> availables, Game gameState)
+        {
+            GameManager.CurrentGame = gameState.Clone();
+
+            if (availables.Count == 0)
+            {
+                return new List<List<int>> { selected };
+            }
+
+            List<List<int>> AllPlays = new List<List<int>>();
+
+            AllPlays.Add(selected); //pass
+
+            for (int i = 0; i < availables.Count; i++)
+            {
+                selected.Add(availables[i]);
+                GameManager.CurrentGame.PlayCard(availables[i], false);
+
+                AllPlays.AddRange(AllGeneratorPlays(CloneList(selected), AvailableCards(), GameManager.CurrentGame));
+
+                GameManager.CurrentGame = gameState.Clone();
+                selected.RemoveAt(selected.Count - 1);
+            }
+
+            GameManager.CurrentGame = gameState;
+
+            return AllPlays;
+        }
+
+        public List<int> CloneList(List<int> toclone)
+        {
+            List<int> toReturn = new List<int>();
+            toclone.ForEach(item => toReturn.Add(item));
+            return toReturn;
+        }
+
         public List<int> AvailableCards()
         {
             List<int> toReturn = new List<int>();
@@ -83,14 +118,12 @@ namespace GameProgram
                 if (GameManager.CurrentGame.CurrentPlayer.CanPlay(i)) toReturn.Add(i);
             }
 
-
-
             return toReturn;
         }
 
-        private void PlayCards(List<int> cardsToPlay)
+        public void PlayCards(List<int> cardsToPlay)
         {
-            cardsToPlay.ForEach(card => GameManager.CurrentGame.PlayCard(card));
+            cardsToPlay.ForEach(card => GameManager.CurrentGame.PlayCard(card, false));
         }
 
         public void IsPreviousGame(Game expected)

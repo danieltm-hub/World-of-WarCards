@@ -11,10 +11,6 @@ namespace GameProgram
         public List<Player> Players = new List<Player>();
         public Player CurrentPlayer => Players[CurrentPlayerIndex];
         public int CurrentPlayerIndex { get; private set; }
-
-        public int Max { get; private set; }
-        public int Min { get; private set; }
-
         public IWinCondition WinCondition;
 
         public Game(List<Player> players, int currentPlayerIndex, IWinCondition winCondition)
@@ -36,20 +32,21 @@ namespace GameProgram
             return new Game(players, CurrentPlayerIndex, WinCondition);
         }
 
-        public void NextTurn()
+        public void NextTurn(bool print = true)
         {
-            Draw.WriteText($"{CurrentPlayer.Name} decide pasar turno", Console.BufferWidth/2 - Console.BufferWidth/5 +1, 2, Console.BufferWidth/2 + Console.BufferWidth/5, Console.BufferHeight / 4 - 1, "#8900FF");
+            if (print) Draw.WriteText($"{CurrentPlayer.Name} decide pasar turno", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, Console.BufferWidth / 2 + Console.BufferWidth / 5, Console.BufferHeight / 4 - 1, "#8900FF");
+            
             CurrentPlayer.OnTurnEndStates.ForEach(state => state.Evaluate());
+            ReduceCooldown();
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
             CurrentPlayer.OnTurnInitStates.ForEach(state => state.Evaluate());
             CurrentPlayer.ResetEnergy();
             CurrentPlayer.FillWill();
-            ReduceCooldown();
         }
 
-        public void PlayCard(int cardIndex)
+        public void PlayCard(int cardIndex, bool print = true)
         {
-            if (!CurrentPlayer.PlayCard(cardIndex)) return;
+            if (!CurrentPlayer.PlayCard(cardIndex, print)) return;
             ReduceCooldown();
         }
 
@@ -67,7 +64,7 @@ namespace GameProgram
 
         public void ReduceCooldown()
         {
-            Players.ForEach(player => player.ReduceCooldown());
+            CurrentPlayer.ReduceCooldown();
         }
 
         public bool IsSameGame(Game game)
