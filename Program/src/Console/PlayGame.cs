@@ -180,18 +180,20 @@ namespace Visual
             indexes = battleMenu.GetIndexes();
             Choise(indexes, battleMenu);
         }
-        private void Choise((int,int) index, BattleMenu battle)
+      private void Choise((int, int) index, BattleMenu battle)
         {
-            Card toPlay = GameManager.CurrentGame.CurrentPlayer.Cards[index.Item1];
-            if(index.Item2 == 0)
+            Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
+            Card toPlay = currentPlayer.Cards[index.Item1];
+
+            if (index.Item2 == 0)
             {
-             battle.DisplayOptions();
-             Choise(battle.GetIndexes(), battle);
-            } 
+                battle.DisplayOptions();
+                Choise(battle.GetIndexes(), battle);
+            }
             switch (index.Item2)
             {
                 case -2:
-                    if (toPlay.CurrentColdown > 0)
+                    if (currentPlayer.Cooldowns[index.Item2] > 0)
                     {
                         Draw.WriteText($"La carta {toPlay.Name} está en Cooldown", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                         TextAnimation.AnimateTyping("Presione cualquier tecla para continuar", 5, battle.borderLeft, 3, "#8900ff");
@@ -200,7 +202,7 @@ namespace Visual
                         RunBattleMenu(index);
                         break;
                     }
-                    else if (toPlay.EnergyCostValue > GameManager.CurrentGame.CurrentPlayer.Energy)
+                    else if (toPlay.EnergyCostValue > currentPlayer.Energy)
                     {
                         Draw.WriteText($"No tienes suficiente energía para jugar la carta {toPlay.Name}", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                         Console.ReadKey(true);
@@ -208,7 +210,7 @@ namespace Visual
                         RunBattleMenu(index);
                         break;
                     }
-                    else if (GameManager.CurrentGame.CurrentPlayer.GetWill() == 0)
+                    else if (currentPlayer.Will == 0)
                     {
                         Draw.WriteText($"No tienes voluntad para jugar, pasa turno", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                         Console.ReadKey(true);
@@ -216,7 +218,7 @@ namespace Visual
                         RunBattleMenu(index);
                         break;
                     }
-                    GameManager.CurrentGame.PlayCard(toPlay);
+                    GameManager.CurrentGame.PlayCard(index.Item2);
                     Draw.WriteText($"Se jugó la carta {toPlay.Name}", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                     Console.ReadKey(true);
                     if (GameManager.CurrentGame.IsOver())
@@ -225,20 +227,20 @@ namespace Visual
                         break;
                     }
                     index.Item2 = 0;
-                        RunBattleMenu(index);
+                    RunBattleMenu(index);
                     break;
                 case -3:
                     Draw.WriteText(toPlay.Description, battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                     Console.ReadKey(true);
                     index.Item2 = 0;
-                        RunBattleMenu(index);
+                    RunBattleMenu(index);
                     break;
                 case -4:
                     Draw.WriteText($"{GameManager.CurrentGame.CurrentPlayer.Name} ha decidido pasar turno", battle.borderLeft, 1, battle.borderWidth, battle.borderHeight, "#8900FF");
                     GameManager.CurrentGame.NextTurn();
                     Console.ReadKey(true);
                     index.Item2 = 0;
-                        RunBattleMenu(index);
+                    RunBattleMenu(index);
                     break;
                 case -1:
                     RunMainMenu();

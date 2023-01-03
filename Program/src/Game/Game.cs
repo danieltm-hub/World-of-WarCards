@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Visual;
 
 namespace GameProgram
 {
@@ -37,17 +38,19 @@ namespace GameProgram
 
         public void NextTurn()
         {
+            Draw.WriteText($"{CurrentPlayer.Name} decide pasar turno", Console.BufferWidth/2 - Console.BufferWidth/5 +1, 2, Console.BufferWidth/2 + Console.BufferWidth/5, Console.BufferHeight / 4 - 1, "#8900FF");
             CurrentPlayer.OnTurnEndStates.ForEach(state => state.Evaluate());
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
             CurrentPlayer.OnTurnInitStates.ForEach(state => state.Evaluate());
             CurrentPlayer.ResetEnergy();
-            ReduceColdown();
+            CurrentPlayer.FillWill();
+            ReduceCooldown();
         }
 
-        public void PlayCard(Card card)
+        public void PlayCard(int cardIndex)
         {
-            if (!CurrentPlayer.PlayCard(card)) return;
-            ReduceColdown();
+            if (!CurrentPlayer.PlayCard(cardIndex)) return;
+            ReduceCooldown();
         }
 
         public bool IsOver()
@@ -62,13 +65,16 @@ namespace GameProgram
             return WinCondition.Winner;
         }
 
-        public void ReduceColdown() => Players.ForEach(player => player.ReduceColdown());
+        public void ReduceCooldown()
+        {
+            Players.ForEach(player => player.ReduceCooldown());
+        }
 
         public bool IsSameGame(Game game)
         {
-            if(Players.Count != game.Players.Count) return false;
+            if (Players.Count != game.Players.Count) return false;
 
-            if(CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
+            if (CurrentPlayerIndex != game.CurrentPlayerIndex) return false;
 
             for (int i = 0; i < Players.Count; i++)
             {

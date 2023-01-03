@@ -184,10 +184,15 @@ namespace Visual
             foreach (Player player in list)
             {
                 PrintAt(player.Name, x, y, hexColor);
-                PrintAt($" Health: {Bars(player.Health, player.MaxHealth)} " + $"{player.Health}/{player.MaxHealth}", x, y + 1, "#00FF00");
-                PrintAt($" Energy: {Bars(player.Energy, player.MaxEnergy)} " + $"{player.Energy}/{player.MaxEnergy}", x, y + 3, "#FFFF00");
-                PrintAt($" Will: {WillDots(player.GetWill())} ", x, y + 5, "#e6b700");
+                
+                PrintAt($" Health: {Bars(player.Health, player.MaxHealth)} " + $"{player.Health}/{player.MaxHealth} ", x, y + 1, "#00FF00");
+                
+                PrintAt($" Energy: {Bars(player.Energy, player.MaxEnergy)} " + $"{player.Energy}/{player.MaxEnergy} ", x, y + 3, "#FFFF00");
+                
+                PrintAt($" Will: {WillDots(player.Will)} ", x, y + 5, "#e6b700");
+                
                 x = Console.BufferWidth / 2 + Console.BufferWidth / 5 + 1;
+                
                 hexColor = "#0000FF";
             }
         }

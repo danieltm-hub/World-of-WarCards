@@ -1,7 +1,7 @@
 
-Effect lightning = [next(); modifyhealth(-10)]
+Effect lightning = [next(); modifyhealth(-1.2)]
 
-Effect fire = [next(); modifyhealth(-5)]
+Effect fire = [next(); modifyhealth(-1.2)]
 
 Effect poison = [next(); modifyhealth(-1)]
 

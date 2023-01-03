@@ -8,13 +8,14 @@ namespace GameProgram
     public class Human : Handler
     {
         public Human(Player player) : base(player) { }
-        public override HashSet<string> GetCards()
+        
+        public override List<int> GetCards()
         {
             Game initialGame = GameManager.CurrentGame;
-           
+
             GameManager.CurrentGame = initialGame.Clone();
 
-            HashSet<string> toPlay = HumanController();
+            List<int> toPlay = HumanController();
 
             GameManager.CurrentGame = initialGame;
 
@@ -22,13 +23,10 @@ namespace GameProgram
 
         }
 
-        public HashSet<string> HumanController()
+        public List<int> HumanController()
         {
-            HashSet<string> cardtoPlay = new HashSet<string>();  
+            List<int> cardtoPlay = new List<int>();
             return cardtoPlay;
         }
-
-        
     }
-
 }
