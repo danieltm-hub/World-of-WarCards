@@ -86,64 +86,53 @@ namespace Visual
         {
             List<Card> availableCards = WarCards;
 
-            Console.Clear();
-            Draw.DrawBorders("#FF0000");
+            Player player1 = CreatePlayer(availableCards, 1);
+            Player player2 = CreatePlayer(availableCards, 2);
 
-            Draw.PrintAt("Ingrese el nombre del Player 1: ", 1, 1, "#FF0000");
-            string name1 = Console.ReadLine()!;
-            List<Card> cards1 = new List<Card>();
-
-            PrintAvailableCards(availableCards);
-            int n = 1;
-            Console.CursorVisible = true;
-            while (cards1.Count < 8)
-            {
-                Console.SetCursorPosition(1, n + availableCards.Count + 4);
-                //se podian repetir las cartas?
-                try
-                {
-                    int cardNumber = int.Parse(Console.ReadLine()!);
-                    cards1.Add(availableCards[cardNumber - 1]);
-                    n++;
-                }
-                catch (Exception)
-                {
-                    Draw.PrintAt("Ingrese un numero valido", 1, n + availableCards.Count + 4);
-                    n++;
-                }
-            }
-
-            Console.Clear();
-            Draw.DrawBorders("#FF0000");
-
-            Draw.PrintAt("Ingrese el nombre del player 2: ", 1, 1);
-            string name2 = Console.ReadLine()!;
-            List<Card> cards2 = new List<Card>();
-
-            PrintAvailableCards(availableCards);
-
-            n = 1;
-            while (cards2.Count < 8)
-            {
-                Console.SetCursorPosition(1, n + availableCards.Count + 4);
-                try
-                {
-                    int cardNumber = int.Parse(Console.ReadLine()!);
-                    cards2.Add(availableCards[cardNumber - 1]);
-                    n++;
-                }
-                catch (Exception)
-                {
-                    Draw.PrintAt("Ingrese un numero valido", 1, n + availableCards.Count + 4);
-                    n++;
-                }
-            }
-
-
-            List<Player> players = new List<Player>() { new Player(name1, 100, 15, 5, cards1), new Player(name2, 100, 15, 5, cards2) };
+            List<Player> players = new List<Player>() {player1, player2};
+            
             Game newGame = new Game(players, 0, new EnemyDefeated());
+            
             GameManager.StartGame(players);
+            
             RunBattleMenu((0,0));
+        }
+
+        private Player CreatePlayer(List<Card> availableCards, int index)
+        {
+            Console.Clear();
+            Draw.DrawBorders("#FF0000");
+
+            Draw.PrintAt($"Ingrese el nombre del Player {index}: ", 1, 1, "#FF0000");
+            
+            string name = Console.ReadLine()!;
+            
+            List<Card> cards = new List<Card>();
+
+            PrintAvailableCards(availableCards);
+            
+            int n = 1;
+            
+            Console.CursorVisible = true;
+            
+            while (cards.Count < 6)
+            {
+                Console.SetCursorPosition(1, n + availableCards.Count + 4);
+                
+                try
+                {
+                    int cardNumber = int.Parse(Console.ReadLine()!);
+                    cards.Add(availableCards[cardNumber - 1]);
+                    n++;
+                }
+                catch (Exception)
+                {
+                    Draw.PrintAt("Ingrese un numero valido", 1, n + availableCards.Count + 4);
+                    n++;
+                }
+            }
+
+            return new Player(name, 100, 15, 5, cards);
         }
 
         private void PrintAvailableCards(List<Card> availableCards)
