@@ -66,7 +66,7 @@ namespace Visual
             }
         }
         ///<summary>Prints a game card </summary>
-        public static void PrintCard(string cardName, double value, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
+        public static void PrintCard(string cardName, double energy, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
         {
             if (cardName.Length > cardWidth - 1) cardName = cardName.Substring(0, cardWidth - 1);
             string width = "";
@@ -81,9 +81,10 @@ namespace Visual
             else { WriteAt("║".Pastel(heColor), cardWidth+ (-2), cardHeight + 1, cardWidth+ (-2), Console.BufferHeight - 1); }
             PrintAt(("╠" + width + "╣").Pastel(heColor), x * cardWidth + 1 + (+2), cardHeight + 2);
             PrintAt(("╚" + width + "╝").Pastel(heColor), x * cardWidth + 1 + (+2), Console.BufferHeight - 2);
+            WriteText($"Energia: {energy} \nCooldown: {cooldown}", x*cardWidth + 4, cardHeight + 3,cardWidth, cardHeight, "#FFFFFF");
         }
 
-        public static void PrintSCard(string cardName, double value, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
+        public static void PrintSCard(string cardName, double energy, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
         {
             if (cardName.Length > cardWidth - 1) cardName = cardName.Substring(0, cardWidth - 1);
             string width = "";
@@ -101,6 +102,7 @@ namespace Visual
                 WriteAt("║".PastelBg("#222582"), (x + 1) * cardWidth + (+2), cardHeight + 1-1, (x + 1) * cardWidth + (+2), Console.BufferHeight - 1);
                 PrintAt(("╠" + width + "╣").PastelBg("#222582"), x * cardWidth + 1, cardHeight + 2-1);
                 PrintAt(("╚" + width + "╝").PastelBg("#222582"), x * cardWidth + 1, Console.BufferHeight - 2);
+                WriteText($"Energia: {energy} \nCooldown: {cooldown}", x*cardWidth + 2, cardHeight + 3, cardWidth -2, cardHeight, "#FFFFFF", "#222582");
             }
             else 
             { 
@@ -115,6 +117,7 @@ namespace Visual
                 WriteAt("║".PastelBg("#222582"), x * cardWidth + cardWidth +2, cardHeight + 1-1, x * cardWidth + cardWidth +2, Console.BufferHeight - 1);
                 PrintAt(("╠" + width + "╣").PastelBg("#222582"), x * cardWidth + 1 + (-2), cardHeight + 2 -1);
                 PrintAt(("╚" + width + "╝").PastelBg("#222582"), x * cardWidth + 1 + (-2), Console.BufferHeight - 2);
+                WriteText($"Energia: {energy} \nCooldown: {cooldown}", x*cardWidth + 2, cardHeight + 3, cardWidth -2, cardHeight, "#FFFFFF", "#222582");
             }
             
         }
