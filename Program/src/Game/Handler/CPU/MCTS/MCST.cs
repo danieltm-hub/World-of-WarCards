@@ -57,7 +57,16 @@ namespace GameProgram
             Crono.Start();
 
             MCSTNode root = new MCSTNode(new List<int>());
-            Explore(root, 0);
+
+
+            //Revisar si este while pincha bien
+
+            while(true)
+            {
+                Explore(root, 0);
+                if(IsTimeOut()) break;
+            }
+
 
             root.UpdateMCSTNode(1, 0, double.MinValue);
 
@@ -132,6 +141,8 @@ namespace GameProgram
 
                 if(oddsOnPath == mostOddsOnPath) toExplore.Add(child);
             }
+
+            //Out of index exception revisar
 
             Random random = new Random();
             int index = random.Next(0, toExplore.Count());
