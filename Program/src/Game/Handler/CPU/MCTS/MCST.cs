@@ -41,7 +41,7 @@ namespace GameProgram
     {
         public GetScore<Game, Player> Score { get; private set;}
         public Stopwatch Crono = new Stopwatch();
-        public double exploreFactor { get => 0.5; }
+        public double exploreFactor { get => 1; }
 
         private int DepthLimit = 100;
         private double TimeLimit = 5000;
@@ -57,9 +57,6 @@ namespace GameProgram
             Crono.Start();
 
             MCSTNode root = new MCSTNode(new List<int>());
-
-
-            //Revisar si este while pincha bien
 
             while(true)
             {
@@ -143,9 +140,15 @@ namespace GameProgram
             }
 
             //Out of index exception revisar
+            if(toExplore.Count() == 0)
+            {
+                node.UpdateMCSTNode(1, 0, Score(GameManager.CurrentGame, myPlayer));
+                return;
+            }
 
             Random random = new Random();
             int index = random.Next(0, toExplore.Count());
+
 
             MCSTNode selected = toExplore[index];
 
