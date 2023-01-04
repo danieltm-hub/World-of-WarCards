@@ -147,9 +147,9 @@ namespace GameProgram
         }
 
         public void FillWill() => Will = MaxWill;
-        public void ReduceCooldown() 
+        public void ReduceCooldown()
         {
-            for(int i = 0 ; i < Cooldowns.Length; i++)
+            for (int i = 0; i < Cooldowns.Length; i++)
             {
                 Cooldowns[i] = Math.Max(Cooldowns[i] - 1, 0);
             }

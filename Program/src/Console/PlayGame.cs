@@ -5,6 +5,7 @@ using AST;
 using GameProgram;
 
 
+
 namespace Visual
 {
     class PlayGame
@@ -88,7 +89,12 @@ namespace Visual
 
             Player player1 = CreatePlayer(availableCards, 1);
             Player player2 = CreatePlayer(availableCards, 2);
-
+            if(player1.Name == player2.Name)
+            {
+                Draw.PrintAt("Los nombres de los jugadores no pueden ser iguales", 1,1);
+                System.Console.ReadKey(true);
+                RunChooseCharacterMenu();
+            }
             List<Player> players = new List<Player>() {player1, player2};
             
             Game newGame = new Game(players, 0, new EnemyDefeated());
@@ -131,8 +137,36 @@ namespace Visual
                     n++;
                 }
             }
+            Draw.PrintAt("Escoja el tipo de player", 1, n + availableCards.Count + 4);
+            Draw.PrintAt("1 - Humano", 1, n +availableCards.Count + 5);
+            Draw.PrintAt("2 - Player Random", 1, n + availableCards.Count +6);
+            Draw.PrintAt(" - Player IA Fuerte", 1, n + availableCards.Count +7);
 
-            return new Player(name, 100, 15, 5, cards);
+            try 
+            {
+                int playerType = int.Parse(Console.ReadLine()!);
+                switch(playerType)
+                {
+                    case 1:
+                        return new Player(name, 100, 15, 5, cards);
+                    case 2:
+                        Player random = new Player(name, 100, 15, 5, cards);
+                        RandomPlayer randomIA = new RandomPlayer(random);
+                        random.SetCPU(randomIA);
+                        return random;
+                    case 3:
+                        Player mts = new Player(name, 100, 15, 5, cards);
+                        MCTS mtsIA = new MCTS(BasicStratergy.BasicLifeLScore, mts);
+                        mts.SetCPU(mtsIA);
+                        return mts;
+                    default:
+                        throw(new Exception("Mano ponte pa esto"));
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         private void PrintAvailableCards(List<Card> availableCards)
@@ -177,23 +211,30 @@ namespace Visual
             List<Player> players = GameManager.CurrentGame.Players;
             BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
             
-            indexes = battleMenu.GetIndexes();
-            Choise(indexes, battleMenu);
+            if(!(GameManager.CurrentGame.CurrentPlayer.Controller is Human))
+            {
+                BattleIA();
+            }
+            else
+            {
+                indexes = battleMenu.GetIndexes();
+                Choise(indexes, battleMenu);
+            }
         }
       private void Choise((int, int) index, BattleMenu battle)
         {
-            Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
-            Card toPlay = currentPlayer.Cards[index.Item1];
-
             if (index.Item2 == 0)
             {
                 battle.DisplayOptions();
                 Choise(battle.GetIndexes(), battle);
             }
+            Player currentPlayer = GameManager.CurrentGame.CurrentPlayer;
+            Card toPlay = currentPlayer.Cards[index.Item1];
+
             switch (index.Item2)
             {
                 case -2:
-                    if (currentPlayer.Cooldowns[index.Item2] > 0)
+                    if (currentPlayer.Cooldowns[index.Item1] > 0)
                     {
                         Draw.WriteText($"La carta {toPlay.Name} está en Cooldown", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                         TextAnimation.AnimateTyping("Presione cualquier tecla para continuar", 5, battle.borderLeft, 3, "#8900ff");
@@ -218,7 +259,7 @@ namespace Visual
                         RunBattleMenu(index);
                         break;
                     }
-                    GameManager.CurrentGame.PlayCard(index.Item2);
+                    GameManager.CurrentGame.PlayCard(index.Item1);
                     Draw.WriteText($"Se jugó la carta {toPlay.Name}", battle.borderLeft, 2, battle.borderWidth, battle.borderHeight, "#8900FF");
                     Console.ReadKey(true);
                     if (GameManager.CurrentGame.IsOver())
@@ -327,7 +368,14 @@ namespace Visual
                         GameManager.CurrentGame.CurrentPlayer.Controller.Play();
                     }
                     Console.ReadKey(true);
-                    BattleIA();
+                    if(GameManager.CurrentGame.CurrentPlayer.Controller is Human)
+                    {
+                        RunBattleMenu((0,0));
+                    }
+                    else
+                    {
+                        BattleIA();
+                    }
                     break;
                 case 1:
                     Draw.WriteText("SE SALDRA EN BREVE", borderLeft, 1, borderWidth, borderHeight);
