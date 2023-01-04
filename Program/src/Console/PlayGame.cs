@@ -15,26 +15,7 @@ namespace Visual
         {
             WarCards = cards;
         }
-        public void StartAGame()
-        {
 
-            Player Pepe = new Player("Pepe", 100, 20, 6, WarCards);
-            Player Juan = new Player("Juan", 100, 20, 6, WarCards);
-
-            GameManager.StartGame(new List<Player>() { Juan, Pepe });
-        }
-        public void StartIAGame()
-        {
-
-            Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
-            Player Juan = new Player("Juan", 20, 20, 6, WarCards);
-            RandomPlayer Pepin = new RandomPlayer(Pepe);
-            Pepe.SetCPU(Pepin);
-            MCTS Tontin = new MCTS(BasicStratergy.BasicLifeLScore, Juan);
-            Juan.SetCPU(Tontin);
-
-            GameManager.StartGame(new List<Player>() { Juan, Pepe });
-        }
         public void Start()
         {
             int x = Console.BufferWidth / 2;
@@ -83,12 +64,57 @@ namespace Visual
             }
         }
 
+        private void RunOptionsMenu()
+        {
+            string prompt = FiggleFonts.Larry3d.Render(" OPCIONES ");
+            string[] options = { "VER CARTAS", "SIMULACION DE VIRTUALES", "VOLVER" };
+            Menu optionsMenu = new Menu(prompt, options);
+            int SelectedIndex = optionsMenu.Run();
+
+            switch (SelectedIndex)
+            {
+                case 0:
+                    PrintCards();
+                    break;
+                case 1:
+                    RunVirtualGame();
+                    break;
+                case 2:
+                    RunMainMenu();
+                    break;
+            }
+        }
+
+        private void RunCreditsMenu()
+        {
+            Console.Clear();
+            string prompt = FiggleFonts.Larry3d.Render(" CREDITOS ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(1, 1);
+            System.Console.WriteLine();
+            Console.WriteLine(prompt);
+            string credits = @"
+            Este juego fue creado por:
+            
+            Daniel Toledo
+            Osvaldo Moreno
+            José Antonio Concepción
+            
+            Este juego usa recursos de http://www.patorjk.com/
+            Presione cualquier letra para volver al menu principal";
+
+            TextAnimation.AnimateTyping(credits, 25, Console.BufferWidth / 8, Console.BufferHeight / 4, "#FF0000");
+            System.Console.ReadKey(true);
+            RunMainMenu();
+
+        }
+
         private void RunChooseCharacterMenu()
         {
             List<Card> availableCards = WarCards;
 
-            Player player1 = CreatePlayer(availableCards, 1);
-            Player player2 = CreatePlayer(availableCards, 2);
+            Player player1 = CreatePlayers(availableCards, 1);
+            Player player2 = CreatePlayers(availableCards, 2);
             if (player1.Name == player2.Name)
             {
                 Draw.PrintAt("Los nombres de los jugadores no pueden ser iguales", 1, 1);
@@ -104,7 +130,108 @@ namespace Visual
             RunBattleMenu((0, 0));
         }
 
-        private Player CreatePlayer(List<Card> availableCards, int index)
+        private void RunBattleMenu((int, int) index)
+        {
+            #region Variables
+
+            (int, int) indexes = index;
+            int borderLeft = Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1;
+            int borderRight = Console.BufferWidth / 2 + Console.BufferWidth / 5 - 1;
+            int borderWidth = borderRight - borderLeft;
+            int borderHeight = Console.BufferHeight / 4 - 1;
+            int maxWidth = Console.BufferWidth;
+            int maxHeight = Console.BufferHeight;
+            int bottomBorderY = maxHeight - maxHeight / 4;
+            int topBorderY = maxHeight / 4;
+            int midConsole = maxWidth / 2;
+            int fifthConsole = maxWidth / 5;
+            int cardSHeight = bottomBorderY + 1;
+            int cardSWidth = maxWidth / 10 + 1;
+            int cardHeight = bottomBorderY + 2;
+            int cardWidth = maxWidth / 11;
+
+        #endregion Variables
+            string[] options = new string[4] { "[1] JUGAR CARTA", "[2] LEER CARTA", "[3] PASAR", "[4] SALIR" };
+            List<Player> players = GameManager.CurrentGame.Players;
+            BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
+
+            if (!(GameManager.CurrentGame.CurrentPlayer.Controller is Human))
+            {
+                RunBattleIA();
+            }
+            else
+            {
+                indexes = battleMenu.GetIndexes();
+                Choise(indexes, battleMenu);
+            }
+        }
+
+        private void RunVirtualGame()
+        {
+            int x = Console.BufferWidth / 2;
+            int y = Console.BufferHeight / 2;
+            Console.Clear();
+            ChooseIAs();
+        }
+
+        private void RunBattleIA()
+        {
+            #region Variables
+            int borderLeft = Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1;
+            int borderRight = Console.BufferWidth / 2 + Console.BufferWidth / 5 - 1;
+            int borderWidth = borderRight - borderLeft;
+            int borderHeight = Console.BufferHeight / 4 - 1;
+            int maxWidth = Console.BufferWidth;
+            int maxHeight = Console.BufferHeight;
+            int bottomBorderY = maxHeight - maxHeight / 4;
+            int topBorderY = maxHeight / 4;
+            int midConsole = maxWidth / 2;
+            int fifthConsole = maxWidth / 5;
+            int cardSHeight = bottomBorderY + 1;
+            int cardSWidth = maxWidth / 10 + 1;
+            int cardHeight = bottomBorderY + 2;
+            int cardWidth = maxWidth / 11;
+            #endregion Variables
+
+            (int, int) indexes;
+            string[] optionsIA = { "[1] JUGAR", "[ESC] SALIR" };
+            List<Player> players = GameManager.CurrentGame.Players;
+            BattleMenu battleMenu = new BattleMenu(optionsIA, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
+            indexes = battleMenu.RunMenuIA();
+
+            switch (indexes.Item2)
+            {
+                case 0:
+                    //se garantiza que el jugador actual sea la IA
+                    if (GameManager.CurrentGame.IsOver())
+                    {
+                        RunEndGameMenu();
+                        break;
+                    }
+                    if (GameManager.CurrentGame.CurrentPlayer.Controller != null)
+                    {
+                        Draw.PrintAt($"{GameManager.CurrentGame.CurrentPlayer.Name} está pensando...", 1, bottomBorderY + 1, "#8900FF");
+                        GameManager.CurrentGame.CurrentPlayer.Controller.Play();
+                    }
+                    Console.ReadKey(true);
+                    if (GameManager.CurrentGame.CurrentPlayer.Controller is Human)
+                    {
+                        RunBattleMenu((0, 0));
+                    }
+                    else
+                    {
+                        RunBattleIA();
+                    }
+                    break;
+                case 1:
+                    Draw.WriteText("SE SALDRA EN BREVE", borderLeft, 1, borderWidth, borderHeight);
+                    Console.ReadKey(true);
+                    RunMainMenu();
+                    break;
+            }
+        }
+        
+        private Player CreatePlayers(List<Card> availableCards, int index)
         {
             Console.Clear();
             Draw.DrawBorders("#FF0000");
@@ -149,14 +276,14 @@ namespace Visual
                 switch (playerType)
                 {
                     case 1:
-                        return new Player(name, 100, 15, 5, cards);
+                        return new Player(name, 50, 15, 5, cards);
                     case 2:
-                        Player random = new Player(name, 100, 15, 5, cards);
+                        Player random = new Player(name, 50, 15, 5, cards);
                         RandomPlayer randomIA = new RandomPlayer(random);
                         random.SetCPU(randomIA);
                         return random;
                     case 3:
-                        Player mts = new Player(name, 100, 15, 5, cards);
+                        Player mts = new Player(name, 50, 15, 5, cards);
                         MCTS mtsIA = new MCTS(BasicStratergy.BasicLifeLScore, mts);
                         mts.SetCPU(mtsIA);
                         return mts;
@@ -168,60 +295,10 @@ namespace Visual
             {
                 throw e;
             }
+
+
         }
 
-        private void PrintAvailableCards(List<Card> availableCards)
-        {
-            Draw.PrintAt("Cartas disponibles", 1, 2);
-            int x = 0;
-            int y = 0;
-            for (int i = 0; i < availableCards.Count; i++)
-            {
-                Draw.PrintAt($"{i + 1} - {availableCards[i].Name}", 1 + x, y + 3);
-                y++;
-                if (i % 7 == 0 && i != 0)
-                {
-                    x += 18;
-                    y = 0;
-                }
-            }
-            Draw.PrintAt("Ingrese el numero de la carta que desea agregar", 1, availableCards.Count + 4);
-        }
-        private void RunBattleMenu((int, int) index)
-        {
-            #region Variables
-
-            (int, int) indexes = index;
-            int borderLeft = Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1;
-            int borderRight = Console.BufferWidth / 2 + Console.BufferWidth / 5 - 1;
-            int borderWidth = borderRight - borderLeft;
-            int borderHeight = Console.BufferHeight / 4 - 1;
-            int maxWidth = Console.BufferWidth;
-            int maxHeight = Console.BufferHeight;
-            int bottomBorderY = maxHeight - maxHeight / 4;
-            int topBorderY = maxHeight / 4;
-            int midConsole = maxWidth / 2;
-            int fifthConsole = maxWidth / 5;
-            int cardSHeight = bottomBorderY + 1;
-            int cardSWidth = maxWidth / 10 + 1;
-            int cardHeight = bottomBorderY + 2;
-            int cardWidth = maxWidth / 11;
-            #endregion Variables
-
-            string[] options = new string[4] { "[1] JUGAR CARTA", "[2] LEER CARTA", "[3] PASAR", "[4] SALIR" };
-            List<Player> players = GameManager.CurrentGame.Players;
-            BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
-
-            if (!(GameManager.CurrentGame.CurrentPlayer.Controller is Human))
-            {
-                BattleIA();
-            }
-            else
-            {
-                indexes = battleMenu.GetIndexes();
-                Choise(indexes, battleMenu);
-            }
-        }
         private void Choise((int, int) index, BattleMenu battle)
         {
             if (index.Item2 == 0)
@@ -290,177 +367,83 @@ namespace Visual
                     break;
             }
         }
-        private void RunOptionsMenu()
+
+        private void ChooseIAs()
         {
-            string prompt = FiggleFonts.Larry3d.Render(" OPCIONES ");
-            string[] options = { "VER CARTAS", "SIMULACION DE VIRTUALES", "VOLVER" };
-            Menu optionsMenu = new Menu(prompt, options);
-            int SelectedIndex = optionsMenu.Run();
+            Console.CursorVisible = false;
+            string prompt = FiggleFonts.Larry3d.Render(" Simulacion de Virtuales ");
+            string[] options = { "RANDOM VS RANDOM", "RANDOM VS SMART", "SMART VS SMART", "ATRAS" };
+            Menu virtualMenu = new Menu(prompt, options);
+            int SelectedIndex = virtualMenu.Run();
 
             switch (SelectedIndex)
             {
                 case 0:
-                    PrintCards();
+                    Player Pepe = new Player("Pepe", 50, 15, 5, RandomCards(WarCards));
+                    Player Juan = new Player("Juan", 50, 15, 5, RandomCards(WarCards));
+                    RandomPlayer Pepin = new RandomPlayer(Pepe);
+                    Pepe.SetCPU(Pepin);
+                    RandomPlayer Tontin = new RandomPlayer(Juan);
+                    Juan.SetCPU(Tontin);
+                    GameManager.StartGame(new List<Player>() { Juan, Pepe });
+                    RunBattleIA();
                     break;
                 case 1:
-                    SimulateVirtualGame();
+                    Player Pedro = new Player("Pepe", 50, 15, 5, RandomCards(WarCards));
+                    Player Juana = new Player("Juan", 50, 15, 5, RandomCards(WarCards));
+                    RandomPlayer Pedrito = new RandomPlayer(Pedro);
+                    Pedro.SetCPU(Pedrito);
+                    MCTS Juanina = new MCTS(BasicStratergy.BasicLifeLScore, Juana);
+                    Juana.SetCPU(Juanina);
+                    GameManager.StartGame(new List<Player>() { Juana, Pedro });
+                    RunBattleIA();
                     break;
                 case 2:
-                    RunMainMenu();
+                    Player Stuart = new Player("Pepe", 50, 15, 5, RandomCards(WarCards));
+                    Player Merlin = new Player("Juan", 50, 15, 5, RandomCards(WarCards));
+                    MCTS Sturt = new MCTS(BasicStratergy.BasicLifeLScore, Stuart);
+                    Stuart.SetCPU(Sturt);
+                    MCTS Merlina = new MCTS(BasicStratergy.BasicLifeLScore, Merlin);
+                    Merlin.SetCPU(Merlina);
+                    GameManager.StartGame(new List<Player>() { Stuart, Merlin });
+                    RunBattleIA();
+                    break;
+                case 3:
+                    RunOptionsMenu();
                     break;
             }
+
         }
 
-        private void SimulateVirtualGame()
+        private List<Card> RandomCards(List<Card> allCards)
         {
-            int x = Console.BufferWidth / 2;
-            int y = Console.BufferHeight / 2;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            string prompt = FiggleFonts.Larry3d.Render(" SIMULACION DE VIRTUALES ");
-            System.Console.WriteLine(prompt);
-            ChooseIAs();
-            TextAnimation.AnimateTyping(" Simulando juego virtual...", 50, x, y);
-            System.Console.WriteLine();
-            Draw.PrintAt(" Presione cualquier letra para empezar", x, y + 1);
-            System.Console.ReadKey(true);
-            BattleIA();
-        }
-
-        private void ChooseIAs()
-        {
-            Draw.PrintAt("Escoja la opcion deseada", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -10);
-            Draw.PrintAt("1- Random vs Random", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -9);
-            Draw.PrintAt("2- Random vs Smart", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2- 8);
-            Draw.PrintAt("3- Smart vs Smart", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -7);
-            Console.CursorVisible = true;
-            Console.SetCursorPosition(Console.BufferWidth/2 -10, Console.BufferHeight/2 - 6);
-            Console.CursorVisible = false;
-            try
+            List<Card> randomCards = new List<Card>();
+            Random rnd = new Random();
+            int index = 0;
+            for (int i = 0; i < 6; i++)
             {
-                int option = int.Parse(Console.ReadLine()!);
-                switch (option)
+                index = rnd.Next(0, allCards.Count);
+                randomCards.Add(allCards[index]);
+            }
+            return randomCards;
+        }
+
+        private void PrintAvailableCards(List<Card> availableCards)
+        {
+            Draw.PrintAt("Cartas disponibles", 1, 2);
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < availableCards.Count; i++)
+            {
+                Draw.PrintAt($"{i + 1} - {availableCards[i].Name}", 1 + x, y + 3);
+                y++;
+                if (i % 7 == 0 && i != 0)
                 {
-                    case 1:
-                        Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
-                        Player Juan = new Player("Juan", 20, 20, 6, WarCards);
-                        RandomPlayer Pepin = new RandomPlayer(Pepe);
-                        Pepe.SetCPU(Pepin);
-                        RandomPlayer Tontin = new RandomPlayer(Juan);
-                        Juan.SetCPU(Tontin);
-                        GameManager.StartGame(new List<Player>() { Juan, Pepe });
-                        break;
-                    case 2:
-                        Player Pedro = new Player("Pepe", 20, 20, 6, WarCards);
-                        Player Juana = new Player("Juan", 20, 20, 6, WarCards);
-                        RandomPlayer Pedrito = new RandomPlayer(Pedro);
-                        Pedro.SetCPU(Pedrito);
-                        MCTS Juanina = new MCTS(BasicStratergy.BasicLifeLScore, Juana);
-                        Juana.SetCPU(Juanina);
-                        GameManager.StartGame(new List<Player>() { Juana, Pedro });
-                        break;
-                    case 3:
-                        Player Stuart = new Player("Pepe", 20, 20, 6, WarCards);
-                        Player Merlin = new Player("Juan", 20, 20, 6, WarCards);
-                        MCTS Sturt = new MCTS(BasicStratergy.BasicLifeLScore, Stuart);
-                        Stuart.SetCPU(Sturt);
-                        MCTS Merlina = new MCTS(BasicStratergy.BasicLifeLScore, Merlin);
-                        Merlin.SetCPU(Merlina);
-                        GameManager.StartGame(new List<Player>() { Stuart, Merlin });
-                        break;
-                    default:
-                        break;
+                    x += 18;
+                    y = 0;
                 }
             }
-            catch (System.Exception)
-            {
-                
-                throw;
-            }
-
-        }
-
-        private void BattleIA()
-        {
-            #region Variables
-            (int, int) indexes;
-            int borderLeft = Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1;
-            int borderRight = Console.BufferWidth / 2 + Console.BufferWidth / 5 - 1;
-            int borderWidth = borderRight - borderLeft;
-            int borderHeight = Console.BufferHeight / 4 - 1;
-            int maxWidth = Console.BufferWidth;
-            int maxHeight = Console.BufferHeight;
-            int bottomBorderY = maxHeight - maxHeight / 4;
-            int topBorderY = maxHeight / 4;
-            int midConsole = maxWidth / 2;
-            int fifthConsole = maxWidth / 5;
-            int cardSHeight = bottomBorderY + 1;
-            int cardSWidth = maxWidth / 10 + 1;
-            int cardHeight = bottomBorderY + 2;
-            int cardWidth = maxWidth / 11;
-            #endregion Variables
-
-
-            string[] optionsIA = { "[1] JUGAR", "[ESC] SALIR" };
-
-
-            List<Player> players = GameManager.CurrentGame.Players;
-            BattleMenu battleMenu = new BattleMenu(optionsIA, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
-            indexes = battleMenu.RunMenuIA();
-
-            switch (indexes.Item2)
-            {
-                case 0:
-                    //se garantiza que el jugador actual sea la IA
-                    if (GameManager.CurrentGame.IsOver())
-                    {
-                        RunEndGameMenu();
-                        break;
-                    }
-                    if (GameManager.CurrentGame.CurrentPlayer.Controller != null)
-                    {
-                        GameManager.CurrentGame.CurrentPlayer.Controller.Play();
-                    }
-                    Console.ReadKey(true);
-                    if (GameManager.CurrentGame.CurrentPlayer.Controller is Human)
-                    {
-                        RunBattleMenu((0, 0));
-                    }
-                    else
-                    {
-                        BattleIA();
-                    }
-                    break;
-                case 1:
-                    Draw.WriteText("SE SALDRA EN BREVE", borderLeft, 1, borderWidth, borderHeight);
-                    Console.ReadKey(true);
-                    RunMainMenu();
-                    break;
-            }
-        }
-
-        private void RunCreditsMenu()
-        {
-            Console.Clear();
-            string prompt = FiggleFonts.Larry3d.Render(" CREDITOS ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(1, 1);
-            System.Console.WriteLine();
-            Console.WriteLine(prompt);
-            string credits = @"
-            Este juego fue creado por:
-            
-            Daniel Toledo
-            Osvaldo Moreno
-            José Antonio Concepción
-            
-            Este juego usa recursos de http://www.patorjk.com/
-            Presione cualquier letra para volver al menu principal";
-
-            TextAnimation.AnimateTyping(credits, 25, Console.BufferWidth / 8, Console.BufferHeight / 4, "#FF0000");
-            System.Console.ReadKey(true);
-            RunMainMenu();
-
+            Draw.PrintAt("Ingrese el numero de la carta que desea agregar (máximo 6)", 1, availableCards.Count + 4);
         }
         private void PrintCards()
         {
@@ -477,6 +460,7 @@ namespace Visual
             System.Console.ReadKey(true);
             RunOptionsMenu();
         }
+
         private void RunEndGameMenu()
         {
             Console.Clear();
@@ -499,6 +483,7 @@ namespace Visual
                     break;
             }
         }
+
         private void Exit()
         {
             int x = Console.BufferWidth / 2;
@@ -513,5 +498,6 @@ namespace Visual
             Console.Clear();
             Environment.Exit(0);
         }
+
     }
 }
