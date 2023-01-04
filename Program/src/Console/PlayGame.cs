@@ -161,7 +161,7 @@ namespace Visual
                         mts.SetCPU(mtsIA);
                         return mts;
                     default:
-                        throw (new Exception("Mano ponte pa esto"));
+                        throw (new Exception("Escoja un tipo de player valido"));
                 }
             }
             catch (Exception e)
@@ -303,7 +303,6 @@ namespace Visual
                     PrintCards();
                     break;
                 case 1:
-                    StartIAGame();
                     SimulateVirtualGame();
                     break;
                 case 2:
@@ -320,11 +319,65 @@ namespace Visual
             Console.ForegroundColor = ConsoleColor.Red;
             string prompt = FiggleFonts.Larry3d.Render(" SIMULACION DE VIRTUALES ");
             System.Console.WriteLine(prompt);
+            ChooseIAs();
             TextAnimation.AnimateTyping(" Simulando juego virtual...", 50, x, y);
             System.Console.WriteLine();
             Draw.PrintAt(" Presione cualquier letra para empezar", x, y + 1);
             System.Console.ReadKey(true);
             BattleIA();
+        }
+
+        private void ChooseIAs()
+        {
+            Draw.PrintAt("Escoja la opcion deseada", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -10);
+            Draw.PrintAt("1- Random vs Random", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -9);
+            Draw.PrintAt("2- Random vs Smart", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2- 8);
+            Draw.PrintAt("3- Smart vs Smart", Console.BufferWidth / 2 - 10, Console.BufferHeight / 2 -7);
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(Console.BufferWidth/2 -10, Console.BufferHeight/2 - 6);
+            Console.CursorVisible = false;
+            try
+            {
+                int option = int.Parse(Console.ReadLine()!);
+                switch (option)
+                {
+                    case 1:
+                        Player Pepe = new Player("Pepe", 20, 20, 6, WarCards);
+                        Player Juan = new Player("Juan", 20, 20, 6, WarCards);
+                        RandomPlayer Pepin = new RandomPlayer(Pepe);
+                        Pepe.SetCPU(Pepin);
+                        RandomPlayer Tontin = new RandomPlayer(Juan);
+                        Juan.SetCPU(Tontin);
+                        GameManager.StartGame(new List<Player>() { Juan, Pepe });
+                        break;
+                    case 2:
+                        Player Pedro = new Player("Pepe", 20, 20, 6, WarCards);
+                        Player Juana = new Player("Juan", 20, 20, 6, WarCards);
+                        RandomPlayer Pedrito = new RandomPlayer(Pedro);
+                        Pedro.SetCPU(Pedrito);
+                        MCTS Juanina = new MCTS(BasicStratergy.BasicLifeLScore, Juana);
+                        Juana.SetCPU(Juanina);
+                        GameManager.StartGame(new List<Player>() { Juana, Pedro });
+                        break;
+                    case 3:
+                        Player Stuart = new Player("Pepe", 20, 20, 6, WarCards);
+                        Player Merlin = new Player("Juan", 20, 20, 6, WarCards);
+                        MCTS Sturt = new MCTS(BasicStratergy.BasicLifeLScore, Stuart);
+                        Stuart.SetCPU(Sturt);
+                        MCTS Merlina = new MCTS(BasicStratergy.BasicLifeLScore, Merlin);
+                        Merlin.SetCPU(Merlina);
+                        GameManager.StartGame(new List<Player>() { Stuart, Merlin });
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+
         }
 
         private void BattleIA()

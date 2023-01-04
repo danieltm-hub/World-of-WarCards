@@ -127,7 +127,6 @@ namespace GameProgram
 
             if (IsTimeOut() || depth > DepthLimit)
             {
-
                 return new List<NodeMCTS> { new NodeMCTS(1, 0, Score(gameState, myPlayer), new List<int>()) };
             }
 

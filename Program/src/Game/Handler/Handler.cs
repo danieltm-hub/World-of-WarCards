@@ -28,6 +28,7 @@ namespace GameProgram
             PlayCards(toPlay);
 
             string toPrint = String.Join("\n", toPlay.Select(card => GameManager.CurrentGame.CurrentPlayer.Cards[card].Name));
+            toPrint += $"\n{myPlayer.Name} Decidió pasar turno";
             Draw.WriteText(toPrint, Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, Console.BufferWidth / 2 + Console.BufferWidth / 5, Console.BufferHeight / 4 - 1, "#8900FF");
             GameManager.CurrentGame.NextTurn();
         }

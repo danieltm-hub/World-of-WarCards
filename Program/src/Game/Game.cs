@@ -34,8 +34,6 @@ namespace GameProgram
 
         public void NextTurn(bool print = true)
         {
-            if (print) Draw.WriteText($"{CurrentPlayer.Name} decide pasar turno", Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1, 2, Console.BufferWidth / 2 + Console.BufferWidth / 5, Console.BufferHeight / 4 - 1, "#8900FF");
-            
             CurrentPlayer.OnTurnEndStates.ForEach(state => state.Evaluate());
             ReduceCooldown();
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;

@@ -81,7 +81,8 @@ namespace Visual
             else { WriteAt("║".Pastel(heColor), cardWidth+ (-2), cardHeight + 1, cardWidth+ (-2), Console.BufferHeight - 1); }
             PrintAt(("╠" + width + "╣").Pastel(heColor), x * cardWidth + 1 + (+2), cardHeight + 2);
             PrintAt(("╚" + width + "╝").Pastel(heColor), x * cardWidth + 1 + (+2), Console.BufferHeight - 2);
-            WriteText($"Energia: {energy} \nCooldown: {cooldown}", x*cardWidth + 4, cardHeight + 3,cardWidth, cardHeight, "#FFFFFF");
+            WriteText($"Energia {energy}", x*cardWidth + 4, cardHeight + 3,cardWidth-6, cardHeight, "#FFFFFF");
+            WriteText($"Cooldown {cooldown}", x*cardWidth + 4, cardHeight + 4,cardWidth-6, cardHeight, "#FFFFFF");
         }
 
         public static void PrintSCard(string cardName, double energy, double cooldown, int x, int cardWidth, int cardHeight, string heColor = "#FFFFFF")//hacer despues el bottom)
@@ -183,9 +184,10 @@ namespace Visual
             string hexColor = "#FF0000";
             foreach (Player player in list)
             {
+                
                 PrintAt(player.Name, x, y, hexColor);
                 
-                PrintAt($" Health: {Bars(player.Health, player.MaxHealth)} " + $"{player.Health}/{player.MaxHealth} ", x, y + 1, "#00FF00");
+                PrintAt($" Health: {Bars(player.Health, player.MaxHealth)} " + $"{Math.Round(player.Health, 1)}/{player.MaxHealth} ", x, y + 1, "#00FF00");
                 
                 PrintAt($" Energy: {Bars(player.Energy, player.MaxEnergy)} " + $"{player.Energy}/{player.MaxEnergy} ", x, y + 3, "#FFFF00");
                 
