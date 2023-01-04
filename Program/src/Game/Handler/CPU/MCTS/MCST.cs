@@ -25,9 +25,6 @@ namespace GameProgram
         }
         public void UpdateMCSTNode(int gamesPlayed, int gamesWon, double score)
         {
-            // Revisar que se agreguen solo una vez
-            /////////////////////////cambios aqui
-            //GamesWon += gamesWon / gamesPlayed;
             GamesWon += (gamesWon == gamesPlayed) ? gamesWon : gamesWon + 1;
 
             GamesPlayed += gamesPlayed + 1;
