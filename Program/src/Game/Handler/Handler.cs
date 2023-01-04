@@ -93,6 +93,7 @@ namespace GameProgram
                 AllPlays.AddRange(AllGeneratorPlays(CloneList(selected), AvailableCards(), GameManager.CurrentGame));
 
                 GameManager.CurrentGame = gameState.Clone();
+                
                 selected.RemoveAt(selected.Count - 1);
             }
 
