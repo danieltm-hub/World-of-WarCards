@@ -73,8 +73,11 @@ namespace GameProgram
             return toReturn;
         }
 
-        public List<List<int>> AllGeneratorPlays(List<int> selected, List<int> availables, Game gameState)
+        public List<List<int>> AllGeneratorPlays(List<int> selected)
         {
+            Game gameState = GameManager.CurrentGame;
+            List<int> availables = AvailableCards();
+
             GameManager.CurrentGame = gameState.Clone();
 
             if (availables.Count == 0)
@@ -91,7 +94,7 @@ namespace GameProgram
                 selected.Add(availables[i]);
                 GameManager.CurrentGame.PlayCard(availables[i], false);
 
-                AllPlays.AddRange(AllGeneratorPlays(CloneList(selected), AvailableCards(), GameManager.CurrentGame));
+                AllPlays.AddRange(AllGeneratorPlays(CloneList(selected)));
 
                 GameManager.CurrentGame = gameState.Clone();
                 
