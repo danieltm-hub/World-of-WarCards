@@ -13,7 +13,7 @@ namespace GameProgram
         public static double BasicLifeLScore(Game gameState, Player player)
         {
             double score = gameState.Players[0].Health - gameState.Players[1].Health;
-            return (gameState.Players[0].Name == player.Name) ? score : -score; 
+            return (gameState.Players[0].Name == player.Name) ? score : -score;
         }
     }
 }

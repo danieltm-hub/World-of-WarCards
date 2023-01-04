@@ -114,7 +114,6 @@ namespace GameProgram
 
             for (int i = 0; i < GameManager.CurrentGame.CurrentPlayer.Cards.Count; i++)
             {
-
                 if (GameManager.CurrentGame.CurrentPlayer.CanPlay(i)) toReturn.Add(i);
             }
 

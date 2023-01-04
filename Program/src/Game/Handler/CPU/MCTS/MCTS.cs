@@ -35,7 +35,7 @@ namespace GameProgram
     public class MCTS : Handler
     {
         public Stopwatch Crono = new Stopwatch();
-        public int DepthLimit { get; private set; } = 10000;
+        public int DepthLimit { get; private set; } = 100;
         public GetScore<Game, Player> Score { get; private set; }
         public MCTS(GetScore<Game, Player> score, Player player) : base(player)
         {
@@ -54,9 +54,8 @@ namespace GameProgram
         {
             Crono.Start();
 
-            if (GameManager.CurrentGame.IsOver()) throw new Exception("NO OVER");
-
             List<NodeMCTS> Options = MonteCarlosTreeSearch(GameManager.CurrentGame, 0);
+
             Crono.Stop();
 
             List<int> bestNode = new List<int>();
@@ -64,8 +63,13 @@ namespace GameProgram
             int winPlays = -1;
             int playedPlays = -1;
 
+            string path = "Checkout";
+            string content = "";
+            
             foreach (NodeMCTS node in Options)
             {
+                content += $"Score: {Math.Round(node.Score, 2)} Won Games: {node.Wins} Played Games: {node.Games} Moves: {String.Join(' ', node.Moves)} \n";
+
                 if (node.Wins > winPlays)
                 {
                     bestNode = node.Moves;
@@ -93,6 +97,8 @@ namespace GameProgram
                     }
                 }
             }
+
+            File.WriteAllText(path, content);
 
             return bestNode;
         }
@@ -168,9 +174,10 @@ namespace GameProgram
 
             if (node.Wins == node.Games) node.Wins++; // if all ways to Roma are win, then this is a win
 
-           
+            node.Score = node.Score / node.Games; // average score
 
             node.Games++; // add visit
+
             Moves.ForEach(x => node.Moves.Add(x)); // add moves
 
             return node;

@@ -12,9 +12,6 @@ namespace GameProgram
 
         public override List<int> GetCards()
         {
-
-            List<List<int>> plays = AllGeneratorPlays(new List<int>(), AvailableCards(), GameManager.CurrentGame);
-
             return PlayGenerator();
         }
     }

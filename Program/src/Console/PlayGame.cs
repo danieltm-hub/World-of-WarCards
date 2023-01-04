@@ -37,8 +37,8 @@ namespace Visual
         }
         public void Start()
         {
-            int x = Console.BufferWidth/2;
-            int y = Console.BufferHeight/2;
+            int x = Console.BufferWidth / 2;
+            int y = Console.BufferHeight / 2;
             string[] loadingBar = new string[11]{"▒▒▒▒▒▒▒▒▒▒ 0%" ,
                                                  "█▒▒▒▒▒▒▒▒▒ 10%",
                                                  "██▒▒▒▒▒▒▒▒ 20%",
@@ -50,10 +50,10 @@ namespace Visual
                                                  "████████▒▒ 80%  ",
                                                  "█████████▒ 90%  ",
                                                  "██████████ 100%"};
-            TextAnimation.AnimateFrames(new string[3]{"Iniciando juego.", "Iniciando juego..", "Iniciando juego..."}, 250, 3, "#00FF00", x ,y);
+            TextAnimation.AnimateFrames(new string[3] { "Iniciando juego.", "Iniciando juego..", "Iniciando juego..." }, 250, 3, "#00FF00", x, y);
             TextAnimation.AnimateFrames(loadingBar, 150, 1, "#00FF00", x, y);
             System.Console.WriteLine();
-            Draw.PrintAt("Presione cualquier letra", x , y, "#00FF00");
+            Draw.PrintAt("Presione cualquier letra", x, y, "#00FF00");
             System.Console.ReadKey(true);
             RunMainMenu();
         }
@@ -89,19 +89,19 @@ namespace Visual
 
             Player player1 = CreatePlayer(availableCards, 1);
             Player player2 = CreatePlayer(availableCards, 2);
-            if(player1.Name == player2.Name)
+            if (player1.Name == player2.Name)
             {
-                Draw.PrintAt("Los nombres de los jugadores no pueden ser iguales", 1,1);
+                Draw.PrintAt("Los nombres de los jugadores no pueden ser iguales", 1, 1);
                 System.Console.ReadKey(true);
                 RunChooseCharacterMenu();
             }
-            List<Player> players = new List<Player>() {player1, player2};
-            
+            List<Player> players = new List<Player>() { player1, player2 };
+
             Game newGame = new Game(players, 0, new EnemyDefeated());
-            
+
             GameManager.StartGame(players);
-            
-            RunBattleMenu((0,0));
+
+            RunBattleMenu((0, 0));
         }
 
         private Player CreatePlayer(List<Card> availableCards, int index)
@@ -110,21 +110,21 @@ namespace Visual
             Draw.DrawBorders("#FF0000");
 
             Draw.PrintAt($"Ingrese el nombre del Player {index}: ", 1, 1, "#FF0000");
-            
+
             string name = Console.ReadLine()!;
-            
+
             List<Card> cards = new List<Card>();
 
             PrintAvailableCards(availableCards);
-            
+
             int n = 1;
-            
+
             Console.CursorVisible = true;
-            
+
             while (cards.Count < 6)
             {
                 Console.SetCursorPosition(1, n + availableCards.Count + 4);
-                
+
                 try
                 {
                     int cardNumber = int.Parse(Console.ReadLine()!);
@@ -138,14 +138,15 @@ namespace Visual
                 }
             }
             Draw.PrintAt("Escoja el tipo de player", 1, n + availableCards.Count + 4);
-            Draw.PrintAt("1 - Humano", 1, n +availableCards.Count + 5);
-            Draw.PrintAt("2 - Player Random", 1, n + availableCards.Count +6);
-            Draw.PrintAt(" - Player IA Fuerte", 1, n + availableCards.Count +7);
+            Draw.PrintAt("1 - Humano", 1, n + availableCards.Count + 5);
+            Draw.PrintAt("2 - Player Random", 1, n + availableCards.Count + 6);
+            Draw.PrintAt("3 - Player IA Fuerte", 1, n + availableCards.Count + 7);
+            Console.SetCursorPosition(1, n + availableCards.Count + 8);
 
-            try 
+            try
             {
                 int playerType = int.Parse(Console.ReadLine()!);
-                switch(playerType)
+                switch (playerType)
                 {
                     case 1:
                         return new Player(name, 100, 15, 5, cards);
@@ -160,7 +161,7 @@ namespace Visual
                         mts.SetCPU(mtsIA);
                         return mts;
                     default:
-                        throw(new Exception("Mano ponte pa esto"));
+                        throw (new Exception("Mano ponte pa esto"));
                 }
             }
             catch (Exception e)
@@ -176,9 +177,9 @@ namespace Visual
             int y = 0;
             for (int i = 0; i < availableCards.Count; i++)
             {
-                Draw.PrintAt($"{i + 1} - {availableCards[i].Name}", 1+x, y + 3);
+                Draw.PrintAt($"{i + 1} - {availableCards[i].Name}", 1 + x, y + 3);
                 y++;
-                if(i%7==0 && i!=0)
+                if (i % 7 == 0 && i != 0)
                 {
                     x += 18;
                     y = 0;
@@ -210,8 +211,8 @@ namespace Visual
             string[] options = new string[4] { "[1] JUGAR CARTA", "[2] LEER CARTA", "[3] PASAR", "[4] SALIR" };
             List<Player> players = GameManager.CurrentGame.Players;
             BattleMenu battleMenu = new BattleMenu(options, players, borderLeft, borderRight, borderWidth, borderHeight, maxWidth, maxHeight, bottomBorderY, topBorderY, midConsole, fifthConsole, cardSHeight, cardSWidth, cardHeight, cardWidth);
-            
-            if(!(GameManager.CurrentGame.CurrentPlayer.Controller is Human))
+
+            if (!(GameManager.CurrentGame.CurrentPlayer.Controller is Human))
             {
                 BattleIA();
             }
@@ -221,7 +222,7 @@ namespace Visual
                 Choise(indexes, battleMenu);
             }
         }
-      private void Choise((int, int) index, BattleMenu battle)
+        private void Choise((int, int) index, BattleMenu battle)
         {
             if (index.Item2 == 0)
             {
@@ -313,8 +314,8 @@ namespace Visual
 
         private void SimulateVirtualGame()
         {
-            int x = Console.BufferWidth/2;
-            int y = Console.BufferHeight/2;
+            int x = Console.BufferWidth / 2;
+            int y = Console.BufferHeight / 2;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
             string prompt = FiggleFonts.Larry3d.Render(" SIMULACION DE VIRTUALES ");
@@ -329,7 +330,7 @@ namespace Visual
         private void BattleIA()
         {
             #region Variables
-            (int,int) indexes;
+            (int, int) indexes;
             int borderLeft = Console.BufferWidth / 2 - Console.BufferWidth / 5 + 1;
             int borderRight = Console.BufferWidth / 2 + Console.BufferWidth / 5 - 1;
             int borderWidth = borderRight - borderLeft;
@@ -368,9 +369,9 @@ namespace Visual
                         GameManager.CurrentGame.CurrentPlayer.Controller.Play();
                     }
                     Console.ReadKey(true);
-                    if(GameManager.CurrentGame.CurrentPlayer.Controller is Human)
+                    if (GameManager.CurrentGame.CurrentPlayer.Controller is Human)
                     {
-                        RunBattleMenu((0,0));
+                        RunBattleMenu((0, 0));
                     }
                     else
                     {
@@ -447,9 +448,9 @@ namespace Visual
         }
         private void Exit()
         {
-            int x = Console.BufferWidth/2;
-            int y = Console.BufferHeight/2;
-            string[] exit = new string[3]{"Saliendo del juego.", "Saliendo del juego..", "Saliendo del juego..."};
+            int x = Console.BufferWidth / 2;
+            int y = Console.BufferHeight / 2;
+            string[] exit = new string[3] { "Saliendo del juego.", "Saliendo del juego..", "Saliendo del juego..." };
             TextAnimation.AnimateFrames(exit, 250, 3, "#FFFF00", x, y);
             System.Console.WriteLine();
             TextAnimation.AnimateTyping("Gracias por jugar, presione cualquier tecla", 10, x, y, "FFFF00");
