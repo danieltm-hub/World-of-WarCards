@@ -98,6 +98,7 @@ namespace GameProgram
                 }
             }
 
+            content += String.Join(' ', bestNode);
             File.WriteAllText(path, content);
 
             return bestNode;
