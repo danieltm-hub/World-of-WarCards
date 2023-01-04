@@ -26,9 +26,12 @@ namespace GameProgram
         public void UpdateMCSTNode(int gamesPlayed, int gamesWon, double score)
         {
             // Revisar que se agreguen solo una vez
+            /////////////////////////cambios aqui
+            //GamesWon += gamesWon / gamesPlayed;
+            GamesWon += (gamesWon == gamesPlayed) ? gamesWon : gamesWon + 1;
 
-            GamesPlayed += gamesPlayed;
-            GamesWon += gamesWon / gamesPlayed;
+            GamesPlayed += gamesPlayed + 1;
+
             Score += score / gamesPlayed;
         }
         public void AddChild(List<int> move)
@@ -39,14 +42,14 @@ namespace GameProgram
 
     public class MCTS : Handler
     {
-        public GetScore<Game, Player> Score { get; private set;}
+        public GetScore<Game, Player> Score { get; private set; }
         public Stopwatch Crono = new Stopwatch();
         public double exploreFactor { get => 30; }
 
         private int DepthLimit = 100;
         private double TimeLimit = 5000;
 
-        public MCTS(GetScore<Game, Player> score, Player player) : base(player) 
+        public MCTS(GetScore<Game, Player> score, Player player) : base(player)
         {
             Score = score;
         }
@@ -58,10 +61,10 @@ namespace GameProgram
 
             MCSTNode root = new MCSTNode(new List<int>());
 
-            while(true)
+            while (!IsTimeOut()) ////////////////cambios aqui
             {
                 Explore(root, 0);
-                if(IsTimeOut()) break;
+                //if (IsTimeOut()) break;
             }
 
 
@@ -72,41 +75,40 @@ namespace GameProgram
             string path = "Checkout";
             string content = "";
 
-
-            foreach(MCSTNode node in root.Posibilities)
+            foreach (MCSTNode node in root.Posibilities)
             {
                 content += $"Score: {node.Score}, Games Played: {node.GamesPlayed}, Games Won: {node.GamesWon}, {String.Join(' ', node.Move)}\n";
 
-                if(node.GamesWon < current.GamesWon) continue;
-
-                if(node.GamesWon > current.GamesWon)
+                if (node.GamesWon / node.GamesPlayed < current.GamesWon / node.GamesPlayed) continue;
+                    ////cambios ////
+                if (node.GamesWon / node.GamesPlayed > current.GamesWon / node.GamesPlayed)
                 {
                     current = node;
                     continue;
                 }
 
-                if(node.Score > current.Score)
+                if (node.Score > current.Score)
                 {
                     current = node;
                     continue;
                 }
             }
 
-            File.WriteAllText(path, content);            
+            File.WriteAllText(path, content);
 
             return current.Move;
         }
 
         public void Explore(MCSTNode node, int depth)
         {
-            if(GameManager.CurrentGame.IsOver())
+            if (GameManager.CurrentGame.IsOver())
             {
                 int winner = (GameManager.CurrentGame.Winner().Name == myPlayer.Name) ? 1 : 0;
                 node.UpdateMCSTNode(1, winner, Score(GameManager.CurrentGame, myPlayer));
                 return;
             }
 
-            if(IsTimeOut() || depth > DepthLimit)
+            if (IsTimeOut() || depth > DepthLimit)
             {
                 node.UpdateMCSTNode(1, 0, Score(GameManager.CurrentGame, myPlayer));
                 return;
@@ -125,10 +127,10 @@ namespace GameProgram
             {
 
                 double oddsOnPath = 0;
-                if(child.GamesPlayed != 0) oddsOnPath = child.Score + exploreFactor * Math.Sqrt(Math.Log(Crono.ElapsedMilliseconds / 1000) / child.GamesPlayed);
+                if (child.GamesPlayed != 0) oddsOnPath = child.Score + exploreFactor * Math.Sqrt(Math.Log(Crono.ElapsedMilliseconds / 1000) / child.GamesPlayed);
                 else oddsOnPath = double.MaxValue;
 
-                if(oddsOnPath > mostOddsOnPath)
+                if (oddsOnPath > mostOddsOnPath)
                 {
                     mostOddsOnPath = oddsOnPath;
                     toExplore.Clear();
@@ -136,11 +138,11 @@ namespace GameProgram
                     continue;
                 }
 
-                if(oddsOnPath == mostOddsOnPath) toExplore.Add(child);
+                if (oddsOnPath == mostOddsOnPath) toExplore.Add(child);
             }
 
             //Out of index exception revisar
-            if(toExplore.Count() == 0)
+            if (toExplore.Count() == 0)
             {
                 node.UpdateMCSTNode(1, 0, Score(GameManager.CurrentGame, myPlayer));
                 return;
@@ -156,7 +158,7 @@ namespace GameProgram
             GameManager.CurrentGame = gameState.Clone();
 
             PlayCards(selected.Move);
-            
+
             GameManager.CurrentGame.NextTurn(false);
 
             Explore(selected, depth + 1);
