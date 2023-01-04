@@ -41,7 +41,7 @@ namespace GameProgram
     {
         public GetScore<Game, Player> Score { get; private set;}
         public Stopwatch Crono = new Stopwatch();
-        public double exploreFactor { get => 1; }
+        public double exploreFactor { get => 30; }
 
         private int DepthLimit = 100;
         private double TimeLimit = 5000;
