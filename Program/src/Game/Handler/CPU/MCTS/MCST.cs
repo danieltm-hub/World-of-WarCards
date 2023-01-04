@@ -9,8 +9,8 @@ namespace GameProgram
 {
     public class MCSTNode
     {
-        public int GamesPlayed { get; private set; }
-        public int GamesWon { get; private set; }
+        public long GamesPlayed { get; private set; }
+        public long GamesWon { get; private set; }
         public double Score { get; private set; }
         public List<int> Move { get; private set; }
         public List<MCSTNode> Posibilities = new List<MCSTNode>();
@@ -23,7 +23,7 @@ namespace GameProgram
         {
             UpdateMCSTNode(node.GamesPlayed, node.GamesWon, node.Score);
         }
-        public void UpdateMCSTNode(int gamesPlayed, int gamesWon, double score)
+        public void UpdateMCSTNode(long gamesPlayed, long gamesWon, double score)
         {
             GamesWon += (gamesWon == gamesPlayed) ? gamesWon : gamesWon + 1;
 
@@ -41,9 +41,9 @@ namespace GameProgram
     {
         public GetScore<Game, Player> Score { get; private set; }
         public Stopwatch Crono = new Stopwatch();
-        public double exploreFactor { get => 30; }
+        public double exploreFactor { get => 20; }
 
-        private int DepthLimit = 100;
+        private int DepthLimit = 30;
         private double TimeLimit = 5000;
 
         public MCTS(GetScore<Game, Player> score, Player player) : base(player)
@@ -58,26 +58,27 @@ namespace GameProgram
 
             MCSTNode root = new MCSTNode(new List<int>());
 
-            while (!IsTimeOut()) ////////////////cambios aqui
+            while (!IsTimeOut())
             {
                 Explore(root, 0);
-                //if (IsTimeOut()) break;
             }
 
-
-            root.UpdateMCSTNode(1, 0, double.MinValue);
-
-            MCSTNode current = root;
+            Crono.Stop();
 
             string path = "Checkout";
             string content = "";
+
+            if(root.Posibilities.Count == 0) return new List<int>();
+
+            MCSTNode current = root.Posibilities[0];
 
             foreach (MCSTNode node in root.Posibilities)
             {
                 content += $"Score: {node.Score}, Games Played: {node.GamesPlayed}, Games Won: {node.GamesWon}, {String.Join(' ', node.Move)}\n";
 
+
                 if (node.GamesWon / node.GamesPlayed < current.GamesWon / node.GamesPlayed) continue;
-                    ////cambios ////
+                
                 if (node.GamesWon / node.GamesPlayed > current.GamesWon / node.GamesPlayed)
                 {
                     current = node;
@@ -114,6 +115,9 @@ namespace GameProgram
             if (node.Posibilities.Count == 0)
             {
                 List<List<int>> children = AllGeneratorPlays(new List<int>());
+
+                //children.RemoveAt(0);
+
                 children.ForEach(move => node.AddChild(move));
             }
 
@@ -124,7 +128,7 @@ namespace GameProgram
             {
 
                 double oddsOnPath = 0;
-                if (child.GamesPlayed != 0) oddsOnPath = child.Score + exploreFactor * Math.Sqrt(Math.Log(Crono.ElapsedMilliseconds / 1000) / child.GamesPlayed);
+                if (child.GamesPlayed != 0) oddsOnPath = child.Score + exploreFactor * Math.Sqrt(Math.Log(Crono.ElapsedMilliseconds) / child.GamesPlayed);
                 else oddsOnPath = double.MaxValue;
 
                 if (oddsOnPath > mostOddsOnPath)

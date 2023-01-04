@@ -80,14 +80,14 @@ namespace GameProgram
 
             GameManager.CurrentGame = gameState.Clone();
 
-            if (availables.Count == 0)
+            if (availables.Count == 0 || gameState.IsOver())
             {
                 return new List<List<int>> { selected };
             }
 
             List<List<int>> AllPlays = new List<List<int>>();
 
-            AllPlays.Add(selected); //pass
+            if(selected.Count != 0) AllPlays.Add(selected);
 
             for (int i = 0; i < availables.Count; i++)
             {
