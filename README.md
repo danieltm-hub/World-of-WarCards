@@ -22,7 +22,9 @@ Las clases del manejo de la interfaz virtual se encuentran dentro de la carpeta 
 
 ## Sobre la creación de cartas
 
-El juego es totalmente configurable, los jugadores pueden acceder a [*code.txt*](Program/code.txt) para crear y modificar las cartas disponibles. Para ello cuentan con un conjunto de piezas que debe usar. Por lo que traemos una breve explicación de cada una de ellas.
+### Introducción a la creación de cartas
+
+El juego es totalmente configurable, los jugadores pueden acceder a [*code.txt*](Program/code.txt) para crear y modificar las cartas disponibles (para evitar errores, se tomó la decisión de ser insensible a mayúsculas y minúsculas). Para ello cuentan con un conjunto de piezas que debe usar. Por lo que traemos una breve explicación de cada una de ellas.
 Cada pieza esta representada por una palabra clave que el usuario debe introduccir para hacer su uso. Las piezas son:
 
 - `Poderes`: Estas recogen los poderes más simples a partir de los cuales el usario podra componer y crear sus poderes. Podra ver los poderes detalladamente el uso de cada uno de ellos en [Manual de Poderes](ManualPoderes.md).
@@ -35,7 +37,72 @@ Los efectos no usan palabras claves, comienzan con un corchete `[` y terminan co
 ```c++
 [next(); modifyhealth(-1)] //daño al siguiente jugador
 
-[next(), self(); modifyhealth(-1.2), modifyenergy(-1)] //daño y consumo de energia al siguiente jugador y a si mismo
-
-// notese que el grupo de poderes se separa por comas ',' , al igual que los objetivos 
+[next(), self(); modifyhealth(-1.2), modifyenergy(-1)] //daño y consumo de energia al siguiente jugador y a si mismo 
 ```
+
+>Notese que el grupo de poderes se separa por comas ',' , al igual que los objetivos
+
+Se pueden crear además Efectos con `Condiciones` que se encargan de determinar si un efecto se ejecuta o no. Para crear un efecto con condiciones se debe usar la palabra clave `if` seguida de una condición y un efecto. Por ejemplo:
+
+```c++
+if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] //si 5 + 5 es mayor a 0, se ejecuta el efecto
+```
+
+Los Efectos con Condiciones permiten que luego de poner un efecto se pueda poner otro efecto que se ejecutará si la condición no se cumple. Para esto se usa la palabra clave `else` seguida de un efecto. Por ejemplo:
+
+```c++
+if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] else [self(); modifyhealth(1)] //si 5 + 5 es mayor a 0, se ejecuta el efecto de daño, si no, se ejecuta el efecto de curación
+```
+
+Y además se pueden crear Efectos con Condiciones anidadas. Por ejemplo:
+
+```c++
+if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] 
+else if( 5 + 5 < 0 ) [self(); modifyhealth(1)] 
+else if ( true && false) [self(); modifyhealth(2)] 
+else [self(); modifyhealth(3)]
+//si 5 + 5 es mayor a 0, se ejecuta el efecto de daño, si no, si 5 + 5 es menor a 0, se ejecuta el efecto de curación, si no, si true y false es verdadero, se ejecuta el efecto de curación de 2, si no, se ejecuta el efecto de curación de 3
+```
+
+El usuario también puede usar variables para guardar efectos y usarlos luego. Para crear una variable se usa la palabra clave `Effect` seguida del nombre de la variable, el caracter ¨=¨ un efecto. Por ejemplo:
+
+```c++
+ Effect lightning = [next(); modifyhealth(-1.2)] //crea una variable llamada lightning que guarda el efecto de daño al siguiente jugador
+```
+
+>Los nombres de variables no pueden empezar con números y ni contener espacios. Solo caracteres alfanuméricos y el caracter `_` son permitidos.
+
+Por su gran complejidad hemos dejado los `Estados` para el final. Los estados son parte de la familia de los poderes, y son tratados como tal, se encargan de aplicar un efecto en alguna de las fases del juego. El juego consta de tres fases: `Inicio de turno`, `Jugada de carta` y `Fin del turno`. Los estados se pueden usar en cualquiera de estas fases. Para usar un estado se debe usar la palabra clave de la fase en la que se quiera usar, luego un Efecto y una expresión que determina la duración del estado.
+Las palabras claves de los estados son `initstate`, `playcard`, `endstate`. En el siguiente ejemplo se muestra como usar un estado en la fase de `Jugada de carta`, en un efecto:
+
+```c++
+Effect Aura_de_Represión = [self(); playcard (next(); modifyhealth(-1.5); 2)];
+//crea una variable llamada Aura_de_Represión que guarda el efecto de daño al siguiente jugador, en la fase de jugada de carta del jugador actual, con una duración de 2 turnos
+```
+
+> Notese que el estado se usa dentro de un efecto, por ser un poder.
+
+### Creación de Cartas
+
+Crear una carta es bastante sencillo, se debe usar la palabra clave `Card` seguida del nombre de la carta,
+luego un primer valor que determina el tiempo de reutilización de la carta, un segundo valor que determina el costo de la carta, luego dos llaves `{` y `}` y dentro de las llaves se ponen los efectos de la carta. Por ejemplo:
+
+```c++
+Card Fireball 1 2 
+{ 
+    [next(); modifyhealth(-1.2)] 
+} //crea una carta llamada Ataque_de_Fuego con un tiempo de reutilización de 1 turnos, un costo de 2, y un efecto de daño al siguiente jugador
+
+Effect lightning = [next(); modifyhealth(-1.2)] //crea una variable llamada lightning que guarda el efecto de daño al siguiente jugador
+
+Card lightning 1 1 
+{ 
+    [next(); modifyhealth(-1.2)] 
+    lightning 
+} //crea una carta llamada Lightning con un tiempo de reutilización de 1 turnos, un costo de 1, y un efecto de daño al siguiente jugador
+```
+
+> Una carta y un efecto pueden tener nombres iguales, pero no es recomendable
+
+
+## Sobre el código
