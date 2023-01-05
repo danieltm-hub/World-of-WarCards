@@ -3,7 +3,7 @@
 Los objetivos, al igual que los poderes pueden recibir parámetros, pero usualmente no son necesarios. Y la sintaxis es la misma que la de los poderes. Por ejemplo:
 
 ```c++
-PalabraClave() //onjetivo sin parametros
+PalabraClave() //objetivo sin parámetros
 ```
 
 ## Objetivos
@@ -14,12 +14,6 @@ PalabraClave() //onjetivo sin parametros
 
 - `Next` : *Palabra Clave:* "next". *Descripción:* Está dirigido al jugador siguiente al actual. *Parámetros:* Ninguno.
 
-- rev `LowestHealth` : *Palabra Clave:* "lowesthealth". *Descripción:* Está dirigido al jugador con menos vida. *Parámetros:* Ninguno.
+- `LowestHealth` : *Palabra Clave:* "lowesthealth". *Descripción:* Está dirigido al jugador con menos vida. *Parámetros:* Ninguno.
 
-- rev `HighestHealth` : *Palabra Clave:* "highesthealth". *Descripción:* Está dirigido al jugador con más vida. *Parámetros:* Ninguno.
-
-- rev `EqualHealth` : *Palabra Clave:* "equalhealth". *Descripción:* Está dirigido a los jugadores con la misma cantidad de vida que el jugador actual. *Parámetros:* Ninguno.
-
-- rev `HighestAvailableCards` : *Palabra Clave:* "highestcards". *Descripción:* Está dirigido al jugador con más cartas disponibles a jugar en su mano. *Parámetros:* Ninguno.
-
-- rev `LowestAvailableCards` : *Palabra Clave:* "lowestcards". *Descripción:* Está dirigido al jugador con menos cartas disponibles a jugar en su mano. *Parámetros:* Ninguno.
+- `HighestHealth` : *Palabra Clave:* "highesthealth". *Descripción:* Está dirigido al jugador con más vida. *Parámetros:* Ninguno.

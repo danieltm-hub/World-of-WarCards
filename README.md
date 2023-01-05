@@ -33,7 +33,7 @@ Cada pieza está representada por una palabra clave que el usuario debe introduc
 
 
 
-Con estas piezas el usuario es capaz de crear una estructura superior y más compleja: los `Efectos`. Los efectos son piezas que abarcan tanto `Efectores` como `Condiciones`.
+Con estas piezas el usuario es capaz de crear una estructura superior y más compleja: los `Efectos`. Los efectos son piezas que abarcan tanto `Efectores` como `Condicionales`.
 
 Los `Efectores` se encargan de combinar los poderes y los objetivos para crear una acción completa. No usan palabras claves, comienzan con un corchete `[` y terminan con otro `]`. Dentro de los corchetes el usuario introduce los objetivos que desee, luego un punto y coma `;` y los poderes a aplicar a cada objetivo. La sintaxis debe quedar de la forma: `[objetivos; poderes]`. 
 A continuación se muestran algunos ejemplos prácticos de efectos:
@@ -46,19 +46,19 @@ A continuación se muestran algunos ejemplos prácticos de efectos:
 
 >Nótese que el grupo de poderes se separa por comas `,` al igual que los objetivos
 
-Se pueden crear además `Condiciones` que se encargan de determinar si un efecto se ejecuta o no. Para crear condiciones se debe usar la palabra clave `if` seguida de una condición y un efecto. Por ejemplo:
+Se pueden crear además `Condicionales` que se encargan de determinar si un efecto se ejecuta o no. Para crear condicionales se debe usar la palabra clave `if` seguida de una condición y un efecto. Por ejemplo:
 
 ```c++
 if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] //si 5 + 5 es mayor a 0, se ejecuta el efecto
 ```
 
-Las Condiciones permiten que luego de aplicar un efecto se pueda poner otro que se ejecutará si la condición no se cumple. Para esto se usa la palabra clave `else` seguida de un efecto. Por ejemplo:
+Las Condicionales permiten que luego de evaluar la condición se pueda poner otro efecto que se ejecutará si la condición no se cumple. Para esto se usa la palabra clave `else` seguida de un efecto. Por ejemplo:
 
 ```c++
 if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] else [self(); modifyhealth(1)] //si 5 + 5 es mayor a 0, se ejecuta el efecto de daño, si no, se ejecuta el efecto de curación
 ```
 
-Y además se pueden crear Condiciones anidadas. Por ejemplo:
+Y además se pueden crear Condicionales anidadas. Por ejemplo:
 
 ```c++
 if( 5 + 5 > 0 ) [self(); modifyhealth(-1)] 
@@ -76,7 +76,7 @@ El usuario también puede usar variables para guardar efectos y usarlos luego. P
 
 >Los nombres de variables no pueden empezar con números y ni contener espacios, solo caracteres alfanuméricos y el carácter `_` son permitidos.
 
-Por su gran complejidad hemos dejado los `Estados` para el final. Los estados son parte de la familia de los poderes, y son tratados como tal, se encargan de aplicar un efecto en alguna de las fases del juego. El juego consta de tres fases: `Inicio de turno`, `Jugada de carta` y `Fin del turno`. Los estados se pueden usar en cualquiera de estas fases. Para usar un estado se debe usar la palabra clave de la fase en la que se quiera usar, luego un Efecto y una expresión que determina la duración del estado.
+Hemos dejado los `Estados` para el final por la necesidad de conocer el concepto de efecto para su utilización. Los estados son poderes que se encargan de aplicar un efecto en alguna de las fases del juego. El juego consta de tres fases: `Inicio de turno`, `Jugada de carta` y `Fin del turno`. Los estados se pueden usar en cualquiera de estas fases. Para usar un estado se debe usar la palabra clave de la fase en la que se quiera usar, luego un Efecto y una expresión que determina la duración del estado.
 Las palabras claves de los estados son `initstate`, `playcard`, `endstate`. En el siguiente ejemplo se muestra como usar un estado en la fase de `Jugada de carta`, en un efecto:
 
 ```c++
@@ -84,7 +84,7 @@ Effect Aura_de_Represión = [self(); playcard ([next(); modifyhealth(-1.5)]; 2)]
 //crea una variable llamada Aura_de_Represión que guarda el efecto de daño al siguiente jugador, en la fase de jugada de carta del jugador actual, con una duración de 2 turnos
 ```
 
-> Notese que el estado se usa dentro de un efecto, por ser un poder.
+> Nótese que el estado se usa dentro de un efecto, por ser un poder.
 
 ### Creación de Cartas
 

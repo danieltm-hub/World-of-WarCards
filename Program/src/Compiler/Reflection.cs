@@ -44,7 +44,7 @@ namespace Compiler
         {
             if (type.IsSubclassOf(typeof(T)))
             {
-                System.Console.WriteLine(type.Name + " is a " + typeof(T).Name);
+                System.Console.WriteLine(type.Name + " is " + typeof(T).Name);
 
                 ConstructorInfo? classConstructor = type.GetConstructor(new Type[] { typeof(List<Node>), typeof(CodeLocation) });
 
