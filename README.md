@@ -86,6 +86,14 @@ Effect Aura_de_Represión = [self(); playcard ([next(); modifyhealth(-1.5)]; 2)]
 
 > Nótese que el estado se usa dentro de un efecto, por ser un poder.
 
+Con nuestro lenguaje es posible acceder a datos de los jugadores en tiempo de ejecución, utilizando un sistema de `Entidades` y `Propiedades` y obteniendo como resultado una expresión numérica o una cadena de texto (string). Por ejemplo:
+
+```c++
+Effect selfdestruction = [self(); modifyhealth(current.health)]
+```
+
+> En este caso se utiliza la entidad `current` que denota al jugador actual y la propiedad `health`
+
 ### Creación de Cartas
 
 Crear una carta es bastante sencillo, se debe usar la palabra clave `Card` seguida del nombre de la carta,
