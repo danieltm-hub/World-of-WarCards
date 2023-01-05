@@ -2,9 +2,11 @@
 
 ![World Of WarCards Logo](WorldofWarCards.png)
 
->Proyecto de Programación II. Facultad de Matemática y Computación Universidad de La Habana. Curso 2022. Autores: Daniel Toledo, Osvaldo Moreno, José Antonio Concepción.
+>Proyecto de Programación II. Facultad de Matemática y Computación Universidad de La Habana. Curso 2022.
 
-## Acerca del juego
+World of WarCards tiene como propósito implementar una biblioteca de clases y una aplicación visual para una variante de la familia de juegos conocidos como Trading Cards Games.
+
+## Acerca del juego 🎮
 
 World of WarCards es un juego de cartas por turnos. El objetivo es debilitar al rival con los efectos de las cartas escogidas. Cada jugador tiene una energía y una voluntad máxima a utilizar en cada turno. Cada carta consume una cantidad de energía específica y una unidad de voluntad. Cuando una carta se activa no podrá ser reutlizada hasta que ocurra un número específico de acciones (Cooldown). El jugador será el encargado de, dadas sus cartas, determinar una estrategia ganadora en cada juego.
 
@@ -18,9 +20,16 @@ La aplicación de consola esta compuesta por 3 secciones:
 
 Una vez seleccionada la opción **Jugar** desde el menú interactivo, usted deberá introducir los datos de los jugadores y escoger las cartas con las que jugará cada uno. En el menú de batalla, en la sección superior, podrá apreciar las estadísticas de los jugadores, y el log del juego (turno del jugador y acciones que ocurren). En la sección inferior se encuentran las cartas escogidas y un menú de acciones que se pueden  realizar. Utilice las flechas, izquierda y derecha, para moverse entre las cartas disponibles  y las teclas mostradas delante del nombre de cada acción, para realizar la misma. En la sección de **Opciones** podrá ver todas las cartas disponibles en el juego con su descripción. Además, podrá realizar una simulación de una partida entre jugadores virtuales de su elección.
 
-Las clases del manejo de la interfaz visual se encuentran dentro de la carpeta Console. Se recomienda al usuario usar una consola totalmente expandida para que pueda disfrutar de una mejor experiencia de juego.
+Las clases del manejo de la interfaz visual se encuentran dentro de la carpeta Console, estas usan recursos de los paquetes [Figgle](https://github.com/drewnoakes/figgle) y [Pastel](https://github.com/silkfire/Pastel). Se recomienda al usuario usar una consola totalmente expandida para que pueda disfrutar de una mejor experiencia de juego.
 
-## Sobre la creación de cartas
+Para jugar, desde el directorio de la solución del proyecto ejecute en una consola:
+
+```c#
+dotnet restore
+dotnet run
+```
+
+## Sobre la creación de cartas ♠️
 
 ### Introducción a la creación de cartas
 
@@ -31,11 +40,9 @@ Cada pieza está representada por una palabra clave que el usuario debe introduc
   
 - `Objetivos`: Los objetivos son piezas que se encargan de determinar a quién irá dirigdo un poder. Por ejemplo, si el poder es de daño, el objetivo determina a quien se le aplicará. Los objetivos se pueden ver detalladamente en [Manual de Objetivos](ManualObjetivos.md).
 
-
-
 Con estas piezas el usuario es capaz de crear una estructura superior y más compleja: los `Efectos`. Los efectos son piezas que abarcan tanto `Efectores` como `Condicionales`.
 
-Los `Efectores` se encargan de combinar los poderes y los objetivos para crear una acción completa. No usan palabras claves, comienzan con un corchete `[` y terminan con otro `]`. Dentro de los corchetes el usuario introduce los objetivos que desee, luego un punto y coma `;` y los poderes a aplicar a cada objetivo. La sintaxis debe quedar de la forma: `[objetivos; poderes]`. 
+Los `Efectores` se encargan de combinar los poderes y los objetivos para crear una acción completa. No usan palabras claves, comienzan con un corchete `[` y terminan con otro `]`. Dentro de los corchetes el usuario introduce los objetivos que desee, luego un punto y coma `;` y los poderes a aplicar a cada objetivo. La sintaxis debe quedar de la forma: `[objetivos; poderes]`.
 A continuación se muestran algunos ejemplos prácticos de efectos:
 
 ```c++
@@ -116,3 +123,9 @@ Card lightning 1 1
 ```
 
 > Una carta y un efecto pueden tener nombres iguales, pero no es recomendable.
+
+## Autores ✒️
+
+- **Daniel Toledo** - [danieltoledo](https://github.com/Phann020126)
+- **Osvaldo Moreno** - [osvaldomoreno](https://github.com/Val020213)
+- **José Antonio Concepción** - [joseaconcepcion](https://github.com/JoseAConcepcion)
