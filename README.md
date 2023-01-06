@@ -99,7 +99,7 @@ Con nuestro lenguaje es posible acceder a datos de los jugadores en tiempo de ej
 Effect selfdestruction = [self(); modifyhealth(current.health)]
 ```
 
-> En este caso se utiliza la entidad `current` que denota al jugador actual y la propiedad `health`
+> En este caso se utiliza la entidad `current` que denota al jugador actual y la propiedad `health`, puede ver todas las propiedades disponibles en [Propiedades](Propiedades.md).
 
 ### Creación de Cartas
 
@@ -123,6 +123,8 @@ Card lightning 1 1
 ```
 
 > Una carta y un efecto pueden tener nombres iguales, pero no es recomendable.
+
+
 
 ## Autores ✒️
 
