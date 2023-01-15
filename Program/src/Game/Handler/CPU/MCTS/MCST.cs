@@ -76,6 +76,7 @@ namespace GameProgram
             {
                 content += $"Score: {node.Score}, Games Played: {node.GamesPlayed}, Games Won: {node.GamesWon}, {String.Join(' ', node.Move)}\n";
 
+                if (node.GamesPlayed == 0) continue; 
 
                 if (node.GamesWon / node.GamesPlayed < current.GamesWon / node.GamesPlayed) continue;
                 
